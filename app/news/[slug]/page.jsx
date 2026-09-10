@@ -156,34 +156,40 @@ export default function NewsDetailPage({ params }) {
   const keyTakeaways = Array.isArray(details.keyTakeaways) ? details.keyTakeaways : [];
 
   return (
-    <div className="min-h-screen bg-[#f3f5ed] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 font-sans pb-28 pt-28 sm:pt-36 relative overflow-hidden selection:bg-[#a2d45e]/30 transition-colors duration-300">
+    <div className="min-h-screen bg-[#fcfdfa] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 font-sans pb-28 pt-28 sm:pt-36 relative overflow-hidden selection:bg-[#a2d45e]/30 transition-colors duration-300">
       
+      {/* Ambient Background Glows */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full animate-pulse duration-1000" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#dbe9dd]/50 via-[#e4efe3]/30 to-transparent blur-[120px] rounded-full" />
+        <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#eef4ea]/50 to-transparent blur-3xl rounded-full" />
+      </div>
+
       {/* ============================================================ */}
-      {/* 1. HERO SECTION */}
+      {/* 1. HERO SECTION WITH BLENDED IMAGE */}
       {/* ============================================================ */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         
-        {/* Background Visual Container inside Hero */}
-        {news.imageUrl && (
-          <div className="absolute top-0 right-0 w-full lg:w-[54%] h-full min-h-[460px] lg:h-[540px] pointer-events-none z-0 rounded-l-[3.5rem] overflow-hidden hidden lg:block select-none">
-            <img 
-              src={news.imageUrl} 
-              alt={news.title || "News Story"} 
-              className="w-full h-full object-cover object-center scale-[1.03]" 
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
-            />
-            {/* Fading gradient masks */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#f3f5ed] dark:from-[#031008] via-[#f3f5ed]/85 dark:via-[#031008]/85 via-[18%] to-transparent to-[50%]" />
-            <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-[#f3f5ed] dark:from-[#031008] to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#f3f5ed] dark:from-[#031008] via-[#f3f5ed]/60 dark:via-[#031008]/60 to-transparent" />
-          </div>
-        )}
+        {/* Natural Environment Blend Container */}
+        <div className="absolute top-0 right-0 w-full lg:w-[68%] xl:w-[62%] h-[840px] sm:h-[920px] pointer-events-none z-0 overflow-hidden select-none">
+          <img 
+            src={news.imageUrl || "/events/events_book_plant.jpg"} 
+            alt={news.title || "News Story"} 
+            className="w-full h-full object-cover object-center lg:object-right-top scale-[1.04] transform-gpu transition-transform duration-1000 ease-out" 
+            onError={(e) => { e.currentTarget.src = "/events/events_book_plant.jpg"; }}
+          />
+          {/* Soft Organic Fade Masks into the Canvas */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/85 dark:via-[#031008]/85 via-[20%] to-transparent to-[45%] w-full h-full hidden lg:block" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/88 dark:via-[#031008]/90 via-[35%] to-transparent w-full h-full block lg:hidden" />
+          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/60 dark:via-[#031008]/60 to-transparent" />
+          <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#fcfdfa] dark:from-[#031008] to-transparent" />
+        </div>
 
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-[460px] lg:min-h-[540px] items-center pb-8 lg:pb-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 items-center min-h-[480px] sm:min-h-[560px] pb-6 lg:pb-0">
           
-          <div className="lg:col-span-7 space-y-5 lg:pr-6 pt-2">
+          <div className="lg:col-span-8 space-y-6 z-10">
             
-            {/* Breadcrumb */}
+            {/* Breadcrumb Navigation */}
             <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#485b4d] dark:text-slate-400">
               <Leaf size={14} className="text-[#2d5a3c] dark:text-[#a2d45e] fill-[#2d5a3c] dark:fill-[#a2d45e]" />
               <Link href="/" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">Home</Link>
@@ -195,56 +201,56 @@ export default function NewsDetailPage({ params }) {
               </span>
             </div>
 
-            {/* Category Tag */}
-            <div className="inline-flex px-3 py-1 rounded-md bg-[#eaf1e4] dark:bg-[#11261a] text-[#2d5a3c] dark:text-[#a2d45e] text-[10px] font-bold uppercase tracking-widest">
-              {news.tag || news.category || 'NEWS'}
+            {/* Category Pill Tag */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 dark:bg-[#0c1f15]/80 backdrop-blur-md border border-[#e8efe9] dark:border-[#1e422c] shadow-sm hover:border-[#1a5e35]/40 transition-colors duration-300">
+              <span className="text-[11px] font-bold tracking-[0.22em] text-[#4e6252] dark:text-[#a2d45e] uppercase">
+                {news.tag || news.category || 'LEnSE NEWS'}
+              </span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-[2.85rem] font-normal text-[#131f17] dark:text-white leading-[1.15] tracking-tight font-serif">
+            <h1 className="text-4xl sm:text-5xl lg:text-[4.2rem] font-serif font-normal text-[#122016] dark:text-white leading-[1.08] tracking-tight">
               {news.title}
             </h1>
 
             {news.desc && (
-              <p className="text-[#405245] dark:text-slate-300 text-sm sm:text-[15px] leading-[1.65] max-w-xl font-normal">
+              <p className="text-[#405245] dark:text-slate-300 text-sm sm:text-[14.5px] leading-[1.72] max-w-2xl font-normal">
                 {news.desc}
               </p>
             )}
 
-            {/* Meta Info Bar */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-3 text-xs text-[#526656] dark:text-slate-400 font-medium border-t border-[#d8e4d9] dark:border-[#183a27] max-w-xl">
+            {/* Clean Inline Meta Info Bar */}
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-3 text-xs text-[#526656] dark:text-slate-300 font-medium border-t border-[#d8e4d9]/70 dark:border-[#183a27] max-w-2xl">
               {news.date && (
-                <>
-                  <div className="flex items-center gap-1.5">
-                    <Calendar size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                    <span>{news.date}</span>
-                  </div>
-                  <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
-                </>
+                <div className="flex items-center gap-2">
+                  <Calendar size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
+                  <span className="font-bold text-[#19241c] dark:text-white">{news.date}</span>
+                </div>
               )}
               {news.author && (
                 <>
-                  <div className="flex items-center gap-1.5">
+                  <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
+                  <div className="flex items-center gap-2">
                     <User size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
                     <span>{news.author}</span>
                   </div>
-                  <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
                 </>
               )}
               {news.readTime && (
                 <>
-                  <div className="flex items-center gap-1.5">
+                  <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
+                  <div className="flex items-center gap-2">
                     <Clock size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
                     <span>{news.readTime}</span>
                   </div>
-                  <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
                 </>
               )}
+              <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
               <button 
                 onClick={handleShare}
-                className="flex items-center gap-1.5 text-[#1b3726] dark:text-[#a2d45e] hover:text-[#2d5a3c] font-bold transition-colors cursor-pointer"
+                className="flex items-center gap-2 text-[#1b3726] dark:text-[#a2d45e] hover:text-[#2d5a3c] font-bold transition-colors cursor-pointer group"
               >
-                <Share2 size={14} />
-                <span>{copied ? 'Link Copied!' : 'Share'}</span>
+                <Share2 size={14} className="group-hover:scale-110 transition-transform" />
+                <span>{copied ? 'Link Copied!' : 'Share Story'}</span>
               </button>
             </div>
 
@@ -255,7 +261,7 @@ export default function NewsDetailPage({ params }) {
       </div>
 
       {/* Hero Bottom Divider */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-2">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4">
         <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#d2e0d3] dark:via-[#183a27] to-transparent opacity-80" />
       </div>
 

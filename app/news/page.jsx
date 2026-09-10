@@ -19,7 +19,8 @@ import {
   Mail,
   ExternalLink,
   BookOpen,
-  Globe
+  Globe,
+  Sparkles
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -128,49 +129,86 @@ export default function NewsPage() {
   ], [newsList]);
 
   return (
-    <div className="min-h-screen bg-[#f3f5ed] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 font-sans pb-28 pt-28 sm:pt-36 relative overflow-hidden selection:bg-[#a2d45e]/30 transition-colors duration-300">
+    <div className="min-h-screen bg-[#fcfdfa] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 font-sans pb-28 pt-28 sm:pt-36 relative overflow-hidden selection:bg-[#a2d45e]/30 transition-colors duration-300">
       
       {/* ============================================================ */}
-      {/* 0. HERO TOP SECTION */}
+      {/* 0. HERO NATURAL ENVIRONMENT BLEND */}
       {/* ============================================================ */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Background Visual Graphic on the Right */}
-        <div className="absolute top-0 right-0 w-full lg:w-[58%] h-[420px] sm:h-[460px] pointer-events-none z-0 rounded-l-[3.5rem] overflow-hidden select-none hidden lg:block">
-          <img 
-            src="/events/events_book_plant.jpg" 
-            alt="LEnSE News & Insights" 
-            className="w-full h-full object-cover object-center scale-[1.04]" 
-            onError={(e) => {
-              e.currentTarget.src = "/events/events_globe_books.jpg";
-            }}
-          />
-          {/* Organic masking gradients */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#f3f5ed] dark:from-[#031008] via-[#f3f5ed]/80 dark:via-[#031008]/85 via-[20%] to-transparent to-[55%]" />
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#f3f5ed] dark:from-[#031008] via-[#f3f5ed]/60 dark:via-[#031008]/60 to-transparent" />
-          <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#f3f5ed] dark:from-[#031008] to-transparent" />
+      <div className="absolute top-0 right-0 w-full lg:w-[68%] xl:w-[62%] h-[840px] sm:h-[920px] pointer-events-none z-0 overflow-hidden select-none">
+        <img 
+          src="/events/events_book_plant.jpg" 
+          alt="LEnSE News & Insights" 
+          className="w-full h-full object-cover object-center lg:object-right-top scale-[1.04] transform-gpu transition-transform duration-1000 ease-out" 
+          onError={(e) => {
+            e.currentTarget.src = "/home/bg.png";
+          }}
+        />
+
+        {/* Soft Organic Fade Masks into the Canvas */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/85 dark:via-[#031008]/85 via-[20%] to-transparent to-[45%] w-full h-full hidden lg:block" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/80 dark:via-[#031008]/85 via-[30%] to-transparent w-full h-full block lg:hidden" />
+        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/60 dark:via-[#031008]/60 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#fcfdfa] dark:from-[#031008] to-transparent" />
+      </div>
+
+      {/* Ambient background glows (matching About & Home pages) */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full animate-pulse duration-1000" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#dbe9dd]/50 via-[#e4efe3]/30 to-transparent blur-[120px] rounded-full" />
+        <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#eef4ea]/50 to-transparent blur-3xl rounded-full" />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* ============================================================ */}
+        {/* A. DESKTOP VIEW HERO (LARGE SCREENS) */}
+        {/* ============================================================ */}
+        <div className="hidden lg:block">
+          <div className="grid grid-cols-12 gap-8 lg:gap-4 items-center min-h-[460px] sm:min-h-[520px]">
+
+            {/* Left Content */}
+            <div className="col-span-12 lg:col-span-8 space-y-6 lg:pr-4 z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 dark:bg-[#0c1f15]/80 backdrop-blur-md border border-[#e8efe9] dark:border-[#1e422c] shadow-sm hover:border-[#1a5e35]/40 transition-colors duration-300">
+                <span className="text-[11px] font-bold tracking-[0.22em] text-[#455748] dark:text-[#a2d45e] uppercase">
+                  UPDATES &amp; STORIES
+                </span>
+              </div>
+
+              <h1 className="text-5xl sm:text-6xl lg:text-[4.3rem] font-normal text-[#131f17] dark:text-white leading-[1.05] tracking-tight font-serif">
+                News &amp; Insights.<br />
+                <span className="italic text-[#243a29] dark:text-[#a2d45e] font-serif font-normal">Stories that inspire.</span>
+              </h1>
+
+              <p className="text-[#405245] dark:text-slate-300 text-[13.5px] leading-[1.72] max-w-lg font-normal">
+                Stay informed with the latest research breakthroughs, state-wide STEM training milestones, global academic partnerships, and community initiatives from the Centre for Learning Engineering and Sustainability Education.
+              </p>
+            </div>
+
+          </div>
         </div>
 
-        {/* Hero Text Content */}
-        <div className="relative z-10 max-w-2xl pt-2 pb-8 lg:pb-12 space-y-4">
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-xs font-semibold text-[#485b4d] dark:text-slate-400">
-            <Link href="/" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">Home</Link>
-            <span className="text-[#879b8c] dark:text-slate-500">&gt;</span>
-            <span className="text-[#1b3726] dark:text-[#a2d45e] font-bold">News</span>
+        {/* ============================================================ */}
+        {/* B. MOBILE VIEW HERO (SCREENS < LG) */}
+        {/* ============================================================ */}
+        <div className="block lg:hidden pb-4">
+          <div className="pt-3 pb-2 relative">
+            <div className="w-full space-y-3 z-10">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-[#0c1f15] border border-[#e8efe9] dark:border-[#1e422c] shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:scale-105 transition-transform duration-300">
+                <span className="text-[9.5px] font-bold tracking-wider text-[#1b432a] dark:text-[#a2d45e] uppercase">
+                  NEWS &bull; INSIGHTS
+                </span>
+              </div>
+
+              <h1 className="text-3xl sm:text-4xl font-normal text-[#112318] dark:text-white leading-[1.1] tracking-tight font-serif">
+                News &amp; Insights.<br />
+                <span className="italic text-[#1a5e35] dark:text-[#a2d45e] font-serif font-normal">Stories that inspire.</span>
+              </h1>
+
+              <p className="text-[#556758] dark:text-slate-300 text-xs sm:text-sm leading-relaxed font-normal max-w-lg">
+                Stay updated with achievements, initiatives, partnerships and community stories from LEnSE.
+              </p>
+            </div>
           </div>
-
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-normal text-[#131f17] dark:text-white tracking-tight font-serif">
-            News &amp; Insights
-          </h1>
-
-          <p className="text-xl sm:text-2xl font-serif italic text-[#243a29] dark:text-[#a2d45e] leading-snug">
-            Stories that inform. Updates that inspire.
-          </p>
-
-          <p className="text-[#405245] dark:text-slate-300 text-[13.5px] sm:text-sm leading-relaxed max-w-xl font-normal pt-1">
-            Stay updated with the latest achievements, initiatives, partnerships, research highlights and community stories from LEnSE.
-          </p>
         </div>
 
         {/* ============================================================ */}
