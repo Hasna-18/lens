@@ -68,11 +68,10 @@ export default function Navbar() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className={`relative px-4 py-2 text-xs font-medium rounded-full transition-all duration-300 ${
-                    isActive
+                  className={`relative px-4 py-2 text-xs font-medium rounded-full transition-all duration-300 ${isActive
                       ? 'text-[#132418] dark:text-white font-semibold bg-[#eaf1e4] dark:bg-white/10 shadow-inner'
                       : 'text-[#455748] dark:text-slate-300 hover:text-[#132418] dark:hover:text-white hover:bg-[#eaf1e4]/50 dark:hover:bg-white/5'
-                  }`}
+                    }`}
                 >
                   <span>{link.label}</span>
                   {isActive && (

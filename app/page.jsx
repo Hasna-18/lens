@@ -89,15 +89,15 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#fcfdfa] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 font-sans pb-8 pt-24 lg:pt-28 relative overflow-hidden flex flex-col justify-between">
-      
+
       {/* Background Decorative Waves (matching mockup) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         {/* Top left soft yellow-green glow */}
         <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full" />
-        
+
         {/* Bottom right soft green-blue glow */}
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#dbe9dd]/50 via-[#e4efe3]/30 to-transparent blur-[120px] rounded-full" />
-        
+
         {/* Bottom left subtle glow */}
         <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#eef4ea]/50 to-transparent blur-3xl rounded-full" />
       </div>
@@ -108,7 +108,7 @@ export default function HomePage() {
         {/* 1. HERO AREA: TEXT & OVERLAPPING IMAGE/GLASS PANEL */}
         {/* ========================================================================= */}
         <div className="relative flex items-center min-h-[480px] lg:min-h-[500px] xl:min-h-[540px] w-full">
-          
+
           {/* Background Art Image (Shifted right to avoid overlapping text) */}
           <div className="absolute top-1/2 -translate-y-1/2 right-[-5%] sm:right-[-2%] md:right-0 w-[120%] sm:w-[100%] lg:w-[70%] xl:w-[65%] z-0 pointer-events-none flex justify-end">
             <img
@@ -120,13 +120,13 @@ export default function HomePage() {
               }}
             />
           </div>
-          
+
           {/* Main Hero Content (Grid) */}
           <div className="w-full flex justify-between items-center relative z-10">
-            
+
             {/* Left Hero Content */}
             <div className="w-full lg:w-[50%] xl:w-[48%] space-y-6 max-w-[560px]">
-              
+
               {/* Badge */}
               <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-[2rem] bg-white dark:bg-[#0c1f15] border border-[#e8efe9] dark:border-[#1e422c] shadow-[0_2px_10px_rgba(0,0,0,0.03)]">
                 <Leaf size={14} className="fill-[#1b432a] text-[#1b432a] dark:fill-[#a2d45e] dark:text-[#a2d45e]" />
@@ -289,7 +289,7 @@ export default function HomePage() {
         {/* 2. ABOUT LEnSE SECTION */}
         {/* ========================================================================= */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          
+
           {/* Left Description (4 cols) */}
           <div className="lg:col-span-4 space-y-4 flex flex-col justify-between">
             <div className="space-y-3">
@@ -344,16 +344,16 @@ export default function HomePage() {
 
           {/* Right University Campus Card (4 cols) */}
           <div className="lg:col-span-4 rounded-[2.2rem] overflow-hidden bg-slate-900 border border-white/90 dark:border-[#183a27] shadow-md relative group flex flex-col justify-end min-h-[260px]">
-            <img 
-              src="/about/about4.png" 
-              alt="LEnSE Campus Solar Facility" 
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+            <img
+              src="/about/about4.png"
+              alt="LEnSE Campus Solar Facility"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               onError={(e) => {
                 e.currentTarget.src = "/events/sustainability.jpg";
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0d2216]/95 via-[#0d2216]/40 to-transparent" />
-            
+
             <div className="relative z-10 p-6 text-white space-y-1">
               <div className="flex items-center justify-between">
                 <h4 className="text-[15px] font-bold text-white">Creating a better tomorrow</h4>
@@ -417,10 +417,10 @@ export default function HomePage() {
               <div key={idx} className="p-5 rounded-[2rem] bg-white/80 dark:bg-[#0b1c14]/80 backdrop-blur-xl border border-white/95 dark:border-[#183a27] shadow-[0_4px_20px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] flex flex-col justify-between hover:shadow-md hover:-translate-y-1 hover:bg-white dark:hover:bg-[#10271c] dark:hover:border-[#245437] transition-all duration-300 group">
                 <div className="space-y-3">
                   <div className="w-full h-32 rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#05110a] shadow-xs relative">
-                    <img 
-                      src={item.img} 
-                      alt={item.title} 
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700" 
+                    <img
+                      src={item.img}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
                     />
                   </div>
                   <h3 className="text-[15px] font-serif font-semibold text-[#14261a] dark:text-white">
@@ -445,10 +445,10 @@ export default function HomePage() {
         {/* 4. OUR FOCUS AREAS & OUR IMPACT */}
         {/* ========================================================================= */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Left Column (8 cols): Focus Areas + Upcoming Events */}
           <div className="lg:col-span-8 space-y-12">
-            
+
             {/* FOCUS AREAS */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
@@ -490,14 +490,14 @@ export default function HomePage() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button 
+                  <button
                     onClick={() => setCurrentEventIdx(prev => Math.max(prev - 1, 0))}
                     className="w-7 h-7 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d5e2d6] dark:border-[#183a27] text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#143021] transition-colors shadow-xs cursor-pointer disabled:opacity-40"
                     disabled={currentEventIdx === 0}
                   >
                     <ChevronLeft size={15} />
                   </button>
-                  <button 
+                  <button
                     onClick={() => setCurrentEventIdx(prev => Math.min(prev + 1, upcomingEvents.length - 1))}
                     className="w-7 h-7 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d5e2d6] dark:border-[#183a27] text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#143021] transition-colors shadow-xs cursor-pointer"
                   >
@@ -513,10 +513,10 @@ export default function HomePage() {
                     <div className="rounded-[1.8rem] bg-white/85 dark:bg-[#0b1c14]/85 backdrop-blur-xl border border-white/95 dark:border-[#183a27] p-3.5 space-y-3 shadow-[0_4px_20px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-md hover:-translate-y-1 hover:bg-white dark:hover:bg-[#10271c] dark:hover:border-[#245437] transition-all">
                       {/* Image Thumbnail with Date Tag overlay */}
                       <div className="h-32 rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#05110a] relative shadow-xs">
-                        <img 
-                          src={evt.img} 
-                          alt={evt.title} 
-                          className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700" 
+                        <img
+                          src={evt.img}
+                          alt={evt.title}
+                          className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
                         />
                         {/* Top Left Date Badge */}
                         <div className="absolute top-2.5 left-2.5 px-2 py-1 rounded-xl bg-[#0f2417]/85 backdrop-blur-md text-white border border-[#1e422c]/50 text-center shadow-md">
@@ -607,13 +607,13 @@ export default function HomePage() {
         {/* 5. BUILDING PARTNERSHIPS. DRIVING CHANGE. SHOWCASE */}
         {/* ========================================================================= */}
         <div className="rounded-[2.4rem] bg-gradient-to-r from-[#f7f9f5] via-white to-[#f4f8f2] dark:from-[#0b1c14] dark:via-[#08160f] dark:to-[#040e09] border border-white/95 dark:border-[#183a27] p-6 sm:p-8 lg:p-10 shadow-[0_10px_35px_rgba(0,0,0,0.03)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center transition-all duration-300">
-          
+
           {/* Left Book / AI Visual (3 cols) */}
           <div className="lg:col-span-3 h-48 rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#05110a] shadow-sm relative">
-            <img 
-              src="/events/events_book_plant.jpg" 
-              alt="Innovation and Collaboration" 
-              className="w-full h-full object-cover" 
+            <img
+              src="/events/events_book_plant.jpg"
+              alt="Innovation and Collaboration"
+              className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-[#1b3726]/30 flex items-center justify-center">
               <div className="w-14 h-14 rounded-full bg-white/90 dark:bg-[#0b1c14]/90 backdrop-blur-md flex items-center justify-center text-[#2d5a3c] dark:text-[#a2d45e] shadow-lg">
