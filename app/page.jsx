@@ -33,80 +33,54 @@ import {
   UserCheck
 } from 'lucide-react';
 
-let clientCachedEvents = null;
+import { getFromCache, fetchWithCache, prefetchEndpoint } from '../lib/clientCache';
+
+function formatEvents(data) {
+  if (!Array.isArray(data)) return [];
+  return data.map((item) => ({
+    id: item.id,
+    day: item.dateDay || item.date_day || item.day || '14',
+    month: item.dateMonth || item.date_month || item.month || 'MAR',
+    year: item.dateYear || item.date_year || item.year || '2025',
+    tag: (item.categoryTag || item.category || item.filterType || 'EVENT').toUpperCase(),
+    title: item.title,
+    location: item.location || (item.details && item.details.venue) || 'Thiruvananthapuram, Kerala',
+    duration: item.duration || (item.details && item.details.time) || '2 Days Event',
+    img: item.imageUrl || item.image_url || item.img || '/events/conference.jpg',
+    link: `/events/${item.slug || item.id}`
+  }));
+}
 
 export default function HomePage() {
   const [currentEventIdx, setCurrentEventIdx] = useState(0);
   const [upcomingEvents, setUpcomingEvents] = useState(() => {
-    if (clientCachedEvents && clientCachedEvents.length > 0) return clientCachedEvents;
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = sessionStorage.getItem('clese_events_cache');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            const formatted = parsed.map((item) => ({
-              id: item.id,
-              day: item.dateDay || item.day || '14',
-              month: item.dateMonth || item.month || 'MAR',
-              year: item.dateYear || item.year || '2025',
-              tag: (item.categoryTag || item.category || 'EVENT').toUpperCase(),
-              title: item.title,
-              location: item.location || (item.details && item.details.venue) || 'Thiruvananthapuram, Kerala',
-              duration: item.duration || (item.details && item.details.time) || '2 Days Event',
-              img: item.imageUrl || item.img || '/events/conference.jpg',
-              link: `/events/${item.slug || item.id}`
-            }));
-            clientCachedEvents = formatted;
-            return formatted;
-          }
-        }
-      } catch (e) {}
+    const cached = getFromCache('clese_events_cache');
+    if (cached && Array.isArray(cached) && cached.length > 0) {
+      return formatEvents(cached);
     }
     return [];
   });
 
   useEffect(() => {
     let isMounted = true;
-    const controller = new AbortController();
 
-    async function loadEventsFromDB() {
-      try {
-        const res = await fetch('/api/events', {
-          signal: controller.signal,
-          headers: { 'Accept': 'application/json' }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0 && isMounted) {
-            const formatted = data.map((item) => ({
-              id: item.id,
-              day: item.dateDay || item.day || '14',
-              month: item.dateMonth || item.month || 'MAR',
-              year: item.dateYear || item.year || '2025',
-              tag: (item.categoryTag || item.category || 'EVENT').toUpperCase(),
-              title: item.title,
-              location: item.location || (item.details && item.details.venue) || 'Thiruvananthapuram, Kerala',
-              duration: item.duration || (item.details && item.details.time) || '2 Days Event',
-              img: item.imageUrl || item.img || '/events/conference.jpg',
-              link: `/events/${item.slug || item.id}`
-            }));
-            clientCachedEvents = formatted;
-            setUpcomingEvents(formatted);
-          }
+    fetchWithCache('/api/events', 'clese_events_cache', formatEvents)
+      .then((formatted) => {
+        if (isMounted && Array.isArray(formatted) && formatted.length > 0) {
+          setUpcomingEvents(formatted);
         }
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          console.warn('Home events fetch error:', err.message);
-        }
-      }
-    }
+      })
+      .catch((err) => {
+        console.warn('Home events fetch notice:', err.message);
+      });
 
-    loadEventsFromDB();
+    // Warm caches for other pages during idle time
+    prefetchEndpoint('/api/initiatives', 'clese_initiatives_cache');
+    prefetchEndpoint('/api/news', 'clese_news_cache');
+    prefetchEndpoint('/api/resources', 'clese_resources_cache');
 
     return () => {
       isMounted = false;
-      controller.abort();
     };
   }, []);
 
@@ -539,6 +513,8 @@ export default function HomePage() {
                     <img
                       src={evt.img}
                       alt={evt.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                     />
                     {/* Top Left Date Badge */}

@@ -16,24 +16,33 @@ import {
   ChevronRight,
   Shield
 } from 'lucide-react';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import { getFromCache, fetchWithCache, prefetchEndpoint } from '../../lib/clientCache';
 
-let clientCachedEvents = null;
+function formatEventsList(data) {
+  if (!Array.isArray(data)) return [];
+  return data.map(item => ({
+    ...item,
+    id: item.id,
+    slug: item.slug || String(item.id),
+    categoryTag: item.categoryTag || (item.category ? item.category.toUpperCase() : 'EVENT'),
+    category: item.category || item.filterType || 'Events',
+    filterType: item.filterType || item.category || 'Events',
+    title: item.title,
+    subtitle: item.subtitle || '',
+    location: item.location || (item.details && item.details.venue) || 'Thiruvananthapuram, Kerala',
+    duration: item.duration || (item.details && item.details.time) || '2 Days Event',
+    imageUrl: item.imageUrl || item.image_url || '/events/conference.jpg',
+    dateDay: item.dateDay || item.date_day || '14',
+    dateMonth: item.dateMonth || item.date_month || 'MAR',
+    dateYear: item.dateYear || item.date_year || '2025'
+  }));
+}
 
 export default function EventsPage() {
   const [events, setEvents] = useState(() => {
-    if (clientCachedEvents && clientCachedEvents.length > 0) return clientCachedEvents;
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = sessionStorage.getItem('clese_events_cache');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            clientCachedEvents = parsed;
-            return parsed;
-          }
-        }
-      } catch (e) {}
+    const cached = getFromCache('clese_events_cache');
+    if (cached && Array.isArray(cached) && cached.length > 0) {
+      return formatEventsList(cached);
     }
     return [];
   });
@@ -46,54 +55,28 @@ export default function EventsPage() {
 
   useEffect(() => {
     let isMounted = true;
-    const controller = new AbortController();
 
-    async function loadData() {
-      try {
-        const res = await fetch('/api/events', { 
-          signal: controller.signal,
-          headers: { 'Accept': 'application/json' }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && isMounted) {
-            const formatted = data.map(item => ({
-              ...item,
-              id: item.id,
-              slug: item.slug || String(item.id),
-              categoryTag: item.categoryTag || (item.category ? item.category.toUpperCase() : 'EVENT'),
-              category: item.category || item.filterType || 'Events',
-              filterType: item.filterType || item.category || 'Events',
-              title: item.title,
-              subtitle: item.subtitle || '',
-              location: item.location || (item.details && item.details.venue) || 'Thiruvananthapuram, Kerala',
-              duration: item.duration || (item.details && item.details.time) || '2 Days Event',
-              imageUrl: item.imageUrl || item.image_url || '/events/conference.jpg',
-              dateDay: item.dateDay || item.date_day || '14',
-              dateMonth: item.dateMonth || item.date_month || 'MAR',
-              dateYear: item.dateYear || item.date_year || '2025'
-            }));
-            clientCachedEvents = formatted;
-            setEvents(formatted);
-            setLoading(false);
-            try {
-              sessionStorage.setItem('clese_events_cache', JSON.stringify(formatted));
-            } catch (e) {}
-          }
+    fetchWithCache('/api/events', 'clese_events_cache', formatEventsList)
+      .then((formatted) => {
+        if (isMounted && Array.isArray(formatted) && formatted.length > 0) {
+          setEvents(formatted);
+          setLoading(false);
         }
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          console.warn('Events fetch notice:', err.message);
-        }
-      } finally {
+      })
+      .catch((err) => {
+        console.warn('Events fetch notice:', err.message);
+      })
+      .finally(() => {
         if (isMounted) setLoading(false);
-      }
-    }
+      });
 
-    loadData();
-    return () => { 
+    // Prefetch other sections
+    prefetchEndpoint('/api/initiatives', 'clese_initiatives_cache');
+    prefetchEndpoint('/api/news', 'clese_news_cache');
+    prefetchEndpoint('/api/resources', 'clese_resources_cache');
+
+    return () => {
       isMounted = false;
-      controller.abort();
     };
   }, []);
 
@@ -201,6 +184,8 @@ export default function EventsPage() {
         <img
           src="/event1.png"
           alt="LEnSE Events Botanical Illustration"
+          fetchPriority="high"
+          decoding="async"
           className="w-full h-full object-cover object-[78%_25%] sm:object-right-top scale-[1.03]"
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
@@ -395,6 +380,8 @@ export default function EventsPage() {
                         <img
                           src={evt.imageUrl}
                           alt={evt.title}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out absolute inset-0 block"
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           onError={(e) => {

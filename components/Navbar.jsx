@@ -64,10 +64,24 @@ export default function Navbar() {
             {navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href === '/programs' && pathname === '/academics');
 
+              const handlePrefetch = () => {
+                if (link.href === '/events') {
+                  import('../lib/clientCache').then(m => m.prefetchEndpoint('/api/events', 'clese_events_cache'));
+                } else if (link.href === '/initiatives') {
+                  import('../lib/clientCache').then(m => m.prefetchEndpoint('/api/initiatives', 'clese_initiatives_cache'));
+                } else if (link.href === '/news') {
+                  import('../lib/clientCache').then(m => m.prefetchEndpoint('/api/news', 'clese_news_cache'));
+                } else if (link.href === '/resources') {
+                  import('../lib/clientCache').then(m => m.prefetchEndpoint('/api/resources', 'clese_resources_cache'));
+                }
+              };
+
               return (
                 <Link
                   key={link.label}
                   href={link.href}
+                  onMouseEnter={handlePrefetch}
+                  onTouchStart={handlePrefetch}
                   className={`relative px-4 py-2 text-xs font-medium rounded-full transition-all duration-300 ${isActive
                       ? 'text-[#132418] dark:text-white font-semibold bg-[#eaf1e4] dark:bg-white/10 shadow-inner'
                       : 'text-[#455748] dark:text-slate-300 hover:text-[#132418] dark:hover:text-white hover:bg-[#eaf1e4]/50 dark:hover:bg-white/5'

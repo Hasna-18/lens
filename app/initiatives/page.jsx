@@ -23,22 +23,13 @@ import {
   Leaf
 } from 'lucide-react';
 
-let clientCachedInitiatives = null;
+import { getFromCache, fetchWithCache, prefetchEndpoint } from '../../lib/clientCache';
 
 export default function InitiativesPage() {
   const [initiatives, setInitiatives] = useState(() => {
-    if (clientCachedInitiatives && clientCachedInitiatives.length > 0) return clientCachedInitiatives;
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = sessionStorage.getItem('clese_initiatives_cache');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            clientCachedInitiatives = parsed;
-            return parsed;
-          }
-        }
-      } catch (e) {}
+    const cached = getFromCache('clese_initiatives_cache');
+    if (cached && Array.isArray(cached) && cached.length > 0) {
+      return cached;
     }
     return [];
   });
@@ -46,39 +37,28 @@ export default function InitiativesPage() {
 
   useEffect(() => {
     let isMounted = true;
-    const controller = new AbortController();
 
-    async function loadInitiatives() {
-      try {
-        const res = await fetch('/api/initiatives', {
-          signal: controller.signal,
-          headers: { 'Accept': 'application/json' }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && isMounted) {
-            clientCachedInitiatives = data;
-            setInitiatives(data);
-            setLoading(false);
-            try {
-              sessionStorage.setItem('clese_initiatives_cache', JSON.stringify(data));
-            } catch (e) {}
-          }
+    fetchWithCache('/api/initiatives', 'clese_initiatives_cache')
+      .then((data) => {
+        if (isMounted && Array.isArray(data) && data.length > 0) {
+          setInitiatives(data);
+          setLoading(false);
         }
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          console.warn('Initiatives fetch notice:', err.message);
-        }
-      } finally {
+      })
+      .catch((err) => {
+        console.warn('Initiatives fetch notice:', err.message);
+      })
+      .finally(() => {
         if (isMounted) setLoading(false);
-      }
-    }
+      });
 
-    loadInitiatives();
+    // Prefetch other sections
+    prefetchEndpoint('/api/events', 'clese_events_cache');
+    prefetchEndpoint('/api/news', 'clese_news_cache');
+    prefetchEndpoint('/api/resources', 'clese_resources_cache');
 
     return () => {
       isMounted = false;
-      controller.abort();
     };
   }, []);
   return (

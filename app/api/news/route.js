@@ -6,7 +6,11 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const data = await getNews();
-    return NextResponse.json(data);
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400',
+      },
+    });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
