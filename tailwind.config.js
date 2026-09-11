@@ -11,6 +11,9 @@ export default {
   },
   theme: {
     extend: {
+      screens: {
+        xs: '480px',
+      },
       colors: {
         cyan: {
           400: '#38bdf8',

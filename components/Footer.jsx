@@ -57,10 +57,10 @@ export default function Footer() {
             <ul className="space-y-2.5 text-xs list-none p-0">
               {[
                 { name: 'About Us', href: '/about' },
-                { name: 'Programs', href: '/programs' },
-                { name: 'Research', href: '/projects' },
-                { name: 'Events', href: '/events' },
-                { name: 'News', href: '/news' }
+                { name: 'Initiatives', href: '/initiatives' },
+                { name: 'Research & Projects', href: '/projects' },
+                { name: 'Events & Programmes', href: '/events' },
+                { name: 'News & Media', href: '/news' }
               ].map((link, idx) => (
                 <li key={idx}>
                   <Link href={link.href} className="text-[#556758] dark:text-slate-400 hover:text-[#1b3726] dark:hover:text-white hover:translate-x-1 inline-block transition-all duration-200">
@@ -75,10 +75,15 @@ export default function Footer() {
           <div className="lg:col-span-2 space-y-4">
             <h4 className="font-['Outfit'] font-bold text-xs text-[#122016] dark:text-white uppercase tracking-[0.15em]">Resources</h4>
             <ul className="space-y-2.5 text-xs list-none p-0">
-              {['Gallery', 'Publications', 'Downloads', 'FAQ'].map((link, idx) => (
+              {[
+                { name: 'Publications', href: '/publications' },
+                { name: 'Resources Hub', href: '/resources' },
+                { name: 'Academic Team', href: '/team' },
+                { name: 'Media Gallery', href: '/gallery' }
+              ].map((link, idx) => (
                 <li key={idx}>
-                  <Link href={`/${link.toLowerCase()}`} className="text-[#556758] dark:text-slate-400 hover:text-[#1b3726] dark:hover:text-white hover:translate-x-1 inline-block transition-all duration-200">
-                    {link}
+                  <Link href={link.href} className="text-[#556758] dark:text-slate-400 hover:text-[#1b3726] dark:hover:text-white hover:translate-x-1 inline-block transition-all duration-200">
+                    {link.name}
                   </Link>
                 </li>
               ))}
@@ -96,10 +101,6 @@ export default function Footer() {
               <li className="flex items-center gap-2">
                 <Mail size={14} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0" />
                 <a href="mailto:lenseedu24@gmail.com" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">lenseedu24@gmail.com</a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone size={14} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0" />
-                <a href="tel:+911234567890" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">+91 1234 567 890</a>
               </li>
             </ul>
           </div>

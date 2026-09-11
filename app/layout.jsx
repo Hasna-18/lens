@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
   const isAdminRoute = pathname?.startsWith('/admin');
 
   return (
-    <html lang="en" data-theme={isAdminRoute ? "light" : "dark"} className={isAdminRoute ? "light" : "dark"}>
+    <html lang="en" data-theme={isAdminRoute ? "light" : "dark"} className={isAdminRoute ? "light" : "dark"} suppressHydrationWarning>
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
           rel="stylesheet" 
         />
       </head>
-      <body className={isAdminRoute ? "bg-[#edf4e8] text-slate-900 min-h-screen antialiased selection:bg-[#2d5a3c]/20 selection:text-[#1b3726] transition-colors duration-300" : "bg-[#fcfdfa] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 min-h-screen antialiased selection:bg-[#a2d45e]/30 selection:text-white transition-colors duration-300"}>
+      <body suppressHydrationWarning className={isAdminRoute ? "bg-[#edf4e8] text-slate-900 min-h-screen antialiased selection:bg-[#2d5a3c]/20 selection:text-[#1b3726] transition-colors duration-300" : "bg-[#fcfdfa] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 min-h-screen antialiased selection:bg-[#a2d45e]/30 selection:text-white transition-colors duration-300"}>
         <ToastProvider>
           <div id="app" className={isAdminRoute ? "relative min-h-screen flex flex-col justify-between bg-[#edf4e8] text-slate-900" : "relative min-h-screen flex flex-col justify-between bg-[#fcfdfa] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 transition-colors duration-300"}>
             {/* Top Navigation - Suppressed on admin routes */}

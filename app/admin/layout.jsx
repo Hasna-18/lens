@@ -106,6 +106,12 @@ export default function AdminLayout({ children }) {
       active: pathname.startsWith('/admin/resources')
     },
     {
+      label: 'Key Initiatives',
+      href: '/admin/initiatives',
+      icon: Sparkles,
+      active: pathname.startsWith('/admin/initiatives')
+    },
+    {
       label: 'News & Media',
       href: '/admin/news',
       icon: FileText,

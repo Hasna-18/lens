@@ -912,7 +912,7 @@ export default function AboutPage() {
                                 Leading initiatives in sustainable education, interdisciplinary research, and inclusive learning for a better tomorrow.
                             </p>
                             <div className="pt-0.5">
-                                <Link href="/about/director" className="inline-flex group">
+                                <Link href="/team" className="inline-flex group">
                                     <button className="px-2.5 py-1 rounded-full bg-white hover:bg-[#f8faf8] border border-[#d6e0d8] dark:bg-[#0c1f15] dark:border-[#1e422c] shadow-sm text-[#0a311b] dark:text-[#a2d45e] text-[8.5px] sm:text-[9.5px] font-semibold tracking-wider flex items-center gap-1 hover:scale-105 active:scale-95 transition-all duration-300">
                                         <span>Know More</span>
                                         <ArrowRight size={7} className="group-hover:translate-x-0.5 transition-transform duration-300" />
@@ -934,19 +934,15 @@ export default function AboutPage() {
                                 <MapPin size={9} className="text-[#174b2b] dark:text-[#a2d45e] shrink-0 mt-0.5" />
                                 <span className="leading-tight">
                                     University of Kerala<br />
-                                    Kariavattom, TVM<br />
-                                    Kerala, India
+                                    Kariavattom - 695581<br />
+                                    Thiruvananthapuram
                                 </span>
                             </div>
                             <div className="flex items-center gap-1 text-[8px] sm:text-[9px] text-[#3c4e41] dark:text-slate-200 pt-0.5">
                                 <Mail size={9} className="text-[#174b2b] dark:text-[#a2d45e] shrink-0" />
-                                <a href="mailto:lense@keralauniversity.ac.in" className="text-[#1a5e35] dark:text-[#a2d45e] font-semibold hover:underline truncate">
-                                    lense@keralauniversity.ac.in
+                                <a href="mailto:lenseedu24@gmail.com" className="text-[#1a5e35] dark:text-[#a2d45e] font-semibold hover:underline truncate">
+                                    lenseedu24@gmail.com
                                 </a>
-                            </div>
-                            <div className="flex items-center gap-1 text-[8px] sm:text-[9px] text-[#3c4e41] dark:text-slate-200">
-                                <Phone size={9} className="text-[#174b2b] dark:text-[#a2d45e] shrink-0" />
-                                <span>+91 123 456 7890</span>
                             </div>
                         </div>
                     </div>

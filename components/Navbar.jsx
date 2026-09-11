@@ -100,19 +100,19 @@ export default function Navbar() {
             {/* Get Involved Button */}
             <Link
               href="/contact"
-              className="hidden sm:inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#143021] to-[#0d2217] dark:from-[#143021] dark:to-[#0d2217] hover:from-[#1b3d2b] hover:to-[#122e1f] border border-[#2d5c3f] hover:border-[#428159] text-white text-xs font-semibold tracking-wide transition-all duration-300 shadow-[0_0_20px_rgba(20,48,33,0.3)] dark:shadow-[0_0_20px_rgba(20,48,33,0.6)] group"
+              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-6 sm:py-2.5 rounded-full bg-[#143021] hover:bg-[#1b3d2b] dark:bg-[#143021] dark:hover:bg-[#1b3d2b] border border-[#2d5c3f] hover:border-[#428159] text-white text-[11px] sm:text-xs font-semibold tracking-wide transition-all duration-300 shadow-sm group"
             >
               <span>Get Involved</span>
-              <ArrowRight size={14} className="text-[#a2d45e] group-hover:translate-x-1 transition-transform" />
+              <ArrowRight size={13} className="text-[#a2d45e] group-hover:translate-x-0.5 transition-transform" />
             </Link>
 
             {/* Mobile Hamburger Button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2.5 rounded-full bg-white/80 dark:bg-[#0b1c14]/80 border border-[#dce6dd] dark:border-white/10 text-[#132418] dark:text-white hover:bg-[#eaf1e4] dark:hover:bg-white/10 transition-colors cursor-pointer"
+              className="lg:hidden p-2 sm:p-2.5 rounded-full bg-white/80 dark:bg-[#0b1c14]/80 border border-[#dce6dd] dark:border-white/10 text-[#132418] dark:text-white hover:bg-[#eaf1e4] dark:hover:bg-white/10 transition-colors cursor-pointer"
               aria-label="Toggle navigation menu"
             >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
 

@@ -141,10 +141,10 @@ export default function ContactPage() {
           <div className="absolute top-0 left-8 right-8 h-[1.5px] bg-gradient-to-r from-transparent via-white dark:via-white/20 to-transparent opacity-95 pointer-events-none" />
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-white/70 dark:divide-[#183a27] relative z-10">
             {[
-              { icon: Mail, title: 'Email Us', desc: 'lenseedu24@gmail.com\nDirect queries', href: 'mailto:lenseedu24@gmail.com' },
-              { icon: MapPin, title: 'Visit Campus', desc: 'Kariavattom Campus\nDept. of Education, TVM', href: '#director-office-card' },
-              { icon: Phone, title: 'Call Office', desc: '+91 1234 567 890\nMon - Fri (IST)', href: 'tel:+911234567890' },
-              { icon: Clock, title: 'Office Hours', desc: '09:30 AM – 05:00 PM\nWorking days', href: '#director-office-card' }
+              { icon: Mail, title: 'Email Us', desc: 'lenseedu24@gmail.com\nOfficial enquiries', href: 'mailto:lenseedu24@gmail.com' },
+              { icon: MapPin, title: 'Visit Campus', desc: 'Kariavattom Campus\nThiruvananthapuram - 695581', href: '#director-office-card' },
+              { icon: Building2, title: 'Centre Office', desc: 'Dept. of Education\nUniversity of Kerala', href: '#director-office-card' },
+              { icon: Clock, title: 'Office Hours', desc: '09:30 AM – 05:00 PM\nWorking days (IST)', href: '#director-office-card' }
             ].map((item, i) => (
               <a 
                 key={i} 
