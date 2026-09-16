@@ -320,10 +320,6 @@ export default function ContactPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-40 dark:from-[#08160f]/60 dark:to-white/10 dark:opacity-60 pointer-events-none" />
                   </div>
 
-                  {/* Botanical Seal Badge */}
-                  <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-full bg-[#132c1e] border-2 border-white dark:border-[#a2d45e] flex items-center justify-center text-[#a2d45e] shadow-md group-hover/photo:rotate-12 transition-transform duration-300">
-                    <Leaf size={12} className="fill-[#a2d45e]" />
-                  </div>
                 </div>
 
                 {/* Director Title & Role */}
