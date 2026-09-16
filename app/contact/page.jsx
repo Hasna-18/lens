@@ -300,71 +300,126 @@ export default function ContactPage() {
           <div className="lg:col-span-5 space-y-6">
             
             {/* DIRECTOR OFFICE CARD */}
-            <div id="director-office-card" className="scroll-mt-32 rounded-[2.6rem] bg-gradient-to-br from-[#132c1e] via-[#0f2418] to-[#08160f] dark:from-[#0a1f13] dark:via-[#07170e] dark:to-[#020a05] p-8 text-white shadow-xl space-y-6 relative overflow-hidden border-[1.5px] border-white/20 dark:border-[#1e422c] group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#a2d45e]/15 to-transparent rounded-tr-[2.6rem] pointer-events-none" />
+            <div id="director-office-card" className="scroll-mt-32 rounded-[2.6rem] bg-gradient-to-br from-white/90 via-[#f7faf7]/85 to-[#edf4ee]/80 dark:from-[#0a1f13] dark:via-[#07170e] dark:to-[#020a05] backdrop-blur-2xl p-7 sm:p-8 text-[#14261a] dark:text-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_20px_50px_rgba(0,25,12,0.06)] dark:shadow-2xl space-y-6 relative overflow-hidden border-[1.5px] border-white/95 dark:border-[#1e422c] group transition-all duration-500 hover:shadow-xl dark:hover:shadow-[0_25px_60px_-15px_rgba(15,35,22,0.45)]">
+              {/* Ambient lighting glows */}
+              <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#a2d45e]/20 dark:bg-[#a2d45e]/15 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-700" />
+              <div className="absolute -bottom-12 -left-12 w-44 h-44 bg-[#1a5e35]/10 dark:bg-[#2e6840]/20 rounded-full blur-2xl pointer-events-none" />
               
-              <div className="w-12 h-12 rounded-full bg-gradient-to-b from-white/20 to-white/5 border border-white/30 flex items-center justify-center text-[#a2d45e] absolute top-6 right-6 shadow-sm group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                <Globe size={20} strokeWidth={1.75} />
+              {/* Profile Header with Portrait Photo */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 relative z-10">
+                {/* Director Portrait Avatar Frame */}
+                <div className="relative shrink-0 group/photo">
+                  <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-[#1a5e35]/25 via-[#a2d45e]/30 to-[#80be3b]/20 dark:from-[#a2d45e]/40 dark:via-[#4e965f]/30 dark:to-[#a2d45e]/10 blur-sm group-hover/photo:blur-md group-hover/photo:scale-105 transition-all duration-500" />
+                  
+                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-white dark:border-[#a2d45e]/30 shadow-xl bg-[#eef4ef] dark:bg-[#0a1c11]">
+                    <img 
+                      src="/divya.png" 
+                      alt="Dr. Divya C. Senan" 
+                      className="w-full h-full object-cover object-top filter brightness-[1.02] contrast-[1.04] group-hover/photo:scale-108 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-40 dark:from-[#08160f]/60 dark:to-white/10 dark:opacity-60 pointer-events-none" />
+                  </div>
+
+                  {/* Botanical Seal Badge */}
+                  <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-full bg-[#132c1e] border-2 border-white dark:border-[#a2d45e] flex items-center justify-center text-[#a2d45e] shadow-md group-hover/photo:rotate-12 transition-transform duration-300">
+                    <Leaf size={12} className="fill-[#a2d45e]" />
+                  </div>
+                </div>
+
+                {/* Director Title & Role */}
+                <div className="space-y-1.5 flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#eaf1e4] dark:bg-[#a2d45e]/20 text-[#1f4a2d] dark:text-[#c2ec8b] border border-[#cedfce] dark:border-[#a2d45e]/30 text-[9px] font-bold uppercase tracking-widest shadow-xs backdrop-blur-md">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#2d5a3c] dark:bg-[#a2d45e] animate-pulse" />
+                      DIRECTOR'S OFFICE
+                    </span>
+                  </div>
+                  
+                  <h3 className="text-2xl sm:text-3xl font-serif font-normal leading-snug pt-0.5 text-[#122016] dark:text-white tracking-wide">
+                    Dr. Divya C. Senan
+                  </h3>
+                  
+                  <p className="text-xs text-[#2d5a3c] dark:text-[#b0d9b8] font-medium leading-relaxed">
+                    Director, Centre for Learning Engineering &amp; Sustainability Education
+                  </p>
+
+                  <p className="text-[11px] text-[#5a6f5e] dark:text-[#86ab8e] font-normal leading-tight">
+                    Associate Professor, University of Kerala
+                  </p>
+                </div>
               </div>
 
-              <div className="space-y-2 relative z-10 pr-12">
-                <span className="inline-flex px-3 py-1 rounded-full bg-[#a2d45e]/20 text-[#c2ec8b] border border-[#a2d45e]/30 text-[9.5px] font-bold uppercase tracking-widest">
-                  DIRECTOR'S OFFICE
-                </span>
-                
-                <h3 className="text-2xl sm:text-3xl font-serif font-normal leading-snug pt-1">
-                  Dr. Divya C. Senan
-                </h3>
-                
-                <p className="text-xs text-[#a8cfb0] font-medium leading-relaxed">
-                  Director, Centre for Learning Engineering &amp; Sustainability Education
-                </p>
-              </div>
-
-              <div className="space-y-4 text-xs text-[#d0e6d5] relative z-10 pt-3 border-t border-white/15">
+              {/* Office & Institutional Details */}
+              <div className="space-y-3 text-xs text-[#3d5242] dark:text-[#d0e6d5] relative z-10 pt-4 border-t border-[#e2ece3] dark:border-white/15">
                 
                 {/* Centre Name */}
-                <div className="flex items-start gap-3">
-                  <Building2 size={16} className="text-[#a2d45e] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="block font-bold text-white">Centre:</span>
-                    <span className="text-[#b9d5bf]">Centre for Learning Engineering and Sustainability Education (LEnSE / CLESE)</span>
+                <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-white/80 dark:bg-white/[0.04] hover:bg-white dark:hover:bg-white/[0.08] border border-[#dee8df] dark:border-white/10 hover:border-[#1a5e35]/30 dark:hover:border-[#a2d45e]/30 shadow-xs dark:shadow-none transition-all duration-300">
+                  <div className="w-8 h-8 rounded-xl bg-[#eaf1e4] dark:bg-[#a2d45e]/15 border border-[#d2e2d4] dark:border-[#a2d45e]/25 flex items-center justify-center text-[#1b432a] dark:text-[#a2d45e] shrink-0 mt-0.5">
+                    <Building2 size={16} />
+                  </div>
+                  <div className="space-y-0.5">
+                    <span className="block text-[10.5px] font-bold text-[#14261a] dark:text-white uppercase tracking-wider">Centre</span>
+                    <span className="text-[#485d4d] dark:text-[#b9d5bf] text-xs leading-relaxed block">Centre for Learning Engineering and Sustainability Education (LEnSE / CLESE)</span>
                   </div>
                 </div>
 
                 {/* Campus Address */}
-                <div className="flex items-start gap-3">
-                  <MapPin size={16} className="text-[#a2d45e] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="block font-bold text-white">Campus Location:</span>
-                    <span className="text-[#b9d5bf]">Department of Education, University of Kerala, Kariavattom Campus, Thiruvananthapuram - 695581, Kerala, India</span>
+                <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-white/80 dark:bg-white/[0.04] hover:bg-white dark:hover:bg-white/[0.08] border border-[#dee8df] dark:border-white/10 hover:border-[#1a5e35]/30 dark:hover:border-[#a2d45e]/30 shadow-xs dark:shadow-none transition-all duration-300">
+                  <div className="w-8 h-8 rounded-xl bg-[#eaf1e4] dark:bg-[#a2d45e]/15 border border-[#d2e2d4] dark:border-[#a2d45e]/25 flex items-center justify-center text-[#1b432a] dark:text-[#a2d45e] shrink-0 mt-0.5">
+                    <MapPin size={16} />
+                  </div>
+                  <div className="space-y-0.5">
+                    <span className="block text-[10.5px] font-bold text-[#14261a] dark:text-white uppercase tracking-wider">Campus Location</span>
+                    <span className="text-[#485d4d] dark:text-[#b9d5bf] text-xs leading-relaxed block">Department of Education, University of Kerala, Kariavattom Campus, Thiruvananthapuram - 695581, Kerala, India</span>
                   </div>
                 </div>
 
                 {/* Official Email */}
-                <div className="flex items-start gap-3">
-                  <Mail size={16} className="text-[#a2d45e] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="block font-bold text-white">Official Email:</span>
-                    <a href="mailto:lenseedu24@gmail.com" className="text-[#a2d45e] hover:underline font-semibold">
+                <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-white/80 dark:bg-white/[0.04] hover:bg-white dark:hover:bg-white/[0.08] border border-[#dee8df] dark:border-white/10 hover:border-[#1a5e35]/30 dark:hover:border-[#a2d45e]/30 shadow-xs dark:shadow-none transition-all duration-300">
+                  <div className="w-8 h-8 rounded-xl bg-[#eaf1e4] dark:bg-[#a2d45e]/15 border border-[#d2e2d4] dark:border-[#a2d45e]/25 flex items-center justify-center text-[#1b432a] dark:text-[#a2d45e] shrink-0 mt-0.5">
+                    <Mail size={16} />
+                  </div>
+                  <div className="space-y-0.5 flex-1 min-w-0">
+                    <span className="block text-[10.5px] font-bold text-[#14261a] dark:text-white uppercase tracking-wider">Official Email</span>
+                    <a href="mailto:lenseedu24@gmail.com" className="text-[#1a5e35] dark:text-[#a2d45e] hover:text-[#0e3a1f] dark:hover:text-[#c2ec8b] hover:underline font-semibold text-xs block transition-colors">
                       lenseedu24@gmail.com
                     </a>
                   </div>
                 </div>
 
                 {/* Office Hours */}
-                <div className="flex items-start gap-3">
-                  <Clock size={16} className="text-[#a2d45e] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="block font-bold text-white">Office Hours:</span>
-                    <span className="text-[#b9d5bf]">Monday – Friday: 09:30 AM – 05:00 PM IST</span>
+                <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-white/80 dark:bg-white/[0.04] hover:bg-white dark:hover:bg-white/[0.08] border border-[#dee8df] dark:border-white/10 hover:border-[#1a5e35]/30 dark:hover:border-[#a2d45e]/30 shadow-xs dark:shadow-none transition-all duration-300">
+                  <div className="w-8 h-8 rounded-xl bg-[#eaf1e4] dark:bg-[#a2d45e]/15 border border-[#d2e2d4] dark:border-[#a2d45e]/25 flex items-center justify-center text-[#1b432a] dark:text-[#a2d45e] shrink-0 mt-0.5">
+                    <Clock size={16} />
+                  </div>
+                  <div className="space-y-0.5">
+                    <span className="block text-[10.5px] font-bold text-[#14261a] dark:text-white uppercase tracking-wider">Office Hours</span>
+                    <span className="text-[#485d4d] dark:text-[#b9d5bf] text-xs leading-relaxed block">Monday – Friday: 09:30 AM – 05:00 PM IST</span>
                   </div>
                 </div>
 
               </div>
 
+              {/* Direct Quick Action Buttons */}
+              <div className="pt-2 flex items-center gap-3 relative z-10">
+                <a 
+                  href="mailto:lenseedu24@gmail.com?subject=Enquiry%20to%20Director's%20Office"
+                  className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-b from-[#1b3726] to-[#11261a] hover:from-[#234631] hover:to-[#173323] text-white dark:bg-gradient-to-r dark:from-[#a2d45e] dark:to-[#80be3b] dark:hover:from-[#b2e46e] dark:hover:to-[#8fce47] dark:text-[#091a0f] font-bold text-[11px] uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                >
+                  <Mail size={13} />
+                  <span>Email Director</span>
+                </a>
+                <Link 
+                  href="/about"
+                  className="py-3 px-4 rounded-xl bg-white/90 dark:bg-white/10 hover:bg-white dark:hover:bg-white/15 border border-[#cedece] dark:border-white/20 text-[#14261a] dark:text-white font-semibold text-[11px] text-center flex items-center justify-center gap-1.5 hover:border-[#1a5e35]/40 dark:hover:border-[#a2d45e]/40 shadow-xs dark:shadow-none transition-all duration-300"
+                >
+                  <span>About CLESE</span>
+                  <ArrowRight size={12} />
+                </Link>
+              </div>
+
               {/* Decorative botanical artwork */}
-              <div className="absolute right-0 bottom-0 pointer-events-none opacity-15 translate-x-4 translate-y-4">
+              <div className="absolute right-0 bottom-0 pointer-events-none opacity-[0.06] dark:opacity-10 text-[#1b432a] dark:text-white translate-x-6 translate-y-6 group-hover:opacity-10 dark:group-hover:opacity-15 group-hover:scale-105 transition-all duration-500">
                 <Leaf size={140} />
               </div>
             </div>

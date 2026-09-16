@@ -17,6 +17,7 @@ import {
   Shield
 } from 'lucide-react';
 import { getFromCache, fetchWithCache, prefetchEndpoint } from '../../lib/clientCache';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 function formatEventsList(data) {
   if (!Array.isArray(data)) return [];
