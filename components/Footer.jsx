@@ -104,35 +104,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-
-          {/* Column 5: Stay Connected (lg:col-span-3) */}
-          <div className="lg:col-span-3">
-            <div className="p-6 rounded-3xl border border-[#d5e2d6] dark:border-[#1b3d2b] bg-white dark:bg-gradient-to-br dark:from-[#0c1e15] dark:to-[#06110b] shadow-sm dark:shadow-xl">
-              <h4 className="font-['Outfit'] font-semibold text-sm text-[#122016] dark:text-white mb-1.5">Stay Connected</h4>
-              <p className="text-[11px] text-[#556758] dark:text-slate-400 leading-relaxed mb-4">
-                Subscribe to our newsletter for updates and insights.
-              </p>
-              
-              <form onSubmit={handleSubscribe} className="relative flex items-center">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  required
-                  className="w-full bg-[#f4f7f2] dark:bg-[#05110a] border border-[#d5e2d6] dark:border-[#1f422e] rounded-full px-4 py-2.5 pr-12 text-xs text-[#14261a] dark:text-white placeholder-[#879b8c] dark:placeholder-slate-500 focus:outline-none focus:border-[#2d5a3c] dark:focus:border-[#a2d45e] transition-colors"
-                />
-                <button
-                  type="submit"
-                  aria-label="Subscribe"
-                  className="absolute right-1.5 w-8 h-8 rounded-full bg-[#1b3726] dark:bg-[#a2d45e] text-white dark:text-slate-950 flex items-center justify-center transition-transform hover:scale-105 shadow-md cursor-pointer"
-                >
-                  <ArrowRight size={14} />
-                </button>
-              </form>
-            </div>
-          </div>
-
         </div>
 
         {/* Bottom Copyright Bar */}

@@ -273,11 +273,12 @@ export default function ResearchPage() {
             </div>
 
             <div className="pt-6 relative z-10">
-              <Link href="/contact">
-                <button className="px-6 py-3 rounded-full bg-white dark:bg-[#154628] text-[#122016] dark:text-white hover:bg-slate-100 dark:hover:bg-[#1c5c34] text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-md cursor-pointer">
-                  <span>Collaborate With Us</span>
-                  <ArrowRight size={13} />
-                </button>
+              <Link
+                href="/contact"
+                className="px-6 py-3 rounded-full bg-white dark:bg-[#154628] text-[#122016] dark:text-white hover:bg-slate-100 dark:hover:bg-[#1c5c34] text-xs font-bold uppercase tracking-wider inline-flex items-center gap-2 transition-all shadow-md cursor-pointer"
+              >
+                <span>Collaborate With Us</span>
+                <ArrowRight size={13} />
               </Link>
             </div>
 
@@ -417,11 +418,12 @@ export default function ResearchPage() {
           </div>
 
           <div className="relative z-10 shrink-0">
-            <Link href="/contact">
-              <button className="px-7 py-3.5 rounded-full bg-[#1b3726] dark:bg-[#154628] hover:bg-[#254d35] dark:hover:bg-[#1c5c34] text-white text-xs font-bold tracking-wider flex items-center gap-2.5 transition-all shadow-md cursor-pointer">
-                <span>Submit Research Proposal</span>
-                <ArrowRight size={14} />
-              </button>
+            <Link
+              href="/contact"
+              className="px-7 py-3.5 rounded-full bg-[#1b3726] dark:bg-[#154628] hover:bg-[#254d35] dark:hover:bg-[#1c5c34] text-white text-xs font-bold tracking-wider inline-flex items-center gap-2.5 transition-all shadow-md cursor-pointer"
+            >
+              <span>Submit Research Proposal</span>
+              <ArrowRight size={14} />
             </Link>
           </div>
         </div>

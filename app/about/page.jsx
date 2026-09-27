@@ -42,7 +42,7 @@ export default function AboutPage() {
 
             {/* Ambient background glows (matching homepage) */}
             <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full animate-pulse duration-1000" />
+                <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#dbe9dd]/50 via-[#e4efe3]/30 to-transparent blur-[120px] rounded-full" />
                 <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#eef4ea]/50 to-transparent blur-3xl rounded-full" />
             </div>
@@ -957,11 +957,12 @@ export default function AboutPage() {
                                 Together we can create innovative learning solutions for a more sustainable world.
                             </p>
                         </div>
-                        <Link href="/contact" className="inline-flex shrink-0 group">
-                            <button className="px-4 py-2 rounded-full bg-white text-[#083a20] text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5 hover:bg-slate-100 hover:scale-105 active:scale-95 transition-all duration-300">
-                                <span>Get Involved</span>
-                                <ArrowRight size={8} className="group-hover:translate-x-0.5 transition-transform duration-300" />
-                            </button>
+                        <Link
+                            href="/contact"
+                            className="px-4 py-2 rounded-full bg-white text-[#083a20] text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-md inline-flex items-center gap-1.5 hover:bg-slate-100 hover:scale-105 active:scale-95 transition-all duration-300 shrink-0 group"
+                        >
+                            <span>Get Involved</span>
+                            <ArrowRight size={8} className="group-hover:translate-x-0.5 transition-transform duration-300" />
                         </Link>
                     </div>
 

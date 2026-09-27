@@ -26,17 +26,18 @@ import {
 import { getFromCache, fetchWithCache, prefetchEndpoint } from '../../lib/clientCache';
 
 export default function InitiativesPage() {
-  const [initiatives, setInitiatives] = useState(() => {
-    const cached = getFromCache('clese_initiatives_cache');
-    if (cached && Array.isArray(cached) && cached.length > 0) {
-      return cached;
-    }
-    return [];
-  });
-  const [loading, setLoading] = useState(initiatives.length === 0);
+  const [initiatives, setInitiatives] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
+
+    // Load from cache synchronously on client mount after hydration
+    const cached = getFromCache('clese_initiatives_cache');
+    if (cached && Array.isArray(cached) && cached.length > 0) {
+      setInitiatives(cached);
+      setLoading(false);
+    }
 
     fetchWithCache('/api/initiatives', 'clese_initiatives_cache')
       .then((data) => {
@@ -85,7 +86,7 @@ export default function InitiativesPage() {
 
       {/* Ambient background glows (matching About & Home pages) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full animate-pulse duration-1000" />
+        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#dbe9dd]/50 via-[#e4efe3]/30 to-transparent blur-[120px] rounded-full" />
         <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#eef4ea]/50 to-transparent blur-3xl rounded-full" />
       </div>
@@ -118,20 +119,22 @@ export default function InitiativesPage() {
               </p>
 
               <div className="pt-2 flex items-center gap-4">
-                <Link href="/contact" className="inline-flex group">
-                  <button className="px-7 py-3.5 rounded-full bg-gradient-to-b from-[#1b3726] to-[#11261a] hover:from-[#234631] hover:to-[#173323] text-white text-[11px] font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-[0_12px_28px_rgba(15,35,22,0.32),inset_0_1px_1px_rgba(255,255,255,0.25)] hover:scale-105 active:scale-95 cursor-pointer dark:bg-gradient-to-b dark:from-[#1b432a] dark:to-[#112c1b] dark:border dark:border-[#245437] hover:shadow-[0_16px_36px_rgba(15,35,22,0.45)]">
-                    <span>Request School Camp</span>
-                    <div className="w-5 h-5 rounded-full border border-white/35 flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-300">
-                      <ArrowRight size={10} className="text-white group-hover:text-[#11261a] group-hover:translate-x-0.5 transition-transform duration-300" />
-                    </div>
-                  </button>
+                <Link
+                  href="/contact"
+                  className="px-7 py-3.5 rounded-full bg-gradient-to-b from-[#1b3726] to-[#11261a] hover:from-[#234631] hover:to-[#173323] text-white text-[11px] font-bold uppercase tracking-wider inline-flex items-center gap-3 transition-all duration-300 shadow-[0_12px_28px_rgba(15,35,22,0.32),inset_0_1px_1px_rgba(255,255,255,0.25)] hover:scale-105 active:scale-95 cursor-pointer dark:bg-gradient-to-b dark:from-[#1b432a] dark:to-[#112c1b] dark:border dark:border-[#245437] hover:shadow-[0_16px_36px_rgba(15,35,22,0.45)] group"
+                >
+                  <span>Request School Camp</span>
+                  <div className="w-5 h-5 rounded-full border border-white/35 flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-300">
+                    <ArrowRight size={10} className="text-white group-hover:text-[#11261a] group-hover:translate-x-0.5 transition-transform duration-300" />
+                  </div>
                 </Link>
 
-                <a href="#initiatives-list" className="inline-flex group">
-                  <button className="px-6 py-3.5 rounded-full bg-white/70 hover:bg-white dark:bg-[#0b1c14] dark:hover:bg-[#11261a] backdrop-blur-xl border-[1.5px] border-white dark:border-[#183a27] shadow-[inset_0_1.5px_2px_rgba(255,255,255,1),0_8px_20px_rgba(0,0,0,0.04)] text-[#162d1f] dark:text-[#a2d45e] text-[11px] font-bold uppercase tracking-wider flex items-center gap-2.5 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer">
-                    <span>Explore Programmes</span>
-                    <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform duration-300" />
-                  </button>
+                <a
+                  href="#initiatives-list"
+                  className="px-6 py-3.5 rounded-full bg-white/70 hover:bg-white dark:bg-[#0b1c14] dark:hover:bg-[#11261a] backdrop-blur-xl border-[1.5px] border-white dark:border-[#183a27] shadow-[inset_0_1.5px_2px_rgba(255,255,255,1),0_8px_20px_rgba(0,0,0,0.04)] text-[#162d1f] dark:text-[#a2d45e] text-[11px] font-bold uppercase tracking-wider inline-flex items-center gap-2.5 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer group"
+                >
+                  <span>Explore Programmes</span>
+                  <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform duration-300" />
                 </a>
               </div>
             </div>
@@ -282,13 +285,14 @@ export default function InitiativesPage() {
             </div>
 
             <div className="relative z-10 shrink-0">
-              <Link href="/contact" className="inline-flex group">
-                <button className="px-7 py-3.5 rounded-full bg-gradient-to-b from-[#1b3726] to-[#11261a] hover:from-[#234631] hover:to-[#173323] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-[0_12px_28px_rgba(15,35,22,0.32),inset_0_1px_1px_rgba(255,255,255,0.25)] hover:scale-105 active:scale-95 cursor-pointer dark:bg-gradient-to-b dark:from-[#1b432a] dark:to-[#112c1b] dark:border dark:border-[#245437]">
-                  <span>Request Camp Partnership</span>
-                  <div className="w-5 h-5 rounded-full border border-white/35 flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-300">
-                    <ArrowRight size={10} className="text-white group-hover:text-[#11261a] group-hover:translate-x-0.5 transition-transform duration-300" />
-                  </div>
-                </button>
+              <Link
+                href="/contact"
+                className="px-7 py-3.5 rounded-full bg-gradient-to-b from-[#1b3726] to-[#11261a] hover:from-[#234631] hover:to-[#173323] text-white text-xs font-bold uppercase tracking-wider inline-flex items-center gap-3 transition-all duration-300 shadow-[0_12px_28px_rgba(15,35,22,0.32),inset_0_1px_1px_rgba(255,255,255,0.25)] hover:scale-105 active:scale-95 cursor-pointer dark:bg-gradient-to-b dark:from-[#1b432a] dark:to-[#112c1b] dark:border dark:border-[#245437] group"
+              >
+                <span>Request Camp Partnership</span>
+                <div className="w-5 h-5 rounded-full border border-white/35 flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-300">
+                  <ArrowRight size={10} className="text-white group-hover:text-[#11261a] group-hover:translate-x-0.5 transition-transform duration-300" />
+                </div>
               </Link>
             </div>
           </div>
@@ -320,18 +324,20 @@ export default function InitiativesPage() {
               </p>
 
               <div className="pt-2 flex items-center gap-2.5 flex-wrap">
-                <Link href="/contact" className="inline-flex group">
-                  <button className="px-5 py-2.5 rounded-full bg-[#1b3726] hover:bg-[#11261a] text-white text-xs font-bold tracking-wide flex items-center gap-2 shadow-md hover:shadow-lg dark:bg-[#124225] dark:hover:bg-[#1a5c34] transition-all duration-300 hover:scale-105 active:scale-95">
-                    <span>Request School Camp</span>
-                    <ArrowRight size={12} className="text-white group-hover:translate-x-1 transition-transform duration-300" />
-                  </button>
+                <Link
+                  href="/contact"
+                  className="px-5 py-2.5 rounded-full bg-[#1b3726] hover:bg-[#11261a] text-white text-xs font-bold tracking-wide inline-flex items-center gap-2 shadow-md hover:shadow-lg dark:bg-[#124225] dark:hover:bg-[#1a5c34] transition-all duration-300 hover:scale-105 active:scale-95 group"
+                >
+                  <span>Request School Camp</span>
+                  <ArrowRight size={12} className="text-white group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
 
-                <a href="#mobile-initiatives-list" className="inline-flex group">
-                  <button className="px-4 py-2.5 rounded-full bg-white hover:bg-[#f8faf8] dark:bg-[#0b1c14] dark:hover:bg-[#11261a] border border-[#e2eae4] dark:border-[#183a27] text-[#162d1f] dark:text-[#a2d45e] text-xs font-bold tracking-wide flex items-center gap-1.5 shadow-sm transition-all duration-300 hover:scale-105 active:scale-95">
-                    <span>Explore Programmes</span>
-                    <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform duration-300" />
-                  </button>
+                <a
+                  href="#mobile-initiatives-list"
+                  className="px-4 py-2.5 rounded-full bg-white hover:bg-[#f8faf8] dark:bg-[#0b1c14] dark:hover:bg-[#11261a] border border-[#e2eae4] dark:border-[#183a27] text-[#162d1f] dark:text-[#a2d45e] text-xs font-bold tracking-wide inline-flex items-center gap-1.5 shadow-sm transition-all duration-300 hover:scale-105 active:scale-95 group"
+                >
+                  <span>Explore Programmes</span>
+                  <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform duration-300" />
                 </a>
               </div>
             </div>
@@ -474,11 +480,12 @@ export default function InitiativesPage() {
             </div>
 
             <div className="self-end pt-0.5">
-              <Link href="/contact" className="inline-flex group">
-                <button className="px-4 py-2.5 rounded-full bg-[#1b3726] hover:bg-[#11261a] text-white text-xs font-bold tracking-wide flex items-center gap-1.5 shadow-md hover:scale-105 active:scale-95 transition-all">
-                  <span>Request Partnership</span>
-                  <ArrowRight size={11} className="text-white group-hover:translate-x-0.5 transition-transform" />
-                </button>
+              <Link
+                href="/contact"
+                className="px-4 py-2.5 rounded-full bg-[#1b3726] hover:bg-[#11261a] text-white text-xs font-bold tracking-wide inline-flex items-center gap-1.5 shadow-md hover:scale-105 active:scale-95 transition-all group"
+              >
+                <span>Request Partnership</span>
+                <ArrowRight size={11} className="text-white group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
           </div>

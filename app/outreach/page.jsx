@@ -1,12 +1,16 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Globe, Calendar, MapPin, Users, Sparkles, CheckCircle2, Mail, Leaf } from 'lucide-react';
 import { DEFAULT_OUTREACH, getStoredData } from '../../lib/data';
 
 export default function OutreachPage() {
-  const [outreachItems] = useState(getStoredData('outreach', DEFAULT_OUTREACH));
+  const [outreachItems, setOutreachItems] = useState(DEFAULT_OUTREACH);
   const [sliderIndex, setSliderIndex] = useState(0);
+
+  useEffect(() => {
+    setOutreachItems(getStoredData('outreach', DEFAULT_OUTREACH));
+  }, []);
 
   const eventsList = [
     {

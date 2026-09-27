@@ -193,21 +193,6 @@ export default function AdminDashboardPage() {
           </div>
         </Link>
 
-        {/* Metric 4: Database Status */}
-        <div className="p-6 rounded-[2rem] bg-white border border-[#e2ece3] shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex items-center gap-4 group hover:-translate-y-1 transition-all duration-300">
-          <div className="w-14 h-14 rounded-2xl bg-[#eef5ee] border border-[#d6e6d8] flex items-center justify-center text-[#2d5a3c] shrink-0 group-hover:scale-105 transition-transform">
-            <Database size={24} strokeWidth={1.75} />
-          </div>
-          <div>
-            <span className="text-[11px] font-bold text-[#627766] uppercase tracking-wider block">Database Status</span>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-sm font-bold text-[#142919]">PostgreSQL Live</span>
-            </div>
-            <span className="text-[10px] text-[#6e8574] font-medium block mt-0.5">SSL Secure Connection</span>
-          </div>
-        </div>
-
       </div>
 
       {/* ========================================================================= */}
@@ -222,7 +207,6 @@ export default function AdminDashboardPage() {
               Management Modules
             </h2>
           </div>
-          <span className="text-xs font-semibold text-[#667d6c]">Real-time synchronization enabled</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -350,94 +334,10 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          {/* Card 4: Featured Initiatives & Page Settings */}
-          <div className="rounded-[2.2rem] bg-white border border-[#e2ece3] p-6 sm:p-7 flex flex-col justify-between hover:border-[#2d5a3c]/60 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(20,40,25,0.06)] hover:-translate-y-1.5 transition-all duration-300 group">
-            <div className="space-y-3.5">
-              <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-[#eef5ee] border border-[#d6e6d8] flex items-center justify-center text-[#2d5a3c] group-hover:scale-105 transition-transform">
-                  <Layers size={22} strokeWidth={1.5} />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#eef5ee] text-[#2d5a3c] border border-[#d6e6d8]">
-                  Metrics
-                </span>
-              </div>
-
-              <h3 className="text-xl font-serif font-normal text-[#122016] group-hover:text-[#2d5a3c] transition-colors leading-tight">
-                Initiatives &amp; Hero
-              </h3>
-
-              <p className="text-xs text-[#485e4d] leading-relaxed font-normal">
-                Customize the auto-scrolling Initiatives carousel, campus banner imagery, and live student impact counters.
-              </p>
-            </div>
-
-            <div className="pt-5 border-t border-[#edf3ee] mt-5 flex items-center gap-2">
-              <Link
-                href="/admin/events"
-                className="flex-1 py-2.5 rounded-xl bg-[#f4f7f2] hover:bg-[#eaf1e5] text-[#1b3726] border border-[#d8e5da] text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-1.5 transition-all"
-              >
-                <Settings size={13} className="text-[#2d5a3c]" />
-                <span>Configure</span>
-              </Link>
-
-              <Link
-                href="/initiatives"
-                target="_blank"
-                className="p-2.5 rounded-xl bg-[#f4f7f2] hover:bg-[#eaf1e5] text-[#2d4032] border border-[#d8e5da] transition-colors"
-                title="View Public Initiatives Page"
-              >
-                <ExternalLink size={14} />
-              </Link>
-            </div>
-          </div>
-
         </div>
 
       </div>
 
-      {/* ========================================================================= */}
-      {/* 4. SECURITY & ENVIRONMENT SUMMARY DOCK */}
-      {/* ========================================================================= */}
-      <div className="rounded-[2rem] bg-white border border-[#e2ece3] p-6 sm:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-[#eaf1eb]">
-          
-          <div className="flex items-center gap-3.5 pr-4">
-            <ShieldCheck size={28} className="text-[#2d5a3c] shrink-0" />
-            <div>
-              <span className="text-[11px] font-bold text-[#5c7361] uppercase tracking-wider block">Security Protocol</span>
-              <span className="text-xs font-bold text-[#142618]">HTTP-Only Token Auth</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3.5 sm:pl-6 pr-4 pt-4 sm:pt-0">
-            <Building size={28} className="text-[#2d5a3c] shrink-0" />
-            <div>
-              <span className="text-[11px] font-bold text-[#5c7361] uppercase tracking-wider block">Campus Facility</span>
-              <span className="text-xs font-bold text-[#142618]">Kariavattom Campus</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3.5 sm:pl-6 pr-4 pt-4 sm:pt-0">
-            <CheckCircle2 size={28} className="text-[#2d5a3c] shrink-0" />
-            <div>
-              <span className="text-[11px] font-bold text-[#5c7361] uppercase tracking-wider block">System Status</span>
-              <span className="text-xs font-bold text-emerald-700">All Modules Operational</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3.5 sm:pl-6 pt-4 sm:pt-0">
-            <Globe size={28} className="text-[#2d5a3c] shrink-0" />
-            <div>
-              <span className="text-[11px] font-bold text-[#5c7361] uppercase tracking-wider block">Public Preview</span>
-              <Link href="/" target="_blank" className="text-xs font-bold text-[#2d5a3c] hover:underline flex items-center gap-1">
-                <span>View Live University Site</span>
-                <ExternalLink size={12} />
-              </Link>
-            </div>
-          </div>
-
-        </div>
-      </div>
 
     </div>
   );

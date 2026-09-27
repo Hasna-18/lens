@@ -25,8 +25,33 @@ import {
   ChevronRight,
   Loader2,
   Star,
-  Mic
+  Mic,
+  X,
+  AlertCircle
 } from 'lucide-react';
+
+const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+const formatDateDDMMYYYY = (day, monthStr, year) => {
+  if (!day && !monthStr && !year) return '';
+  let mIdx = MONTHS.indexOf(String(monthStr).toUpperCase().trim());
+  let mm = '';
+  if (mIdx !== -1) {
+    mm = String(mIdx + 1).padStart(2, '0');
+  } else {
+    const numM = parseInt(monthStr, 10);
+    if (!isNaN(numM) && numM >= 1 && numM <= 12) {
+      mm = String(numM).padStart(2, '0');
+    } else {
+      mm = '01';
+    }
+  }
+  const dNum = parseInt(String(day).replace(/[^\d]/g, ''), 10);
+  const dd = isNaN(dNum) ? String(day || '01').padStart(2, '0') : String(dNum).padStart(2, '0');
+  const yNum = parseInt(String(year).replace(/[^\d]/g, ''), 10);
+  const yyyy = isNaN(yNum) ? String(year || '2025') : String(yNum);
+  return `${dd}/${mm}/${yyyy}`;
+};
 
 export default function EventDetailPage({ params }) {
   const resolvedParams = params && typeof params.then === 'function' ? use(params) : params;
@@ -38,6 +63,39 @@ export default function EventDetailPage({ params }) {
 
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+
+  // Registration Modal State
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [registrationForm, setRegistrationForm] = useState({ name: '', phone: '', dob: '', institution: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleRegisterSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/events/${encodeURIComponent(eventSlug)}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registrationForm)
+      });
+      if (res.ok) {
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsRegisterModalOpen(false);
+          setIsSuccess(false);
+          setRegistrationForm({ name: '', phone: '', dob: '', institution: '' });
+        }, 3000);
+      } else {
+        alert("Registration failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Error registering:", err);
+      alert("Network error. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -113,7 +171,7 @@ export default function EventDetailPage({ params }) {
   }
 
   const details = event.details || {};
-  
+
   // Safe defaults if details are completely empty
   const time = details.time || 'TBA';
   const venue = details.venue || 'TBA';
@@ -145,7 +203,7 @@ export default function EventDetailPage({ params }) {
 
       {/* Ambient Background Glows */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full animate-pulse duration-1000" />
+        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#dbe9dd]/50 via-[#e4efe3]/30 to-transparent blur-[120px] rounded-full" />
         <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#eef4ea]/50 to-transparent blur-3xl rounded-full" />
       </div>
@@ -153,98 +211,132 @@ export default function EventDetailPage({ params }) {
       {/* ============================================================ */}
       {/* 1. HERO SECTION WITH BLENDED IMAGE */}
       {/* ============================================================ */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        
-        {/* Natural Environment Blend Container */}
-        <div className="absolute top-0 right-0 w-full lg:w-[62%] xl:w-[56%] h-[760px] sm:h-[840px] pointer-events-none z-0 overflow-hidden select-none">
+      <div className="relative w-full overflow-hidden">
+
+        {/* Natural Environment Blend Container (Full Bleed Right) */}
+        <div
+          className="absolute top-0 right-0 h-full min-h-[520px] lg:h-[620px] xl:h-[670px] pointer-events-none z-0 overflow-hidden select-none hidden lg:block rounded-l-[3rem] transition-all duration-300"
+          style={{ width: `${heroSettings.widthPercent}%` }}
+        >
           <img
             src={event.imageUrl || "/events/conference.jpg"}
             alt={event.title || "Event Image"}
-            className="w-full h-full object-cover object-center lg:object-right-top scale-[1.04] transform-gpu transition-transform duration-1000 ease-out"
+            className="w-full h-full object-cover"
+            style={{
+              objectPosition: heroSettings.objectPosition,
+              transform: `scale(${heroSettings.scale / 100})`,
+              opacity: heroSettings.opacity / 100,
+              transition: 'all 0.2s ease-out'
+            }}
             onError={(e) => { e.currentTarget.src = "/events/conference.jpg"; }}
           />
           {/* Soft Organic Fade Masks */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/85 dark:via-[#031008]/85 via-[20%] to-transparent to-[48%] w-full h-full hidden lg:block" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/80 dark:via-[#031008]/85 via-[30%] to-transparent w-full h-full block lg:hidden" />
-          <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/60 dark:via-[#031008]/60 to-transparent" />
-          <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#fcfdfa] dark:from-[#031008] to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/90 dark:via-[#031008]/90 via-[15%] to-transparent to-[50%] w-full h-full pointer-events-none" />
+          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#fcfdfa] dark:from-[#031008] to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#fcfdfa] dark:from-[#031008] to-transparent pointer-events-none" />
         </div>
 
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 min-h-[500px] lg:min-h-[600px] items-center pb-8 lg:pb-0">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
 
-          <div className="lg:col-span-8 space-y-6 lg:pr-8 pt-4">
-            
-            {/* Breadcrumb Navigation */}
-            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#485b4d] dark:text-slate-400">
-              <Leaf size={14} className="text-[#2d5a3c] dark:text-[#a2d45e] fill-[#2d5a3c] dark:fill-[#a2d45e]" />
-              <Link href="/" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">Home</Link>
-              <span className="text-[#879b8c] dark:text-slate-500">&gt;</span>
-              <Link href="/events" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">Events</Link>
-              <span className="text-[#879b8c] dark:text-slate-500">&gt;</span>
-              <span className="text-[#1b3726] dark:text-[#a2d45e] font-bold line-clamp-1 max-w-[200px] sm:max-w-xs">{event.title}</span>
+          {/* Mobile View Hero Banner (when showOnMobile is enabled) */}
+          {heroSettings.showOnMobile && (
+            <div className="lg:hidden w-full h-52 sm:h-64 rounded-3xl overflow-hidden mb-5 border border-slate-200 dark:border-slate-800 shadow-sm relative pt-4">
+              <img
+                src={event.imageUrl || "/events/conference.jpg"}
+                alt={event.title}
+                className="w-full h-full object-cover"
+                style={{
+                  objectPosition: heroSettings.objectPosition,
+                  transform: `scale(${heroSettings.scale / 100})`,
+                  opacity: heroSettings.opacity / 100
+                }}
+                onError={(e) => { e.currentTarget.src = "/events/conference.jpg"; }}
+              />
             </div>
+          )}
 
-            {/* Category Pill Tag */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#eaf1e4] dark:bg-[#11261a] border border-[#d2e0d3] dark:border-[#1e422c] text-[#2d5a3c] dark:text-[#a2d45e] text-[10.5px] font-bold uppercase tracking-widest shadow-xs">
-              <Sparkles size={13} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-              <span>{event.category || 'EVENT'}</span>
-            </div>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 min-h-[500px] lg:min-h-[600px] items-center pb-8 lg:pb-0">
 
-            {/* Title */}
-            <h1 className="text-3xl sm:text-4xl lg:text-[3.25rem] font-normal text-[#131f17] dark:text-white leading-[1.12] tracking-tight font-serif max-w-2xl">
-              {event.title}
-            </h1>
+            <div className="lg:col-span-8 space-y-6 lg:pr-8 pt-4">
 
-            {event.subtitle && (
-              <p className="text-xl sm:text-2xl font-serif italic text-[#2d5a3c] dark:text-[#a2d45e]">
-                {event.subtitle}
+              {/* Breadcrumb Navigation */}
+              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#485b4d] dark:text-slate-400">
+                <Leaf size={14} className="text-[#2d5a3c] dark:text-[#a2d45e] fill-[#2d5a3c] dark:fill-[#a2d45e]" />
+                <Link href="/" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">Home</Link>
+                <span className="text-[#879b8c] dark:text-slate-500">&gt;</span>
+                <Link href="/events" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">Events</Link>
+                <span className="text-[#879b8c] dark:text-slate-500">&gt;</span>
+                <span className="text-[#1b3726] dark:text-[#a2d45e] font-bold line-clamp-1 max-w-[200px] sm:max-w-xs">{event.title}</span>
+              </div>
+
+              {/* Category Pill Tag */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#eaf1e4] dark:bg-[#11261a] border border-[#d2e0d3] dark:border-[#1e422c] text-[#2d5a3c] dark:text-[#a2d45e] text-[10.5px] font-bold uppercase tracking-widest shadow-xs">
+                <Sparkles size={13} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
+                <span>{event.category || 'EVENT'}</span>
+              </div>
+
+              {/* Title */}
+              <h1 className="text-3xl sm:text-4xl lg:text-[3.25rem] font-normal text-[#131f17] dark:text-white leading-[1.12] tracking-tight font-serif max-w-2xl">
+                {event.title}
+              </h1>
+
+              {event.subtitle && (
+                <p className="text-xl sm:text-2xl font-serif italic text-[#2d5a3c] dark:text-[#a2d45e]">
+                  {event.subtitle}
+                </p>
+              )}
+
+              {/* Truncated abstract for hero if aboutText is long */}
+              <p className="text-[#405245] dark:text-slate-300 text-sm leading-[1.7] max-w-xl font-normal line-clamp-3">
+                {aboutText}
               </p>
-            )}
 
-            {/* Truncated abstract for hero if aboutText is long */}
-            <p className="text-[#405245] dark:text-slate-300 text-sm leading-[1.7] max-w-xl font-normal line-clamp-3">
-              {aboutText}
-            </p>
+              {/* Clean Inline Metadata Row */}
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-[#526656] dark:text-slate-300 font-medium pt-2 max-w-xl">
+                <div className="flex items-center gap-2">
+                  <Calendar size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
+                  <span className="font-semibold text-[#19241c] dark:text-white">
+                    {formatDateDDMMYYYY(event.dateDay, event.dateMonth, event.dateYear)}
+                  </span>
+                </div>
+                <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
+                <div className="flex items-center gap-2">
+                  <Clock size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
+                  <span>{time}</span>
+                </div>
+                <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
+                <div className="flex items-center gap-2">
+                  <MapPin size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
+                  <span className="truncate max-w-[160px] sm:max-w-xs">{venue}</span>
+                </div>
+                <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
+                <div className="flex items-center gap-2">
+                  <Users size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
+                  <span>{mode}</span>
+                </div>
+              </div>
 
-            {/* Clean Inline Metadata Row */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-[#526656] dark:text-slate-300 font-medium pt-2 max-w-xl">
-              <div className="flex items-center gap-2">
-                <Calendar size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                <span className="font-semibold text-[#19241c] dark:text-white">{event.dateDay} {event.dateMonth} {event.dateYear}</span>
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-4 pt-2">
+                <button
+                  onClick={() => setIsRegisterModalOpen(true)}
+                  className="px-7 py-3.5 rounded-full bg-gradient-to-b from-[#1b3726] to-[#11261a] hover:from-[#234631] hover:to-[#173323] text-white text-[11.5px] font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-[0_8px_20px_rgba(15,35,22,0.25)] hover:scale-105 active:scale-95 group dark:bg-gradient-to-b dark:from-[#1b432a] dark:to-[#112c1b] dark:border dark:border-[#245437] cursor-pointer"
+                >
+                  <span>Register Now</span>
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </button>
+
+                <button className="px-6 py-3.5 rounded-full bg-white/80 dark:bg-[#0b1c14]/80 backdrop-blur-sm border border-[#c1d1c4] dark:border-[#183a27] hover:bg-[#f3f6f1] dark:hover:bg-[#11261a] text-[#1b3726] dark:text-[#a2d45e] text-[11.5px] font-bold tracking-wider flex items-center gap-2.5 transition-all duration-300 shadow-xs hover:scale-105 active:scale-95 cursor-pointer">
+                  <span>Add to Calendar</span>
+                  <CalendarPlus size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
+                </button>
               </div>
-              <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
-              <div className="flex items-center gap-2">
-                <Clock size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                <span>{time}</span>
-              </div>
-              <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
-              <div className="flex items-center gap-2">
-                <MapPin size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                <span className="truncate max-w-[160px] sm:max-w-xs">{venue}</span>
-              </div>
-              <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
-              <div className="flex items-center gap-2">
-                <Users size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                <span>{mode}</span>
-              </div>
+
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <button className="px-7 py-3.5 rounded-full bg-gradient-to-b from-[#1b3726] to-[#11261a] hover:from-[#234631] hover:to-[#173323] text-white text-[11.5px] font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-[0_8px_20px_rgba(15,35,22,0.25)] hover:scale-105 active:scale-95 group dark:bg-gradient-to-b dark:from-[#1b432a] dark:to-[#112c1b] dark:border dark:border-[#245437] cursor-pointer">
-                <span>Register Now</span>
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-              </button>
-
-              <button className="px-6 py-3.5 rounded-full bg-white/80 dark:bg-[#0b1c14]/80 backdrop-blur-sm border border-[#c1d1c4] dark:border-[#183a27] hover:bg-[#f3f6f1] dark:hover:bg-[#11261a] text-[#1b3726] dark:text-[#a2d45e] text-[11.5px] font-bold tracking-wider flex items-center gap-2.5 transition-all duration-300 shadow-xs hover:scale-105 active:scale-95 cursor-pointer">
-                <span>Add to Calendar</span>
-                <CalendarPlus size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-              </button>
-            </div>
-
           </div>
         </div>
       </div>
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4">
         <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#d2e0d3] dark:via-[#183a27] to-transparent opacity-80" />
@@ -320,7 +412,7 @@ export default function EventDetailPage({ params }) {
 
               <div className="px-7 pb-7 space-y-5">
                 {[
-                  { icon: Calendar, label: 'Dates', value: `${event.dateDay} ${event.dateMonth} ${event.dateYear}` },
+                  { icon: Calendar, label: 'Dates', value: formatDateDDMMYYYY(event.dateDay, event.dateMonth, event.dateYear) },
                   { icon: Clock, label: 'Time', value: time },
                   { icon: MapPin, label: 'Venue', value: venue },
                   { icon: Users, label: 'Mode', value: mode },
@@ -342,7 +434,10 @@ export default function EventDetailPage({ params }) {
                 ))}
 
                 <div className="pt-4 border-t border-[#f0f4f1] dark:border-[#183a27]">
-                  <button className="w-full py-4 rounded-full bg-[#1b3726] dark:bg-[#154628] hover:bg-[#234631] dark:hover:bg-[#1c5c34] text-white text-[12px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_8px_20px_rgba(27,55,38,0.2)] cursor-pointer">
+                  <button
+                    onClick={() => setIsRegisterModalOpen(true)}
+                    className="w-full py-4 rounded-full bg-[#1b3726] dark:bg-[#154628] hover:bg-[#234631] dark:hover:bg-[#1c5c34] text-white text-[12px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_8px_20px_rgba(27,55,38,0.2)] cursor-pointer"
+                  >
                     <span>Register Now</span>
                     <ArrowRight size={14} />
                   </button>
@@ -388,6 +483,104 @@ export default function EventDetailPage({ params }) {
           </div>
         </div>
       </div>
+
+      {/* Registration Modal */}
+      {isRegisterModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => !isSubmitting && !isSuccess && setIsRegisterModalOpen(false)} />
+          <div className="relative bg-white dark:bg-[#0b1c14] w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden border border-[#e8efe9] dark:border-[#183a27] animate-in fade-in zoom-in-95 duration-200">
+
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 pb-4 border-b border-[#f0f4f1] dark:border-[#183a27]">
+              <h3 className="text-xl font-serif font-bold text-[#122016] dark:text-white">Register for Event</h3>
+              {!isSubmitting && !isSuccess && (
+                <button onClick={() => setIsRegisterModalOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors cursor-pointer">
+                  <X size={20} />
+                </button>
+              )}
+            </div>
+
+            {/* Body */}
+            <div className="p-6">
+              {isSuccess ? (
+                <div className="text-center py-8 space-y-4">
+                  <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle2 size={32} className="text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <h4 className="text-xl font-bold text-[#19241c] dark:text-white">Registered Successfully!</h4>
+                  <p className="text-sm text-[#556758] dark:text-slate-400">Thank you for registering. We look forward to seeing you at the event.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleRegisterSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-[#445548] dark:text-slate-300 mb-1.5 uppercase tracking-wide">Full Name</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="John Doe"
+                      value={registrationForm.name}
+                      onChange={(e) => setRegistrationForm({ ...registrationForm, name: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-[#f9faf7] dark:bg-[#05110a] border border-[#e8efe9] dark:border-[#183a27] text-sm text-[#19241c] dark:text-white outline-none focus:border-[#2d5a3c] focus:ring-1 focus:ring-[#2d5a3c] transition-all"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-[#445548] dark:text-slate-300 mb-1.5 uppercase tracking-wide">Phone Number</label>
+                      <input
+                        required
+                        type="tel"
+                        placeholder="+1 234 567 890"
+                        value={registrationForm.phone}
+                        onChange={(e) => setRegistrationForm({ ...registrationForm, phone: e.target.value })}
+                        className="w-full px-4 py-3 rounded-xl bg-[#f9faf7] dark:bg-[#05110a] border border-[#e8efe9] dark:border-[#183a27] text-sm text-[#19241c] dark:text-white outline-none focus:border-[#2d5a3c] focus:ring-1 focus:ring-[#2d5a3c] transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-[#445548] dark:text-slate-300 mb-1.5 uppercase tracking-wide">Date of Birth</label>
+                      <input
+                        required
+                        type="date"
+                        value={registrationForm.dob}
+                        onChange={(e) => setRegistrationForm({ ...registrationForm, dob: e.target.value })}
+                        className="w-full px-4 py-3 rounded-xl bg-[#f9faf7] dark:bg-[#05110a] border border-[#e8efe9] dark:border-[#183a27] text-sm text-[#19241c] dark:text-white outline-none focus:border-[#2d5a3c] focus:ring-1 focus:ring-[#2d5a3c] transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#445548] dark:text-slate-300 mb-1.5 uppercase tracking-wide">College / School Name</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="University of Science..."
+                      value={registrationForm.institution}
+                      onChange={(e) => setRegistrationForm({ ...registrationForm, institution: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-[#f9faf7] dark:bg-[#05110a] border border-[#e8efe9] dark:border-[#183a27] text-sm text-[#19241c] dark:text-white outline-none focus:border-[#2d5a3c] focus:ring-1 focus:ring-[#2d5a3c] transition-all"
+                    />
+                    <p className="text-[10px] text-[#6c7d70] mt-1">If you are a student, please provide your institution's name.</p>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full py-3.5 rounded-xl bg-[#1b3726] hover:bg-[#234631] dark:bg-[#154628] dark:hover:bg-[#1c5c34] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                      {isSubmitting ? (
+                        <><Loader2 size={16} className="animate-spin" /> Processing...</>
+                      ) : (
+                        <><CheckCircle2 size={16} /> Complete Registration</>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );

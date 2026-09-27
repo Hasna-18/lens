@@ -40,14 +40,8 @@ function formatEventsList(data) {
 }
 
 export default function EventsPage() {
-  const [events, setEvents] = useState(() => {
-    const cached = getFromCache('clese_events_cache');
-    if (cached && Array.isArray(cached) && cached.length > 0) {
-      return formatEventsList(cached);
-    }
-    return [];
-  });
-  const [loading, setLoading] = useState(events.length === 0);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -56,6 +50,13 @@ export default function EventsPage() {
 
   useEffect(() => {
     let isMounted = true;
+
+    // Load from cache synchronously on client mount after hydration
+    const cached = getFromCache('clese_events_cache');
+    if (cached && Array.isArray(cached) && cached.length > 0) {
+      setEvents(formatEventsList(cached));
+      setLoading(false);
+    }
 
     fetchWithCache('/api/events', 'clese_events_cache', formatEventsList)
       .then((formatted) => {
@@ -198,7 +199,7 @@ export default function EventsPage() {
 
       {/* Ambient Glows */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full animate-pulse duration-1000" />
+        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#dbe9dd]/50 via-[#e4efe3]/30 to-transparent blur-[120px] rounded-full" />
       </div>
 
@@ -229,11 +230,12 @@ export default function EventsPage() {
             </p>
 
             <div className="pt-0.5 sm:pt-2">
-              <a href="#events-section" className="inline-flex">
-                <button className="px-3.5 sm:px-7 py-2 sm:py-3.5 rounded-full bg-[#1b3726] hover:bg-[#254d35] text-white text-[10px] sm:text-[12px] font-bold tracking-wide flex items-center gap-1.5 sm:gap-3 transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 group cursor-pointer dark:bg-[#1b432a] dark:hover:bg-[#245437]">
-                  <span>Explore All Events</span>
-                  <ArrowRight size={12} className="group-hover:translate-x-1.5 transition-transform duration-300 sm:w-3.5 sm:h-3.5" />
-                </button>
+              <a
+                href="#events-section"
+                className="px-3.5 sm:px-7 py-2 sm:py-3.5 rounded-full bg-[#1b3726] hover:bg-[#254d35] text-white text-[10px] sm:text-[12px] font-bold tracking-wide inline-flex items-center gap-1.5 sm:gap-3 transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 group cursor-pointer dark:bg-[#1b432a] dark:hover:bg-[#245437]"
+              >
+                <span>Explore All Events</span>
+                <ArrowRight size={12} className="group-hover:translate-x-1.5 transition-transform duration-300 sm:w-3.5 sm:h-3.5" />
               </a>
             </div>
           </div>

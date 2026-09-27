@@ -9,6 +9,47 @@ import Link from 'next/link';
 import ImageUploader from '../../../components/admin/ImageUploader';
 import { slugify } from '../../../lib/slug';
 
+const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+const getIsoDate = (day, monthStr, year) => {
+  if (!day || !monthStr || !year) return '';
+  let mIdx = MONTHS.indexOf(String(monthStr).toUpperCase().trim());
+  if (mIdx === -1) {
+    const numM = parseInt(monthStr, 10);
+    if (!isNaN(numM) && numM >= 1 && numM <= 12) {
+      mIdx = numM - 1;
+    }
+  }
+  if (mIdx === -1) return '';
+  const mm = String(mIdx + 1).padStart(2, '0');
+  const dNum = parseInt(String(day).replace(/[^\d]/g, ''), 10);
+  const dd = isNaN(dNum) ? '01' : String(dNum).padStart(2, '0');
+  const yNum = parseInt(String(year).replace(/[^\d]/g, ''), 10);
+  const yyyy = isNaN(yNum) ? '2025' : String(yNum);
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+const formatDateDDMMYYYY = (day, monthStr, year) => {
+  if (!day && !monthStr && !year) return 'DD/MM/YYYY';
+  let mIdx = MONTHS.indexOf(String(monthStr).toUpperCase().trim());
+  let mm = '';
+  if (mIdx !== -1) {
+    mm = String(mIdx + 1).padStart(2, '0');
+  } else {
+    const numM = parseInt(monthStr, 10);
+    if (!isNaN(numM) && numM >= 1 && numM <= 12) {
+      mm = String(numM).padStart(2, '0');
+    } else {
+      mm = '01';
+    }
+  }
+  const dNum = parseInt(String(day).replace(/[^\d]/g, ''), 10);
+  const dd = isNaN(dNum) ? String(day || '01').padStart(2, '0') : String(dNum).padStart(2, '0');
+  const yNum = parseInt(String(year).replace(/[^\d]/g, ''), 10);
+  const yyyy = isNaN(yNum) ? String(year || '2025') : String(yNum);
+  return `${dd}/${mm}/${yyyy}`;
+};
+
 export default function AdminEventsPage() {
   const router = useRouter();
   const [authChecking, setAuthChecking] = useState(true);
@@ -468,13 +509,12 @@ export default function AdminEventsPage() {
 
       {/* Toast Notification Alert */}
       {toast.show && (
-        <div className={`fixed bottom-6 right-6 z-[60] px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border transition-all animate-bounce ${
-          toast.type === 'success' 
-            ? 'bg-emerald-50 text-emerald-900 border-emerald-300' 
-            : toast.type === 'error' 
-              ? 'bg-rose-50 text-rose-900 border-rose-300' 
+        <div className={`fixed bottom-6 right-6 z-[60] px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border transition-all animate-bounce ${toast.type === 'success'
+            ? 'bg-emerald-50 text-emerald-900 border-emerald-300'
+            : toast.type === 'error'
+              ? 'bg-rose-50 text-rose-900 border-rose-300'
               : 'bg-white text-slate-900 border-slate-300'
-        }`}>
+          }`}>
           {toast.type === 'success' ? <CheckCircle2 size={22} className="text-emerald-700" /> : <AlertCircle size={22} className="text-rose-600" />}
           <span className="font-bold text-sm">{toast.message}</span>
         </div>
@@ -579,7 +619,7 @@ export default function AdminEventsPage() {
 
         {/* CONTROLS BAR: CATEGORY PILLS & SEARCH */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-200">
-          
+
           {/* Categories Tab Selector */}
           <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 custom-scrollbar">
             {categories.map((cat) => {
@@ -589,11 +629,10 @@ export default function AdminEventsPage() {
                 <button
                   key={cat.name}
                   onClick={() => setFilterCategory(cat.name)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
-                    isActive
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${isActive
                       ? 'bg-[#2d5a3c] text-white shadow-xs'
                       : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:bg-slate-100/70'
-                  }`}
+                    }`}
                 >
                   <Icon size={14} className={isActive ? 'text-white' : 'text-[#2d5a3c]'} />
                   <span>{cat.name}</span>
@@ -707,41 +746,39 @@ export default function AdminEventsPage() {
                     />
                   </div>
 
-                  {/* Dates Row */}
-                  <div className="grid grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">Day</label>
-                      <input
-                        type="text"
-                        required
-                        value={eventForm.dateDay}
-                        onChange={(e) => setEventForm({ ...eventForm, dateDay: e.target.value })}
-                        placeholder="15"
-                        className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none text-center"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">Month</label>
-                      <input
-                        type="text"
-                        required
-                        value={eventForm.dateMonth}
-                        onChange={(e) => setEventForm({ ...eventForm, dateMonth: e.target.value.toUpperCase() })}
-                        placeholder="MAR"
-                        className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none text-center uppercase"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">Year</label>
-                      <input
-                        type="text"
-                        required
-                        value={eventForm.dateYear}
-                        onChange={(e) => setEventForm({ ...eventForm, dateYear: e.target.value })}
-                        placeholder="2025"
-                        className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none text-center"
-                      />
-                    </div>
+                  {/* Event Date Picker (DD/MM/YYYY) */}
+                  <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5"><Calendar size={13} className="text-[#2d5a3c]" /> Event Date (DD/MM/YYYY)</span>
+                      <span className="font-mono text-[#2d5a3c] text-xs font-bold bg-white px-2 py-0.5 rounded border border-slate-200">
+                        {formatDateDDMMYYYY(eventForm.dateDay, eventForm.dateMonth, eventForm.dateYear)}
+                      </span>
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      value={getIsoDate(eventForm.dateDay, eventForm.dateMonth, eventForm.dateYear)}
+                      onChange={(e) => {
+                        const isoVal = e.target.value;
+                        if (!isoVal) {
+                          setEventForm({ ...eventForm, dateDay: '', dateMonth: '', dateYear: '' });
+                          return;
+                        }
+                        const [year, monthNum, dayNum] = isoVal.split('-');
+                        if (year && monthNum && dayNum) {
+                          const monthIdx = parseInt(monthNum, 10) - 1;
+                          const day = String(parseInt(dayNum, 10));
+                          const month = MONTHS[monthIdx] || 'JAN';
+                          setEventForm({
+                            ...eventForm,
+                            dateDay: day,
+                            dateMonth: month,
+                            dateYear: year
+                          });
+                        }
+                      }}
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800 focus:border-[#2d5a3c] outline-none cursor-pointer"
+                    />
                   </div>
 
                   {/* Category & Filter Type */}
@@ -907,7 +944,7 @@ export default function AdminEventsPage() {
                     {/* Mobile Date Header */}
                     <div className="sm:hidden w-full flex items-center justify-between border-b border-slate-100 pb-2 mb-1 pr-36">
                       <span className="text-xs font-bold text-[#2d5a3c] flex items-center gap-1">
-                        <Calendar size={14} /> {evt.dateDay} {evt.dateMonth} {evt.dateYear}
+                        <Calendar size={14} /> {formatDateDDMMYYYY(evt.dateDay, evt.dateMonth, evt.dateYear)}
                       </span>
                     </div>
 
@@ -925,13 +962,17 @@ export default function AdminEventsPage() {
 
                     {/* Content */}
                     <div className="flex-1 py-0.5 w-full flex flex-col justify-center pr-2 relative z-10">
-                      <div className="flex items-center gap-2 mb-1.5">
+                      <div className="flex flex-wrap items-center gap-2 mb-1.5">
                         <span className="inline-flex px-2.5 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-[#2d5a3c] text-[10px] font-extrabold uppercase tracking-wider">
                           {evt.category}
                         </span>
                         <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
                           Tab: {evt.filterType}
                         </span>
+                        <Link href={`/admin/events/${evt.slug || evt.id}#registrations`} className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors cursor-pointer text-[10px] font-bold">
+                          <Users size={12} />
+                          <span>{evt.registrationCount || 0} Registrations</span>
+                        </Link>
                       </div>
                       <h3 className="text-base sm:text-lg font-black text-slate-900 leading-snug mb-1 pr-36 group-hover:text-[#2d5a3c] transition-colors">
                         {evt.title}
@@ -1032,9 +1073,8 @@ export default function AdminEventsPage() {
                           <span
                             key={idx}
                             onClick={() => setCurrentInitiativeIndex(idx)}
-                            className={`block w-2 h-2 rounded-full cursor-pointer transition-all ${
-                              idx === currentInitiativeIndex ? 'bg-[#2d5a3c] w-4' : 'bg-slate-300 hover:bg-slate-400'
-                            }`}
+                            className={`block w-2 h-2 rounded-full cursor-pointer transition-all ${idx === currentInitiativeIndex ? 'bg-[#2d5a3c] w-4' : 'bg-slate-300 hover:bg-slate-400'
+                              }`}
                           />
                         ))}
                       </div>

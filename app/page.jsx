@@ -53,16 +53,16 @@ function formatEvents(data) {
 
 export default function HomePage() {
   const [currentEventIdx, setCurrentEventIdx] = useState(0);
-  const [upcomingEvents, setUpcomingEvents] = useState(() => {
-    const cached = getFromCache('clese_events_cache');
-    if (cached && Array.isArray(cached) && cached.length > 0) {
-      return formatEvents(cached);
-    }
-    return [];
-  });
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
+
+    // Load from cache synchronously on client mount after hydration
+    const cached = getFromCache('clese_events_cache');
+    if (cached && Array.isArray(cached) && cached.length > 0) {
+      setUpcomingEvents(formatEvents(cached));
+    }
 
     fetchWithCache('/api/events', 'clese_events_cache', formatEvents)
       .then((formatted) => {
@@ -90,7 +90,7 @@ export default function HomePage() {
       {/* Background Decorative Waves */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         {/* Top left soft yellow-green glow */}
-        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full animate-pulse duration-1000" />
+        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full" />
 
         {/* Bottom right soft green-blue glow */}
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#dbe9dd]/50 via-[#e4efe3]/30 to-transparent blur-[120px] rounded-full" />
@@ -146,18 +146,20 @@ export default function HomePage() {
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
-                <Link href="/about">
-                  <button className="px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full bg-[#083a20] hover:bg-[#114427] text-white text-[12px] sm:text-[14px] font-semibold tracking-wide flex items-center gap-2 sm:gap-3 transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 dark:bg-[#124225] dark:hover:bg-[#1a5c34] group cursor-pointer">
-                    <span>Explore Our Journey</span>
-                    <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform duration-300 sm:w-4 sm:h-4" />
-                  </button>
+                <Link
+                  href="/about"
+                  className="px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full bg-[#083a20] hover:bg-[#114427] text-white text-[12px] sm:text-[14px] font-semibold tracking-wide flex items-center gap-2 sm:gap-3 transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 dark:bg-[#124225] dark:hover:bg-[#1a5c34] group cursor-pointer"
+                >
+                  <span>Explore Our Journey</span>
+                  <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform duration-300 sm:w-4 sm:h-4" />
                 </Link>
 
-                <Link href="/events">
-                  <button className="px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full bg-white hover:bg-[#f8faf8] border border-[#d6e0d8] text-[#0a311b] text-[12px] sm:text-[14px] font-semibold tracking-wide flex items-center gap-2 sm:gap-3 transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 dark:bg-[#0c1f15] dark:hover:bg-[#122c1e] dark:border-[#1e422c] dark:text-[#a2d45e] group cursor-pointer">
-                    <span>Upcoming Events</span>
-                    <Calendar size={14} className="text-[#0a311b] dark:text-[#a2d45e] sm:w-4 sm:h-4 group-hover:rotate-12 transition-transform duration-300" />
-                  </button>
+                <Link
+                  href="/events"
+                  className="px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full bg-white hover:bg-[#f8faf8] border border-[#d6e0d8] text-[#0a311b] text-[12px] sm:text-[14px] font-semibold tracking-wide flex items-center gap-2 sm:gap-3 transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 dark:bg-[#0c1f15] dark:hover:bg-[#122c1e] dark:border-[#1e422c] dark:text-[#a2d45e] group cursor-pointer"
+                >
+                  <span>Upcoming Events</span>
+                  <Calendar size={14} className="text-[#0a311b] dark:text-[#a2d45e] sm:w-4 sm:h-4 group-hover:rotate-12 transition-transform duration-300" />
                 </Link>
               </div>
 
@@ -617,11 +619,12 @@ export default function HomePage() {
               We collaborate with institutions, educators and communities to create meaningful learning experiences and a brighter, sustainable future for all.
             </p>
             <div className="pt-1 sm:pt-2">
-              <Link href="/projects">
-                <button className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#1b3726] hover:bg-[#254c35] text-white text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 transition-all duration-300 shadow-sm hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer dark:bg-[#1b3726] dark:hover:bg-[#234631] dark:border dark:border-[#2d5c3f] group">
-                  <span>Our Initiatives</span>
-                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
-                </button>
+              <Link
+                href="/projects"
+                className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#1b3726] hover:bg-[#254c35] text-white text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider inline-flex items-center gap-2 transition-all duration-300 shadow-sm hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer dark:bg-[#1b3726] dark:hover:bg-[#234631] dark:border dark:border-[#2d5c3f] group"
+              >
+                <span>Our Initiatives</span>
+                <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
           </div>
