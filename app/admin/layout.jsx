@@ -14,7 +14,8 @@ import {
   Database,
   Building,
   CheckCircle2,
-  BookOpen
+  BookOpen,
+  Mail
 } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
@@ -116,6 +117,12 @@ export default function AdminLayout({ children }) {
       href: '/admin/news',
       icon: FileText,
       active: pathname.startsWith('/admin/news')
+    },
+    {
+      label: 'Enquiries',
+      href: '/admin/enquiries',
+      icon: Mail,
+      active: pathname.startsWith('/admin/enquiries')
     }
   ];
 

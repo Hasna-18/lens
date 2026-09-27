@@ -14,7 +14,8 @@ import {
   Home,
   ChevronLeft,
   ChevronRight,
-  Shield
+  Shield,
+  Sparkles
 } from 'lucide-react';
 import { getFromCache, fetchWithCache, prefetchEndpoint } from '../../lib/clientCache';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -48,6 +49,27 @@ export default function EventsPage() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
+  const [settings, setSettings] = useState({
+    stat1Number: '56+', stat1Text: 'Gifted Students<br/>Supported',
+    stat2Number: '44', stat2Text: 'Schools in<br/>Kerala',
+    stat3Number: '41', stat3Text: 'Educational<br/>Districts',
+    stat4Number: '6+', stat4Text: 'Programmes<br/>Organized',
+    featuredInitiatives: [],
+    newsletterTitle: 'Stay updated',
+    newsletterText: 'Subscribe to our newsletter for upcoming events, insights and more.'
+  });
+  const [currentInitiativeIndex, setCurrentInitiativeIndex] = useState(0);
+  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
+
+  useEffect(() => {
+    const inits = settings.featuredInitiatives || [];
+    if (inits.length <= 1 || isCarouselPaused) return;
+    const interval = setInterval(() => {
+      setCurrentInitiativeIndex((prev) => (prev + 1) % inits.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [settings.featuredInitiatives, isCarouselPaused]);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -71,6 +93,18 @@ export default function EventsPage() {
       .finally(() => {
         if (isMounted) setLoading(false);
       });
+
+    const cachedSettings = getFromCache('clese_event_settings_cache');
+    if (cachedSettings && cachedSettings.stat1Number) {
+      setSettings(prev => ({ ...prev, ...cachedSettings }));
+    }
+    fetchWithCache('/api/event-settings', 'clese_event_settings_cache', (d) => d)
+      .then((data) => {
+        if (isMounted && data && data.stat1Number) {
+          setSettings(prev => ({ ...prev, ...data }));
+        }
+      })
+      .catch((err) => console.warn('Event settings fetch notice:', err.message));
 
     // Prefetch other sections
     prefetchEndpoint('/api/initiatives', 'clese_initiatives_cache');
@@ -113,19 +147,19 @@ export default function EventsPage() {
   const filteredEvents = selectedCategory === 'All'
     ? events
     : events.filter(e => {
-        const cat = (e.category || '').toLowerCase();
-        const filt = (e.filterType || '').toLowerCase();
-        const tag = (e.categoryTag || '').toLowerCase();
-        const target = selectedCategory.toLowerCase();
+      const cat = (e.category || '').toLowerCase();
+      const filt = (e.filterType || '').toLowerCase();
+      const tag = (e.categoryTag || '').toLowerCase();
+      const target = selectedCategory.toLowerCase();
 
-        if (filt === target || cat === target || tag === target) return true;
-        if (target === 'conferences' && (cat.includes('conf') || filt.includes('conf'))) return true;
-        if (target === 'workshops' && (cat.includes('work') || filt.includes('work'))) return true;
-        if (target === 'training programmes' && (cat.includes('train') || cat.includes('course') || cat.includes('lect') || filt.includes('train') || filt.includes('course') || filt.includes('lect'))) return true;
-        if (target === 'stem labs' && (cat.includes('stem') || filt.includes('stem') || tag.includes('stem'))) return true;
-        if (target === 'outreach & community' && (cat.includes('outreach') || cat.includes('comm') || filt.includes('outreach') || filt.includes('comm'))) return true;
-        return false;
-      });
+      if (filt === target || cat === target || tag === target) return true;
+      if (target === 'conferences' && (cat.includes('conf') || filt.includes('conf'))) return true;
+      if (target === 'workshops' && (cat.includes('work') || filt.includes('work'))) return true;
+      if (target === 'training programmes' && (cat.includes('train') || cat.includes('course') || cat.includes('lect') || filt.includes('train') || filt.includes('course') || filt.includes('lect'))) return true;
+      if (target === 'stem labs' && (cat.includes('stem') || filt.includes('stem') || tag.includes('stem'))) return true;
+      if (target === 'outreach & community' && (cat.includes('outreach') || cat.includes('comm') || filt.includes('outreach') || filt.includes('comm'))) return true;
+      return false;
+    });
 
   // Dynamic pagination calculation
   const totalEvents = filteredEvents.length;
@@ -243,7 +277,7 @@ export default function EventsPage() {
           {/* Right: Floating 18+ Glass Badge */}
           <div className="col-span-5 sm:col-span-5 lg:col-span-5 relative flex items-start justify-end pt-1 sm:pt-6">
             <div className="relative w-full max-w-[130px] xs:max-w-[160px] sm:max-w-[220px]">
-              
+
               {/* Floating Glass Card */}
               <div className="bg-white/85 dark:bg-[#0b1c14]/85 backdrop-blur-xl p-2.5 xs:p-3 sm:p-5 rounded-2xl sm:rounded-[2rem] border border-white/95 dark:border-[#183a27] shadow-[0_10px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_20px_45px_rgba(0,0,0,0.5)] z-20 hover:-translate-y-1 transition-all duration-300 relative w-full">
 
@@ -282,15 +316,13 @@ export default function EventsPage() {
                 <div
                   key={i}
                   onClick={() => handleCategorySelect(cat.name)}
-                  className={`flex flex-col items-center text-center px-0.5 sm:px-3 py-1 sm:py-3.5 group transition-all duration-300 rounded-xl sm:rounded-2xl cursor-pointer ${
-                    isSelected 
-                      ? 'bg-[#f0f6ee] dark:bg-[#132c1e]' 
+                  className={`flex flex-col items-center text-center px-0.5 sm:px-3 py-1 sm:py-3.5 group transition-all duration-300 rounded-xl sm:rounded-2xl cursor-pointer ${isSelected
+                      ? 'bg-[#f0f6ee] dark:bg-[#132c1e]'
                       : 'hover:bg-white/60 dark:hover:bg-[#10271c]'
-                  }`}
+                    }`}
                 >
-                  <div className={`w-7 h-7 sm:w-12 sm:h-12 rounded-full bg-[#f4f8f3] dark:bg-[#11261a] border border-[#e2ede4] dark:border-[#1e422c] shadow-xs flex items-center justify-center text-[#1b3726] dark:text-[#a2d45e] mb-1 sm:mb-2 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 ${
-                    isSelected ? 'ring-2 ring-[#2d5a3c] dark:ring-[#a2d45e] bg-white dark:bg-[#1e422c]' : ''
-                  }`}>
+                  <div className={`w-7 h-7 sm:w-12 sm:h-12 rounded-full bg-[#f4f8f3] dark:bg-[#11261a] border border-[#e2ede4] dark:border-[#1e422c] shadow-xs flex items-center justify-center text-[#1b3726] dark:text-[#a2d45e] mb-1 sm:mb-2 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 ${isSelected ? 'ring-2 ring-[#2d5a3c] dark:ring-[#a2d45e] bg-white dark:bg-[#1e422c]' : ''
+                    }`}>
                     <Icon size={12} strokeWidth={1.5} className="sm:w-5 sm:h-5" />
                   </div>
 
@@ -308,185 +340,294 @@ export default function EventsPage() {
         </div>
 
         {/* ============================================================ */}
-        {/* 3. MAIN SECTION: EXPLORE WHAT'S NEXT & EVENTS TIMELINE */}
         {/* ============================================================ */}
-        <div id="events-section" className="relative z-20 space-y-3 sm:space-y-6 pt-1 sm:pt-2">
+        {/* 3. MAIN SECTION: EXPLORE WHAT'S NEXT & EVENTS TIMELINE (2-COLUMN) */}
+        {/* ============================================================ */}
+        <div id="events-section" className="relative z-20 grid grid-cols-1 lg:grid-cols-12 gap-8 pt-1 sm:pt-6">
+          <div className="lg:col-span-8 space-y-3 sm:space-y-6">
 
-          {/* Section Header */}
-          <div className="flex items-center justify-between pb-2 border-b border-[#e8efe9] dark:border-[#183a27]">
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#2d5a3c] dark:bg-[#a2d45e]" />
-                <span className="text-[8px] sm:text-[10.5px] font-bold tracking-[0.2em] text-[#4d5e50] dark:text-[#a2d45e] uppercase">
-                  UPCOMING EVENTS
-                </span>
+            {/* Section Header */}
+            <div className="flex items-center justify-between pb-2 border-b border-[#e8efe9] dark:border-[#183a27]">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#2d5a3c] dark:bg-[#a2d45e]" />
+                  <span className="text-[8px] sm:text-[10.5px] font-bold tracking-[0.2em] text-[#4d5e50] dark:text-[#a2d45e] uppercase">
+                    UPCOMING EVENTS
+                  </span>
+                </div>
+                <h2 className="text-xl xs:text-2xl sm:text-3xl lg:text-[2.6rem] font-serif font-normal text-[#142218] dark:text-white tracking-tight">
+                  Explore what's next.
+                </h2>
               </div>
-              <h2 className="text-xl xs:text-2xl sm:text-3xl lg:text-[2.6rem] font-serif font-normal text-[#142218] dark:text-white tracking-tight">
-                Explore what's next.
-              </h2>
+
+              <button
+                onClick={() => { setSelectedCategory('All'); setCurrentPage(1); }}
+                className="px-2.5 py-1 sm:px-4 sm:py-1.5 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[9.5px] sm:text-[12px] font-bold text-[#183120] dark:text-[#a2d45e] hover:bg-[#f0f6ee] dark:hover:bg-[#132c1e] flex items-center gap-1 sm:gap-1.5 transition-all shadow-xs group cursor-pointer"
+              >
+                <span>View All Events</span>
+                <ArrowRight size={11} className="group-hover:translate-x-1 transition-transform duration-300" />
+              </button>
             </div>
 
-            <button
-              onClick={() => { setSelectedCategory('All'); setCurrentPage(1); }}
-              className="px-2.5 py-1 sm:px-4 sm:py-1.5 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[9.5px] sm:text-[12px] font-bold text-[#183120] dark:text-[#a2d45e] hover:bg-[#f0f6ee] dark:hover:bg-[#132c1e] flex items-center gap-1 sm:gap-1.5 transition-all shadow-xs group cursor-pointer"
-            >
-              <span>View All Events</span>
-              <ArrowRight size={11} className="group-hover:translate-x-1 transition-transform duration-300" />
-            </button>
-          </div>
-
-          {/* Events List */}
-          <div className="space-y-2.5 sm:space-y-4">
-            {loading ? (
-              <div className="bg-white dark:bg-[#0b1c14] rounded-[2rem] border border-[#e8efe9] dark:border-[#183a27] p-12 text-center shadow-xs">
-                <LoadingSpinner message="Fetching upcoming events..." />
-              </div>
-            ) : paginatedEvents.length === 0 ? (
-              <div className="text-center py-12 bg-white dark:bg-[#0b1c14] rounded-[2rem] border border-[#e8efe9] dark:border-[#183a27] p-8 shadow-xs">
-                <div className="w-12 h-12 bg-[#f4f8f3] dark:bg-[#11261a] rounded-full flex items-center justify-center text-[#2d5a3c] dark:text-[#a2d45e] mx-auto mb-3 shadow-xs">
-                  <Calendar size={20} />
+            {/* Events List */}
+            <div className="space-y-2.5 sm:space-y-4">
+              {loading ? (
+                <div className="bg-white dark:bg-[#0b1c14] rounded-[2rem] border border-[#e8efe9] dark:border-[#183a27] p-12 text-center shadow-xs">
+                  <LoadingSpinner message="Fetching upcoming events..." />
                 </div>
-                <h3 className="text-base font-serif text-[#122016] dark:text-white mb-1">No events found in this category</h3>
-                <p className="text-xs text-[#526656] dark:text-slate-400 max-w-sm mx-auto mb-4">
-                  Check back soon for upcoming announcements in this category.
-                </p>
+              ) : paginatedEvents.length === 0 ? (
+                <div className="text-center py-12 bg-white dark:bg-[#0b1c14] rounded-[2rem] border border-[#e8efe9] dark:border-[#183a27] p-8 shadow-xs">
+                  <div className="w-12 h-12 bg-[#f4f8f3] dark:bg-[#11261a] rounded-full flex items-center justify-center text-[#2d5a3c] dark:text-[#a2d45e] mx-auto mb-3 shadow-xs">
+                    <Calendar size={20} />
+                  </div>
+                  <h3 className="text-base font-serif text-[#122016] dark:text-white mb-1">No events found in this category</h3>
+                  <p className="text-xs text-[#526656] dark:text-slate-400 max-w-sm mx-auto mb-4">
+                    Check back soon for upcoming announcements in this category.
+                  </p>
+                  <button
+                    onClick={() => { setSelectedCategory('All'); setCurrentPage(1); }}
+                    className="px-5 py-2 rounded-full bg-[#1b3726] dark:bg-[#154628] text-white text-[11px] font-bold uppercase tracking-wider hover:bg-[#244833] transition-colors cursor-pointer"
+                  >
+                    Show All Events
+                  </button>
+                </div>
+              ) : (
+                paginatedEvents.map((evt) => (
+                  <Link key={evt.id} href={`/events/${evt.slug || evt.id}`} className="block group">
+                    <div className="flex items-center gap-2 sm:gap-6">
+
+                      {/* Left Date Column */}
+                      <div className="w-9 sm:w-16 text-center shrink-0">
+                        <span className="block text-base xs:text-lg sm:text-3xl font-serif font-normal text-[#122016] dark:text-white leading-none">
+                          {evt.dateDay}
+                        </span>
+                        <span className="block text-[7.5px] sm:text-[10.5px] font-bold text-[#556758] dark:text-[#a2d45e] mt-0.5 uppercase tracking-wider">
+                          {evt.dateMonth}
+                        </span>
+                        <span className="block text-[7px] sm:text-[9px] text-[#7a8e7e] dark:text-slate-400 font-medium">
+                          {evt.dateYear}
+                        </span>
+                      </div>
+
+                      {/* Event White Glass Card */}
+                      <div className="flex-1 rounded-[1.2rem] sm:rounded-[2.2rem] bg-white dark:bg-[#0b1c14] border border-[#e8efe9] dark:border-[#183a27] p-2 sm:p-4 flex items-center gap-2.5 sm:gap-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-xl hover:-translate-y-1 hover:border-[#1a5e35]/30 transition-all duration-300 w-full relative min-w-0 overflow-hidden">
+
+                        {/* Image Thumbnail with Explicit Dimensions */}
+                        <div className="w-[82px] min-w-[82px] sm:w-[176px] sm:min-w-[176px] h-[64px] sm:h-[110px] rounded-xl sm:rounded-2xl overflow-hidden shrink-0 bg-slate-100 dark:bg-[#05110a] shadow-xs relative">
+                          <img
+                            src={evt.imageUrl}
+                            alt={evt.title}
+                            loading="lazy"
+                            decoding="async"
+                            className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out absolute inset-0 block"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            onError={(e) => {
+                              e.currentTarget.src = "/events/conference.jpg";
+                            }}
+                          />
+                        </div>
+
+                        {/* Content Area */}
+                        <div className="flex-1 py-0.5 sm:py-1 w-full flex flex-col justify-center min-w-0">
+                          <span className="inline-block px-1.5 sm:px-2.5 py-0.5 rounded text-[7px] sm:text-[8.5px] font-bold uppercase tracking-widest bg-[#eaf1e4] dark:bg-[#11261a] text-[#2d5a3c] dark:text-[#a2d45e] mb-0.5 sm:mb-1 w-max">
+                            {evt.categoryTag || evt.category}
+                          </span>
+
+                          <h3 className="text-[10.5px] xs:text-[12px] sm:text-[16px] font-serif font-semibold text-[#122016] dark:text-white leading-snug mb-0.5 sm:mb-1 group-hover:text-[#1b3726] dark:group-hover:text-[#a2d45e] transition-colors line-clamp-1 sm:line-clamp-2">
+                            {evt.title}
+                          </h3>
+
+                          <p className="text-[8px] xs:text-[9.5px] sm:text-[12px] text-[#445548] dark:text-slate-300 leading-tight sm:leading-relaxed line-clamp-1 sm:line-clamp-2 mb-1 font-normal">
+                            {evt.subtitle || evt.desc || 'Explore collaborative learning and sustainability education initiatives.'}
+                          </p>
+
+                          <div className="flex flex-wrap items-center gap-1.5 sm:gap-3.5 text-[7.5px] sm:text-[11px] text-[#556758] dark:text-slate-400 font-medium">
+                            <span className="flex items-center gap-1 truncate">
+                              <MapPin size={9} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0 sm:w-3 sm:h-3" />
+                              {evt.location || 'Kazhakkoottam, Kerala'}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Calendar size={9} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0 sm:w-3 sm:h-3" />
+                              {evt.duration || 'Session'}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Right Circular Arrow Button */}
+                        <div className="w-6 h-6 sm:w-9 sm:h-9 rounded-full bg-[#f4f8f3] dark:bg-[#11261a] border border-[#e2ede4] dark:border-[#183a27] shadow-xs flex items-center justify-center text-[#14261a] dark:text-[#a2d45e] group-hover:bg-[#1b3726] dark:group-hover:bg-[#a2d45e] group-hover:text-white dark:group-hover:text-[#031008] transition-all duration-300 shrink-0 cursor-pointer group-hover:scale-110 mr-0.5">
+                          <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform duration-300 sm:w-3.5 sm:h-3.5 text-[#2d5a3c] group-hover:text-white dark:text-[#a2d45e]" />
+                        </div>
+
+                      </div>
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
+
+            {/* ============================================================ */}
+            {/* PAGINATION CONTROLS (Calculated dynamically from total events) */}
+            {/* ============================================================ */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-1.5 sm:gap-2 pt-3 sm:pt-6">
+                {/* Previous Page Button */}
                 <button
-                  onClick={() => { setSelectedCategory('All'); setCurrentPage(1); }}
-                  className="px-5 py-2 rounded-full bg-[#1b3726] dark:bg-[#154628] text-white text-[11px] font-bold uppercase tracking-wider hover:bg-[#244833] transition-colors cursor-pointer"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[#1b3726] dark:text-white flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#132c1e] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-xs cursor-pointer"
+                  title="Previous Page"
+                  aria-label="Previous Page"
                 >
-                  Show All Events
+                  <ChevronLeft size={13} />
+                </button>
+
+                {/* Dynamic Page Number Buttons */}
+                {getPageNumbers().map((page, idx) => {
+                  if (page === '...') {
+                    return (
+                      <span key={`ellipsis-${idx}`} className="w-5 text-center text-xs text-[#556758] dark:text-slate-400 select-none">
+                        ...
+                      </span>
+                    );
+                  }
+                  const isCurrent = currentPage === page;
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full text-[10.5px] sm:text-xs font-bold transition-all duration-300 cursor-pointer ${isCurrent
+                          ? 'bg-[#143422] dark:bg-[#a2d45e] text-white dark:text-[#031008] scale-105 shadow-md'
+                          : 'bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[#14261a] dark:text-slate-300 hover:bg-[#f0f6ee] dark:hover:bg-[#132c1e]'
+                        }`}
+                      aria-label={`Page ${page}`}
+                      aria-current={isCurrent ? 'page' : undefined}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+
+                {/* Next Page Button */}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[#1b3726] dark:text-white flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#132c1e] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-xs cursor-pointer"
+                  title="Next Page"
+                  aria-label="Next Page"
+                >
+                  <ChevronRight size={13} />
                 </button>
               </div>
-            ) : (
-              paginatedEvents.map((evt) => (
-                <Link key={evt.id} href={`/events/${evt.slug || evt.id}`} className="block group">
-                  <div className="flex items-center gap-2 sm:gap-6">
-                    
-                    {/* Left Date Column */}
-                    <div className="w-9 sm:w-16 text-center shrink-0">
-                      <span className="block text-base xs:text-lg sm:text-3xl font-serif font-normal text-[#122016] dark:text-white leading-none">
-                        {evt.dateDay}
-                      </span>
-                      <span className="block text-[7.5px] sm:text-[10.5px] font-bold text-[#556758] dark:text-[#a2d45e] mt-0.5 uppercase tracking-wider">
-                        {evt.dateMonth}
-                      </span>
-                      <span className="block text-[7px] sm:text-[9px] text-[#7a8e7e] dark:text-slate-400 font-medium">
-                        {evt.dateYear}
-                      </span>
-                    </div>
-
-                    {/* Event White Glass Card */}
-                    <div className="flex-1 rounded-[1.2rem] sm:rounded-[2.2rem] bg-white dark:bg-[#0b1c14] border border-[#e8efe9] dark:border-[#183a27] p-2 sm:p-4 flex items-center gap-2.5 sm:gap-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-xl hover:-translate-y-1 hover:border-[#1a5e35]/30 transition-all duration-300 w-full relative min-w-0 overflow-hidden">
-                      
-                      {/* Image Thumbnail with Explicit Dimensions */}
-                      <div className="w-[82px] min-w-[82px] sm:w-[176px] sm:min-w-[176px] h-[64px] sm:h-[110px] rounded-xl sm:rounded-2xl overflow-hidden shrink-0 bg-slate-100 dark:bg-[#05110a] shadow-xs relative">
-                        <img
-                          src={evt.imageUrl}
-                          alt={evt.title}
-                          loading="lazy"
-                          decoding="async"
-                          className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out absolute inset-0 block"
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                          onError={(e) => {
-                            e.currentTarget.src = "/events/conference.jpg";
-                          }}
-                        />
-                      </div>
-
-                      {/* Content Area */}
-                      <div className="flex-1 py-0.5 sm:py-1 w-full flex flex-col justify-center min-w-0">
-                        <span className="inline-block px-1.5 sm:px-2.5 py-0.5 rounded text-[7px] sm:text-[8.5px] font-bold uppercase tracking-widest bg-[#eaf1e4] dark:bg-[#11261a] text-[#2d5a3c] dark:text-[#a2d45e] mb-0.5 sm:mb-1 w-max">
-                          {evt.categoryTag || evt.category}
-                        </span>
-
-                        <h3 className="text-[10.5px] xs:text-[12px] sm:text-[16px] font-serif font-semibold text-[#122016] dark:text-white leading-snug mb-0.5 sm:mb-1 group-hover:text-[#1b3726] dark:group-hover:text-[#a2d45e] transition-colors line-clamp-1 sm:line-clamp-2">
-                          {evt.title}
-                        </h3>
-
-                        <p className="text-[8px] xs:text-[9.5px] sm:text-[12px] text-[#445548] dark:text-slate-300 leading-tight sm:leading-relaxed line-clamp-1 sm:line-clamp-2 mb-1 font-normal">
-                          {evt.subtitle || evt.desc || 'Explore collaborative learning and sustainability education initiatives.'}
-                        </p>
-
-                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-3.5 text-[7.5px] sm:text-[11px] text-[#556758] dark:text-slate-400 font-medium">
-                          <span className="flex items-center gap-1 truncate">
-                            <MapPin size={9} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0 sm:w-3 sm:h-3" />
-                            {evt.location || 'Kazhakkoottam, Kerala'}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Calendar size={9} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0 sm:w-3 sm:h-3" />
-                            {evt.duration || 'Session'}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Right Circular Arrow Button */}
-                      <div className="w-6 h-6 sm:w-9 sm:h-9 rounded-full bg-[#f4f8f3] dark:bg-[#11261a] border border-[#e2ede4] dark:border-[#183a27] shadow-xs flex items-center justify-center text-[#14261a] dark:text-[#a2d45e] group-hover:bg-[#1b3726] dark:group-hover:bg-[#a2d45e] group-hover:text-white dark:group-hover:text-[#031008] transition-all duration-300 shrink-0 cursor-pointer group-hover:scale-110 mr-0.5">
-                        <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform duration-300 sm:w-3.5 sm:h-3.5 text-[#2d5a3c] group-hover:text-white dark:text-[#a2d45e]" />
-                      </div>
-
-                    </div>
-                  </div>
-                </Link>
-              ))
             )}
           </div>
 
-          {/* ============================================================ */}
-          {/* PAGINATION CONTROLS (Calculated dynamically from total events) */}
-          {/* ============================================================ */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-1.5 sm:gap-2 pt-3 sm:pt-6">
-              {/* Previous Page Button */}
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[#1b3726] dark:text-white flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#132c1e] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-xs cursor-pointer"
-                title="Previous Page"
-                aria-label="Previous Page"
-              >
-                <ChevronLeft size={13} />
-              </button>
+          {/* Right Column: Sidebar (Stats + Carousel) */}
+          <div className="lg:col-span-4 space-y-6">
 
-              {/* Dynamic Page Number Buttons */}
-              {getPageNumbers().map((page, idx) => {
-                if (page === '...') {
-                  return (
-                    <span key={`ellipsis-${idx}`} className="w-5 text-center text-xs text-[#556758] dark:text-slate-400 select-none">
-                      ...
+            {/* LIVE IMPACT STATISTICS (Sidebar Version) */}
+            <div className="bg-white/70 dark:bg-[#0b1c14]/80 backdrop-blur-xl rounded-[2rem] p-6 border border-[#e8efe9] dark:border-[#183a27] shadow-[0_4px_20px_rgba(0,0,0,0.02)] relative z-20">
+              <div className="flex items-center pb-4 mb-4 border-b border-[#e8efe9] dark:border-[#183a27]">
+                <span className="text-[11px] font-black uppercase text-[#4d5e50] dark:text-[#a2d45e] tracking-wider">
+                  Live Impact Statistics
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { num: settings.stat1Number, text: settings.stat1Text },
+                  { num: settings.stat2Number, text: settings.stat2Text },
+                  { num: settings.stat3Number, text: settings.stat3Text },
+                  { num: settings.stat4Number, text: settings.stat4Text }
+                ].map((stat, i) => (
+                  <div key={i} className="p-3.5 rounded-2xl bg-[#f8faf8] dark:bg-[#11261a] border border-[#e8efe9] dark:border-[#1e422c] shadow-sm hover:shadow-md hover:-translate-y-1 hover:border-[#2d5a3c]/30 transition-all duration-300">
+                    <span className="text-2xl font-bold text-[#131f17] dark:text-white leading-none font-serif block mb-1">
+                      {stat.num}
                     </span>
-                  );
-                }
-                const isCurrent = currentPage === page;
-                return (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full text-[10.5px] sm:text-xs font-bold transition-all duration-300 cursor-pointer ${
-                      isCurrent
-                        ? 'bg-[#143422] dark:bg-[#a2d45e] text-white dark:text-[#031008] scale-105 shadow-md'
-                        : 'bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[#14261a] dark:text-slate-300 hover:bg-[#f0f6ee] dark:hover:bg-[#132c1e]'
-                    }`}
-                    aria-label={`Page ${page}`}
-                    aria-current={isCurrent ? 'page' : undefined}
-                  >
-                    {page}
-                  </button>
-                );
-              })}
-
-              {/* Next Page Button */}
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[#1b3726] dark:text-white flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#132c1e] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-xs cursor-pointer"
-                title="Next Page"
-                aria-label="Next Page"
-              >
-                <ChevronRight size={13} />
-              </button>
+                    <span
+                      className="text-[10px] sm:text-[11px] text-[#556758] dark:text-slate-400 block font-medium leading-snug whitespace-pre-line"
+                      dangerouslySetInnerHTML={{ __html: stat.text }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
 
+            {/* FEATURED INITIATIVES CAROUSEL (Sidebar Version) */}
+            {settings.featuredInitiatives && settings.featuredInitiatives.length > 0 && (
+              <div className="bg-white/70 dark:bg-[#0b1c14]/80 backdrop-blur-xl rounded-[2rem] p-6 border border-[#e8efe9] dark:border-[#183a27] shadow-[0_4px_20px_rgba(0,0,0,0.02)] relative z-20 overflow-hidden group hover:shadow-lg transition-all"
+                onMouseEnter={() => setIsCarouselPaused(true)}
+                onMouseLeave={() => setIsCarouselPaused(false)}
+              >
+                {(() => {
+                  const initiatives = settings.featuredInitiatives;
+                  const activeInit = initiatives[currentInitiativeIndex] || initiatives[0];
+                  return (
+                    <div className="flex flex-col gap-5">
+                      <div className="flex items-center justify-between">
+                        <div className="text-[9px] sm:text-[10px] font-extrabold text-[#2d5a3c] dark:text-[#a2d45e] tracking-wider uppercase flex items-center gap-1.5 bg-[#eaf1e4] dark:bg-[#11261a] px-3 py-1.5 rounded-lg border border-[#dce9de] dark:border-[#1e422c]">
+                          <Sparkles size={12} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
+                          <span>{activeInit.tag || 'FEATURED INITIATIVE'}</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 min-h-[70px] transition-all duration-300">
+                        <h3 className="text-xl sm:text-2xl font-serif font-black text-[#131f17] dark:text-white leading-tight">
+                          {activeInit.title}
+                        </h3>
+                        <p
+                          className="text-xs font-medium text-[#556758] dark:text-slate-300 leading-relaxed max-w-lg whitespace-pre-line"
+                          dangerouslySetInnerHTML={{ __html: activeInit.subtitle || '' }}
+                        />
+                      </div>
+
+                      <div className="w-full h-[180px] rounded-2xl overflow-hidden shadow-sm relative bg-slate-100 dark:bg-[#05110a]">
+                        <img
+                          key={currentInitiativeIndex}
+                          src={activeInit.imageUrl || "/events/e1.png"}
+                          alt={activeInit.title}
+                          className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-700"
+                          onError={(e) => { e.currentTarget.src = "/events/e1.png"; }}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-4">
+                        <Link href={activeInit.link || '#'} className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#1b3726] hover:bg-[#254d35] text-white text-xs font-bold tracking-wide transition-all duration-300 shadow-md hover:scale-105 active:scale-95 group/btn dark:bg-[#a2d45e] dark:hover:bg-[#b8e874] dark:text-[#031008] w-full">
+                          <span>Learn More</span>
+                          <ArrowRight size={14} className="group-hover/btn:translate-x-1.5 transition-transform" />
+                        </Link>
+
+                        {/* Controls */}
+                        {initiatives.length > 1 && (
+                          <div className="flex items-center justify-center gap-2 bg-[#f4f8f3] dark:bg-[#11261a] p-1.5 rounded-full border border-[#e2ede4] dark:border-[#1e422c]">
+                            <button
+                              onClick={() => setCurrentInitiativeIndex((prev) => (prev - 1 + initiatives.length) % initiatives.length)}
+                              className="w-7 h-7 rounded-full hover:bg-white dark:hover:bg-[#183a27] text-[#1b3726] dark:text-[#a2d45e] flex items-center justify-center transition-colors shadow-sm"
+                            >
+                              <ChevronLeft size={14} />
+                            </button>
+                            <div className="flex items-center gap-1.5 px-2">
+                              {initiatives.map((_, idx) => (
+                                <span
+                                  key={idx}
+                                  onClick={() => setCurrentInitiativeIndex(idx)}
+                                  className={`block h-2 rounded-full cursor-pointer transition-all duration-300 ${idx === currentInitiativeIndex ? 'bg-[#2d5a3c] dark:bg-[#a2d45e] w-5' : 'bg-[#dce9de] dark:bg-[#2a4d36] w-2 hover:bg-[#b5cbb9]'}`}
+                                />
+                              ))}
+                            </div>
+                            <button
+                              onClick={() => setCurrentInitiativeIndex((prev) => (prev + 1) % initiatives.length)}
+                              className="w-7 h-7 rounded-full hover:bg-white dark:hover:bg-[#183a27] text-[#1b3726] dark:text-[#a2d45e] flex items-center justify-center transition-colors shadow-sm"
+                            >
+                              <ChevronRight size={14} />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* ============================================================ */}
@@ -494,7 +635,7 @@ export default function EventsPage() {
         {/* ============================================================ */}
         <div className="pt-1 sm:pt-4">
           <div className="rounded-[1.4rem] sm:rounded-[2.4rem] bg-[#143422] dark:bg-[#0b1c14] border border-white/10 dark:border-[#183a27] p-3.5 xs:p-4 sm:p-8 lg:p-10 shadow-xl text-white grid grid-cols-12 gap-3 sm:gap-8 items-center relative overflow-hidden group">
-            
+
             {/* Left Copy */}
             <div className="col-span-6 sm:col-span-6 space-y-1.5 xs:space-y-2 sm:space-y-4 relative z-10">
               <h3 className="text-base xs:text-lg sm:text-3xl lg:text-4xl font-serif text-white leading-tight">
@@ -542,7 +683,7 @@ export default function EventsPage() {
         {/* ============================================================ */}
         <div className="pt-1">
           <div className="rounded-[1.4rem] sm:rounded-[2.4rem] bg-[#f4f7f2] dark:bg-[#0b1c14] border border-[#e4ede5] dark:border-[#183a27] p-3 xs:p-3.5 sm:p-7 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-            
+
             {/* Left Info */}
             <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
               <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white dark:bg-[#11261a] border border-[#dce8dc] dark:border-[#1e422c] flex items-center justify-center text-[#2d5a3c] dark:text-[#a2d45e] shadow-xs shrink-0">
@@ -566,8 +707,8 @@ export default function EventsPage() {
                   <span>Thank you for subscribing!</span>
                 </div>
               ) : (
-                <form 
-                  onSubmit={handleSubscribe} 
+                <form
+                  onSubmit={handleSubscribe}
                   className="bg-white dark:bg-[#05110a] rounded-full p-1 pl-4 pr-1 flex items-center shadow-[0_2px_15px_rgba(0,0,0,0.04)] dark:shadow-[0_2px_15px_rgba(0,0,0,0.4)] w-full sm:w-[320px] md:w-[350px]"
                 >
                   <input

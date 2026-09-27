@@ -1036,12 +1036,12 @@ export default function AdminLiveEventPlatformEditor({ params }) {
                       className="text-center font-bold text-xs text-[#19241c] bg-transparent border-b border-transparent hover:border-slate-300 focus:border-[#2d5a3c] outline-none w-full mb-1"
                     />
 
-                    <input
-                      type="text"
+                    <textarea
+                      rows={2}
                       value={item.desc}
                       onChange={(e) => updateHighlight(idx, 'desc', e.target.value)}
                       placeholder="Short sentence description"
-                      className="text-center text-[11px] text-[#637667] bg-transparent border-b border-transparent hover:border-slate-300 focus:border-[#2d5a3c] outline-none w-full"
+                      className="text-center text-[11px] text-[#637667] bg-transparent border-b border-transparent hover:border-slate-300 focus:border-[#2d5a3c] outline-none w-full resize-none"
                     />
                   </div>
                 ))}
