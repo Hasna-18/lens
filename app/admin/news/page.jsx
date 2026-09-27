@@ -87,7 +87,7 @@ export default function AdminNewsResourcesPage() {
       }
     } catch (error) {
       console.error("Fetch error:", error);
-      showToast('error', 'Error syncing with PostgreSQL database');
+      showToast('error', 'Error syncing with database');
     } finally {
       setLoading(false);
     }
@@ -215,7 +215,7 @@ export default function AdminNewsResourcesPage() {
     try {
       const res = await fetch(`/api/news?id=${idOrSlug}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete news');
-      showToast('success', 'News deleted from PostgreSQL');
+      showToast('success', 'News deleted from database');
       fetchData();
     } catch (err) {
       showToast('error', err.message);
@@ -286,7 +286,7 @@ export default function AdminNewsResourcesPage() {
     try {
       const res = await fetch(`/api/resources?id=${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete resource');
-      showToast('success', 'Resource deleted from PostgreSQL');
+      showToast('success', 'Resource deleted from DB');
       fetchData();
     } catch (err) {
       showToast('error', err.message);
@@ -402,7 +402,7 @@ export default function AdminNewsResourcesPage() {
         {loading ? (
           <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-xs">
             <Loader2 className="animate-spin text-[#2d5a3c] mx-auto mb-2" size={28} />
-            <div className="text-slate-600 text-xs font-bold">Syncing {activeTab} from PostgreSQL...</div>
+            <div className="text-slate-600 text-xs font-bold">Syncing {activeTab} from database...</div>
           </div>
         ) : activeTab === 'news' ? (
           <div className="space-y-4">

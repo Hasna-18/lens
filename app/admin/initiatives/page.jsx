@@ -259,7 +259,7 @@ export default function AdminInitiativesPage() {
           {loading ? (
             <div className="py-20 flex flex-col items-center justify-center gap-3 bg-white rounded-3xl border border-[#e2ece3]">
               <Loader2 className="animate-spin text-[#2d5a3c]" size={28} />
-              <span className="text-xs font-semibold text-[#526657]">Loading initiatives from PostgreSQL...</span>
+              <span className="text-xs font-semibold text-[#526657]">Loading initiatives from Database...</span>
             </div>
           ) : initiatives.length === 0 ? (
             <div className="py-20 text-center bg-white rounded-3xl border border-[#e2ece3] space-y-3">
@@ -346,7 +346,7 @@ export default function AdminInitiativesPage() {
                   {editingId ? 'Edit Outreach Initiative' : 'Add New Outreach Initiative'}
                 </h2>
                 <p className="text-xs text-[#556758] mt-0.5">
-                  Changes save directly to the PostgreSQL database.
+                  Changes save directly to the database.
                 </p>
               </div>
               <button

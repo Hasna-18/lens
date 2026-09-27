@@ -184,11 +184,7 @@ export default function AdminLayout({ children }) {
           {/* Right Action Tools */}
           <div className="flex items-center gap-2.5 sm:gap-3">
             
-            {/* Live Database Indicator */}
-            <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#eef5ee] border border-[#d6e5d8] text-[11px] font-semibold text-[#2d5a3c]">
-              <Database size={13} />
-              <span>PostgreSQL Live</span>
-            </div>
+          
 
             {/* Public Website Preview Link */}
             <Link

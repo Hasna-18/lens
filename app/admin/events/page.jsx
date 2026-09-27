@@ -198,7 +198,7 @@ export default function AdminEventsPage() {
       }
     } catch (error) {
       console.error("Fetch error:", error);
-      showToast('error', 'Error syncing with PostgreSQL database');
+      showToast('error', 'Error syncing with database');
     } finally {
       setLoading(false);
     }
@@ -328,7 +328,7 @@ export default function AdminEventsPage() {
     try {
       const res = await fetch(`/api/events?id=${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete event');
-      showToast('success', 'Event deleted from PostgreSQL database');
+      showToast('success', 'Event deleted from database');
       if (editingEventId === id) {
         setShowAddForm(false);
         setEditingEventId(null);
@@ -532,7 +532,7 @@ export default function AdminEventsPage() {
             <div className="flex items-center gap-2.5">
               <span className="text-xs sm:text-sm font-black tracking-wider uppercase text-slate-900">Live Events Admin</span>
               <span className="text-[10px] bg-emerald-50 text-[#2d5a3c] font-black px-2.5 py-0.5 rounded-full border border-emerald-200/80">
-                PostgreSQL • {events.length} Events • {initiatives.length} Initiatives
+                {events.length} Events • {initiatives.length} Initiatives
               </span>
             </div>
           </div>
@@ -823,7 +823,7 @@ export default function AdminEventsPage() {
             {loading ? (
               <div className="sm:ml-20 text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-xs">
                 <Loader2 className="animate-spin text-[#2d5a3c] mx-auto mb-2" size={28} />
-                <div className="text-slate-600 text-xs font-bold">Syncing live events from PostgreSQL...</div>
+                <div className="text-slate-600 text-xs font-bold">Syncing live events from database...</div>
               </div>
             ) : filteredEvents.length === 0 ? (
               <div className="sm:ml-20 text-center py-14 bg-white rounded-3xl border border-slate-200 shadow-xs p-8">
