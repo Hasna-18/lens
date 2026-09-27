@@ -562,7 +562,7 @@ export default function AdminEventsPage() {
               className="bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 border border-slate-200 transition-colors shadow-xs cursor-pointer"
             >
               <Settings size={15} />
-              <span className="hidden md:inline">Edit Stats & Hero</span>
+              <span className="hidden md:inline">Edit Stats & Newsletter</span>
             </button>
 
             {/* Refresh */}
@@ -578,41 +578,7 @@ export default function AdminEventsPage() {
         </div>
       </div>
 
-      {/* HERO PREVIEW BANNER */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="relative min-h-[380px] rounded-3xl overflow-hidden bg-gradient-to-r from-[#173822] via-[#234e32] to-[#2d5a3c] text-white shadow-lg flex items-center">
-          <div className="absolute inset-0 z-0">
-            <img
-              src={settings.heroImage || "/events/e1.png"}
-              alt="Events Hero illustration"
-              className="w-full h-full object-cover object-center lg:object-right opacity-30 mix-blend-overlay"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#173822]/90 via-[#173822]/70 to-transparent"></div>
-          </div>
-
-          <div className="relative z-10 p-8 sm:p-12 max-w-2xl">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="inline-block text-[#a2d45e] font-black tracking-widest text-xs uppercase bg-black/30 border border-[#a2d45e]/40 px-3 py-1 rounded-full backdrop-blur-md">
-                {settings.heroTag || 'EVENTS'}
-              </span>
-              <button
-                onClick={() => setShowSettingsModal(true)}
-                className="text-[11px] font-bold text-emerald-200 hover:text-white flex items-center gap-1 bg-white/15 hover:bg-white/25 px-2.5 py-0.5 rounded-full backdrop-blur-md transition-colors"
-              >
-                <Edit3 size={11} /> Edit Hero
-              </button>
-            </div>
-
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight whitespace-pre-line text-white">
-              {settings.heroTitle}
-            </h2>
-
-            <p className="mt-4 text-emerald-100/90 text-sm sm:text-base font-normal leading-relaxed">
-              {settings.heroSubtitle}
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* HERO PREVIEW BANNER REMOVED AS REQUESTED */}
 
       {/* MAIN CONTAINER */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
@@ -669,8 +635,7 @@ export default function AdminEventsPage() {
           {/* Left Column: Timeline Events (8 cols) */}
           <div className="lg:col-span-8 space-y-6 relative">
 
-            {/* Decorative Timeline Guide Line */}
-            <div className="hidden sm:block absolute left-[40px] top-6 bottom-6 w-[2px] bg-slate-200 -z-0"></div>
+
 
             {/* INLINE ADD / EDIT EVENT FORM */}
             {showAddForm && (
@@ -853,25 +818,6 @@ export default function AdminEventsPage() {
               </div>
             )}
 
-            {/* ADD EVENT CALLOUT BUTTON (when form not opened) */}
-            {!showAddForm && (
-              <div
-                onClick={() => handleOpenAdd(filterCategory)}
-                className="sm:ml-20 border-2 border-dashed border-slate-300 hover:border-[#2d5a3c] bg-white/70 hover:bg-emerald-50/20 rounded-3xl p-6 text-center cursor-pointer transition-all flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 group shadow-xs"
-              >
-                <div className="w-10 h-10 rounded-full bg-emerald-50 text-[#2d5a3c] border border-emerald-200 flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <Plus size={20} strokeWidth={2.5} />
-                </div>
-                <div className="text-center sm:text-left">
-                  <h4 className="text-sm font-black text-slate-900 group-hover:text-[#2d5a3c] transition-colors">
-                    Click to Add an Event to this Timeline
-                  </h4>
-                  <p className="text-xs text-slate-500 font-medium">
-                    Upload poster images from device and publish directly into PostgreSQL
-                  </p>
-                </div>
-              </div>
-            )}
 
             {/* TIMELINE LISTING */}
             {loading ? (
@@ -906,9 +852,7 @@ export default function AdminEventsPage() {
                     <span className="block text-xs font-bold text-slate-400 mt-0.5">{evt.dateYear}</span>
                   </div>
 
-                  {/* Dot on the Line */}
-                  <div className="hidden sm:flex absolute left-[40px] top-8 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-[3px] border-white bg-slate-300 ring-2 ring-slate-200 z-20 group-hover:bg-[#2d5a3c] group-hover:ring-[#2d5a3c]/30 transition-all duration-300">
-                  </div>
+
 
                   {/* Event Card */}
                   <div className="flex-1 bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-md hover:border-[#2d5a3c]/40 transition-all relative overflow-hidden flex flex-col sm:flex-row gap-4">
@@ -1268,10 +1212,10 @@ export default function AdminEventsPage() {
               <div>
                 <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
                   <Settings className="text-[#2d5a3c]" size={18} />
-                  Edit Sidebar, Hero & Stats Settings
+                  Edit Stats & Newsletter Settings
                 </h3>
                 <p className="text-xs text-slate-500 font-medium mt-0.5">
-                  Update statistics numbers, labels, newsletter, and hero banner.
+                  Update statistics numbers, labels, and newsletter.
                 </p>
               </div>
               <button
@@ -1283,41 +1227,6 @@ export default function AdminEventsPage() {
             </div>
 
             <form onSubmit={handleSettingsSubmit} className="space-y-6 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
-
-              {/* Hero Banner settings */}
-              <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
-                <h4 className="text-xs font-black uppercase text-[#2d5a3c] flex items-center gap-1.5">
-                  <Sparkles size={13} /> Hero Banner Section
-                </h4>
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tag (e.g. EVENTS)</label>
-                  <input
-                    type="text"
-                    value={settings.heroTag}
-                    onChange={(e) => setSettings({ ...settings, heroTag: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 focus:border-[#2d5a3c] outline-none text-xs font-bold text-slate-900"
-                  />
-                </div>
-
-                {/* Hero Banner Image with Local Uploader */}
-                <ImageUploader
-                  value={settings.heroImage}
-                  onChange={(url) => setSettings({ ...settings, heroImage: url })}
-                  category="events"
-                  label="Hero Banner Image"
-                  helperText="Upload custom banner from your device or use /events/e1.png"
-                />
-
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Subtitle</label>
-                  <textarea
-                    rows={2}
-                    value={settings.heroSubtitle}
-                    onChange={(e) => setSettings({ ...settings, heroSubtitle: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 focus:border-[#2d5a3c] outline-none text-xs font-medium text-slate-800"
-                  />
-                </div>
-              </div>
 
               {/* Impact Statistics */}
               <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">

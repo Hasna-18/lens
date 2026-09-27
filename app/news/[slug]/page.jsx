@@ -24,6 +24,7 @@ import {
   Twitter, 
   Linkedin, 
   Mail,
+  ChevronLeft,
   ChevronRight,
   Loader2,
   AlertCircle,
@@ -38,6 +39,8 @@ export default function NewsDetailPage({ params }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [relatedNews, setRelatedNews] = useState([]);
+  const [prevStory, setPrevStory] = useState(null);
+  const [nextStory, setNextStory] = useState(null);
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -66,7 +69,7 @@ export default function NewsDetailPage({ params }) {
         if (isMounted) setLoading(false);
       }
 
-      // Fetch related news list from Neon DB
+      // Fetch related news list and adjacent stories from Neon DB
       try {
         const allRes = await fetch('/api/news');
         if (allRes.ok) {
@@ -76,6 +79,13 @@ export default function NewsDetailPage({ params }) {
               .filter(item => String(item.id) !== newsSlug && item.slug !== newsSlug)
               .slice(0, 3);
             setRelatedNews(filtered);
+
+            // Compute previous and next article in sequence
+            const currIdx = allData.findIndex(item => String(item.id) === newsSlug || item.slug === newsSlug);
+            if (currIdx !== -1) {
+              setPrevStory(currIdx > 0 ? allData[currIdx - 1] : null);
+              setNextStory(currIdx < allData.length - 1 ? allData[currIdx + 1] : null);
+            }
           }
         }
       } catch (err) {
@@ -168,26 +178,36 @@ export default function NewsDetailPage({ params }) {
       {/* ============================================================ */}
       {/* 1. HERO SECTION WITH BLENDED IMAGE */}
       {/* ============================================================ */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+      <div className="relative w-full overflow-hidden">
         
-        {/* Natural Environment Blend Container */}
-        <div className="absolute top-0 right-0 w-full lg:w-[68%] xl:w-[62%] h-[840px] sm:h-[920px] pointer-events-none z-0 overflow-hidden select-none">
-          <img 
-            src={news.imageUrl || "/events/events_book_plant.jpg"} 
-            alt={news.title || "News Story"} 
-            className="w-full h-full object-cover object-center lg:object-right-top scale-[1.04] transform-gpu transition-transform duration-1000 ease-out" 
+        {/* Natural Environment Blend Container (Full Bleed Right) */}
+        <div className="absolute top-0 right-0 h-full min-h-[520px] lg:h-[620px] xl:h-[670px] w-full lg:w-[55%] pointer-events-none z-0 overflow-hidden select-none hidden lg:block rounded-l-[3rem] transition-all duration-300">
+          <img
+            src={news.imageUrl || "/events/events_book_plant.jpg"}
+            alt={news.title || "News Story"}
+            className="w-full h-full object-cover object-left-center transition-all duration-300"
             onError={(e) => { e.currentTarget.src = "/events/events_book_plant.jpg"; }}
           />
-          {/* Soft Organic Fade Masks into the Canvas */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/85 dark:via-[#031008]/85 via-[20%] to-transparent to-[45%] w-full h-full hidden lg:block" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/88 dark:via-[#031008]/90 via-[35%] to-transparent w-full h-full block lg:hidden" />
-          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/60 dark:via-[#031008]/60 to-transparent" />
-          <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#fcfdfa] dark:from-[#031008] to-transparent" />
+          {/* Edge Fading to blend with background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/20 dark:via-[#031008]/20 to-transparent w-full h-full" />
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/50 dark:via-[#031008]/50 to-transparent" />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 items-center min-h-[480px] sm:min-h-[560px] pb-6 lg:pb-0">
-          
-          <div className="lg:col-span-8 space-y-6 z-10">
+        {/* Mobile Background Fallback */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none z-0 block lg:hidden opacity-20">
+           <img
+            src={news.imageUrl || "/events/events_book_plant.jpg"}
+            alt={news.title || "News Story"}
+            className="w-full h-full object-cover"
+            onError={(e) => { e.currentTarget.src = "/events/events_book_plant.jpg"; }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/90 to-transparent" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 items-center min-h-[480px] sm:min-h-[560px] pb-6 lg:pb-0">
+            
+            <div className="lg:col-span-6 xl:col-span-5 space-y-6 sm:space-y-7 lg:pr-8 z-10 pt-10 lg:pt-0">
             
             {/* Breadcrumb Navigation */}
             <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#485b4d] dark:text-slate-400">
@@ -255,10 +275,9 @@ export default function NewsDetailPage({ params }) {
             </div>
 
           </div>
-
         </div>
-
       </div>
+    </div>
 
       {/* Hero Bottom Divider */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4">
@@ -277,11 +296,11 @@ export default function NewsDetailPage({ params }) {
             {/* Overview / Story Section */}
             <section className="space-y-4">
               <h2 className="text-2xl sm:text-[26px] font-serif text-[#122016] dark:text-white">
-                Overview
+                The Full Story
               </h2>
               <div className="space-y-3.5 text-[#3f5244] dark:text-slate-300 text-[13.5px] sm:text-sm leading-[1.8] whitespace-pre-line">
                 <p>
-                  {details.overview || details.content || news.desc || 'No detailed story text provided.'}
+                  {details.aboutText || details.content || details.overview || news.desc || 'No detailed story text provided.'}
                 </p>
               </div>
             </section>
@@ -502,6 +521,49 @@ export default function NewsDetailPage({ params }) {
 
         </div>
       </div>
+
+      {/* ============================================================ */}
+      {/* 2.5. PREVIOUS / NEXT STORY NAVIGATION */}
+      {/* ============================================================ */}
+      {(prevStory || nextStory) && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-[#e2ede4] dark:border-[#183a27] pt-8">
+            {prevStory ? (
+              <Link
+                href={`/news/${prevStory.slug || prevStory.id}`}
+                className="group rounded-2xl bg-white dark:bg-[#0b1c14] border border-[#e4ede5] dark:border-[#183a27] p-5 flex items-center gap-4 hover:border-[#2d5a3c]/40 hover:shadow-md transition-all duration-300"
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#f4f8f3] dark:bg-[#11261a] border border-[#dce8dc] dark:border-[#1e422c] flex items-center justify-center text-[#2d5a3c] dark:text-[#a2d45e] shrink-0 group-hover:-translate-x-1 transition-transform">
+                  <ChevronLeft size={18} />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-bold text-[#647969] dark:text-slate-400 uppercase tracking-wider block">Previous Story</span>
+                  <h4 className="text-[13px] font-bold text-[#14261a] dark:text-white line-clamp-1 group-hover:text-[#2d5a3c] dark:group-hover:text-[#a2d45e] transition-colors">
+                    {prevStory.title}
+                  </h4>
+                </div>
+              </Link>
+            ) : <div className="hidden sm:block" />}
+
+            {nextStory ? (
+              <Link
+                href={`/news/${nextStory.slug || nextStory.id}`}
+                className="group rounded-2xl bg-white dark:bg-[#0b1c14] border border-[#e4ede5] dark:border-[#183a27] p-5 flex items-center justify-between gap-4 hover:border-[#2d5a3c]/40 hover:shadow-md transition-all duration-300 sm:text-right"
+              >
+                <div className="min-w-0 order-2 sm:order-1 flex-1">
+                  <span className="text-[10px] font-bold text-[#647969] dark:text-slate-400 uppercase tracking-wider block">Next Story</span>
+                  <h4 className="text-[13px] font-bold text-[#14261a] dark:text-white line-clamp-1 group-hover:text-[#2d5a3c] dark:group-hover:text-[#a2d45e] transition-colors">
+                    {nextStory.title}
+                  </h4>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-[#f4f8f3] dark:bg-[#11261a] border border-[#dce8dc] dark:border-[#1e422c] flex items-center justify-center text-[#2d5a3c] dark:text-[#a2d45e] shrink-0 order-1 sm:order-2 group-hover:translate-x-1 transition-transform">
+                  <ChevronRight size={18} />
+                </div>
+              </Link>
+            ) : <div className="hidden sm:block" />}
+          </div>
+        </div>
+      )}
 
       {/* ============================================================ */}
       {/* 3. BOTTOM STAY UPDATED NEWSLETTER */}

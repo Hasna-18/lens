@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  FileText, ArrowRight, Download, Link as LinkIcon, Calendar, LayoutGrid, MonitorPlay, Plus, Edit3, Trash2, X, CheckCircle2, AlertCircle, Loader2, ExternalLink, RefreshCw, Layers, LogOut, Home, FileBox, Database
+  FileText, ArrowRight, Download, Link as LinkIcon, Calendar, LayoutGrid, MonitorPlay, Plus, Edit3, Trash2, X, CheckCircle2, AlertCircle, Loader2, ExternalLink, RefreshCw, Layers, LogOut, Home, FileBox, Database, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
 import ImageUploader from '../../../components/admin/ImageUploader';
@@ -15,6 +15,10 @@ export default function AdminNewsResourcesPage() {
   const [adminUser, setAdminUser] = useState('admin');
   const [activeTab, setActiveTab] = useState('news'); // 'news' or 'resources'
   const [loading, setLoading] = useState(true);
+
+  // Pagination for News list (10 per page)
+  const [newsPage, setNewsPage] = useState(1);
+  const newsPerPage = 10;
 
   // Data
   const [newsList, setNewsList] = useState([]);
@@ -402,7 +406,129 @@ export default function AdminNewsResourcesPage() {
           </div>
         ) : activeTab === 'news' ? (
           <div className="space-y-4">
-            {newsList.map(item => (
+            {/* INLINE ADD / EDIT NEWS FORM */}
+            {showNewsForm && (
+              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-md relative z-10 mb-6">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+                  <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
+                    <FileText className="text-[#2d5a3c]" size={18} />
+                    {editingId ? 'Edit News Entry' : 'Publish New Story'}
+                  </h3>
+                  <button onClick={() => setShowNewsForm(false)} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors">
+                    <X size={18} />
+                  </button>
+                </div>
+
+                <form onSubmit={handleNewsSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tag Badge *</label>
+                      <input type="text" required value={newsForm.tag} onChange={(e) => setNewsForm({...newsForm, tag: e.target.value.toUpperCase()})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 uppercase focus:bg-white focus:border-[#2d5a3c] outline-none" />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Category *</label>
+                      <select value={newsForm.category} onChange={(e) => setNewsForm({...newsForm, category: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none">
+                        {newsCategories.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">News Title *</label>
+                    <input
+                      type="text"
+                      required
+                      value={newsForm.title}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setNewsForm(prev => ({
+                          ...prev,
+                          title: val,
+                          slug: !editingId || !prev.slug ? slugify(val) : prev.slug
+                        }));
+                      }}
+                      className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:bg-white focus:border-[#2d5a3c] outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                      <span>URL Slug (Unique Link) *</span>
+                      <span className="text-[10px] text-slate-400 font-mono lowercase">auto-generated from title</span>
+                    </label>
+                    <div className="flex items-center rounded-xl bg-slate-50 border border-slate-200 px-3 py-2 text-xs font-mono text-slate-600 focus-within:border-[#2d5a3c] focus-within:bg-white transition-colors">
+                      <span className="text-slate-400 select-none shrink-0 font-medium">/news/</span>
+                      <input
+                        type="text"
+                        required
+                        value={newsForm.slug}
+                        onChange={(e) => setNewsForm({ ...newsForm, slug: slugify(e.target.value) })}
+                        placeholder="news-article-slug"
+                        className="bg-transparent border-none outline-none flex-1 text-slate-900 font-bold ml-1"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Author</label>
+                      <input
+                        type="text"
+                        value={newsForm.author || ''}
+                        onChange={(e) => setNewsForm({ ...newsForm, author: e.target.value })}
+                        placeholder="LEnSE Admin"
+                        className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Read Time</label>
+                      <input
+                        type="text"
+                        value={newsForm.readTime || ''}
+                        onChange={(e) => setNewsForm({ ...newsForm, readTime: e.target.value })}
+                        placeholder="5 min read"
+                        className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Description / Snippet *</label>
+                    <textarea rows={2} required value={newsForm.desc} onChange={(e) => setNewsForm({...newsForm, desc: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Full Article Content / Details</label>
+                    <textarea rows={4} value={newsForm.content || ''} onChange={(e) => setNewsForm({...newsForm, content: e.target.value})} placeholder="Detailed story content displayed on the full article page..." className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Date String *</label>
+                    <input type="text" required value={newsForm.date} onChange={(e) => setNewsForm({...newsForm, date: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" placeholder="15 May 2025" />
+                  </div>
+
+                  {/* News Image with Local Device ImageUploader */}
+                  <div>
+                    <ImageUploader
+                      value={newsForm.imageUrl}
+                      onChange={(url) => setNewsForm({ ...newsForm, imageUrl: url })}
+                      category="news"
+                      label="News Cover Image"
+                      helperText="Upload image from your device (saved to public/admin/news/) or provide a URL."
+                    />
+                  </div>
+
+                  <div className="pt-3 flex gap-3 border-t border-slate-100">
+                    <button type="button" onClick={() => setShowNewsForm(false)} className="px-5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 font-bold text-xs hover:bg-slate-50 transition-colors">Cancel</button>
+                    <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-xl bg-[#2d5a3c] hover:bg-[#23462f] text-white font-extrabold text-xs flex justify-center items-center gap-2 shadow-xs disabled:opacity-50 transition-all cursor-pointer">
+                      {saving ? <Loader2 className="animate-spin" size={14}/> : <CheckCircle2 size={14}/>} Save News
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+                   {newsList.slice((newsPage - 1) * newsPerPage, newsPage * newsPerPage).map(item => (
               <div key={item.id} className="bg-white rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-center shadow-xs border border-slate-200/90 hover:border-[#2d5a3c]/30 hover:shadow-md transition-all relative group overflow-hidden">
                 <div className="w-full sm:w-48 h-32 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
                   <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => { e.currentTarget.src = "/events/e1.png"; }} />
@@ -438,6 +564,39 @@ export default function AdminNewsResourcesPage() {
             {newsList.length === 0 && (
               <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-xs">
                 <p className="text-slate-500 text-sm font-semibold">No news entries available. Click "+ Add News" to create one.</p>
+              </div>
+            )}
+
+            {/* Admin News Pagination (10 per page) */}
+            {newsList.length > newsPerPage && (
+              <div className="flex items-center justify-center gap-2 p-4 bg-white rounded-2xl border border-slate-200 shadow-xs">
+                <button
+                  onClick={() => setNewsPage(p => Math.max(1, p - 1))}
+                  disabled={newsPage === 1}
+                  className="w-8 h-8 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 disabled:opacity-40 transition-colors cursor-pointer"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                {Array.from({ length: Math.ceil(newsList.length / newsPerPage) }, (_, i) => i + 1).map(p => (
+                  <button
+                    key={p}
+                    onClick={() => setNewsPage(p)}
+                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                      newsPage === p
+                        ? 'bg-[#2d5a3c] text-white shadow-xs'
+                        : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setNewsPage(p => Math.min(Math.ceil(newsList.length / newsPerPage), p + 1))}
+                  disabled={newsPage === Math.ceil(newsList.length / newsPerPage)}
+                  className="w-8 h-8 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 disabled:opacity-40 transition-colors cursor-pointer"
+                >
+                  <ChevronRight size={16} />
+                </button>
               </div>
             )}
           </div>
@@ -481,129 +640,7 @@ export default function AdminNewsResourcesPage() {
         )}
       </div>
 
-      {/* MODAL 1: ADD / EDIT NEWS */}
-      {showNewsForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8 relative">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
-              <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
-                <FileText className="text-[#2d5a3c]" size={18} />
-                {editingId ? 'Edit News Entry' : 'Publish New Story'}
-              </h3>
-              <button onClick={() => setShowNewsForm(false)} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors">
-                <X size={18} />
-              </button>
-            </div>
 
-            <form onSubmit={handleNewsSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tag Badge *</label>
-                  <input type="text" required value={newsForm.tag} onChange={(e) => setNewsForm({...newsForm, tag: e.target.value.toUpperCase()})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 uppercase focus:bg-white focus:border-[#2d5a3c] outline-none" />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Category *</label>
-                  <select value={newsForm.category} onChange={(e) => setNewsForm({...newsForm, category: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none">
-                    {newsCategories.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">News Title *</label>
-                <input
-                  type="text"
-                  required
-                  value={newsForm.title}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setNewsForm(prev => ({
-                      ...prev,
-                      title: val,
-                      slug: !editingId || !prev.slug ? slugify(val) : prev.slug
-                    }));
-                  }}
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:bg-white focus:border-[#2d5a3c] outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                  <span>URL Slug (Unique Link) *</span>
-                  <span className="text-[10px] text-slate-400 font-mono lowercase">auto-generated from title</span>
-                </label>
-                <div className="flex items-center rounded-xl bg-slate-50 border border-slate-200 px-3 py-2 text-xs font-mono text-slate-600 focus-within:border-[#2d5a3c] focus-within:bg-white transition-colors">
-                  <span className="text-slate-400 select-none shrink-0 font-medium">/news/</span>
-                  <input
-                    type="text"
-                    required
-                    value={newsForm.slug}
-                    onChange={(e) => setNewsForm({ ...newsForm, slug: slugify(e.target.value) })}
-                    placeholder="news-article-slug"
-                    className="bg-transparent border-none outline-none flex-1 text-slate-900 font-bold ml-1"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Author</label>
-                  <input
-                    type="text"
-                    value={newsForm.author || ''}
-                    onChange={(e) => setNewsForm({ ...newsForm, author: e.target.value })}
-                    placeholder="LEnSE Admin"
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Read Time</label>
-                  <input
-                    type="text"
-                    value={newsForm.readTime || ''}
-                    onChange={(e) => setNewsForm({ ...newsForm, readTime: e.target.value })}
-                    placeholder="5 min read"
-                    className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Description / Snippet *</label>
-                <textarea rows={2} required value={newsForm.desc} onChange={(e) => setNewsForm({...newsForm, desc: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Full Article Content / Details</label>
-                <textarea rows={4} value={newsForm.content || ''} onChange={(e) => setNewsForm({...newsForm, content: e.target.value})} placeholder="Detailed story content displayed on the full article page..." className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Date String *</label>
-                <input type="text" required value={newsForm.date} onChange={(e) => setNewsForm({...newsForm, date: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" placeholder="15 May 2025" />
-              </div>
-
-              {/* News Image with Local Device ImageUploader */}
-              <div>
-                <ImageUploader
-                  value={newsForm.imageUrl}
-                  onChange={(url) => setNewsForm({ ...newsForm, imageUrl: url })}
-                  category="news"
-                  label="News Cover Image"
-                  helperText="Upload image from your device (saved to public/admin/news/) or provide a URL."
-                />
-              </div>
-
-              <div className="pt-3 flex gap-3 border-t border-slate-100">
-                <button type="button" onClick={() => setShowNewsForm(false)} className="flex-1 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 font-bold text-xs hover:bg-slate-50 transition-colors">Cancel</button>
-                <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-xl bg-[#2d5a3c] hover:bg-[#23462f] text-white font-extrabold text-xs flex justify-center items-center gap-2 shadow-xs disabled:opacity-50 transition-all cursor-pointer">
-                  {saving ? <Loader2 className="animate-spin" size={14}/> : <CheckCircle2 size={14}/>} Save News
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* MODAL 2: ADD / EDIT RESOURCE */}
       {showResourceForm && (
@@ -619,7 +656,7 @@ export default function AdminNewsResourcesPage() {
               </button>
             </div>
 
-            <form onSubmit={handleResourceSubmit} className="space-y-4">
+            <form onSubmit={handleResourceSubmit} className="space-y-4 max-h-[75vh] overflow-y-auto pr-2 custom-scrollbar">
               <div>
                 <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Document Title *</label>
                 <input type="text" required value={resourceForm.title} onChange={(e) => setResourceForm({...resourceForm, title: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:bg-white focus:border-[#2d5a3c] outline-none" />
@@ -672,6 +709,18 @@ export default function AdminNewsResourcesPage() {
         </div>
       )}
 
+      <style dangerouslySetInnerHTML={{__html: `
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: #d1d9d3;
+          border-radius: 10px;
+        }
+      `}} />
     </div>
   );
 }

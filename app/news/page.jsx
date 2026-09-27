@@ -128,6 +128,46 @@ export default function NewsPage() {
     { label: 'Community Stories', count: String(newsList.filter(n => (n.category || n.tag || '').toLowerCase().includes('communit')).length), icon: Users },
   ], [newsList]);
 
+  // Dynamic pagination calculation (10 items per page)
+  const itemsPerPage = 10;
+  const totalNews = filteredNews.length;
+  const totalPages = Math.ceil(totalNews / itemsPerPage) || 1;
+
+  // Reset to first page when search or category filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchQuery]);
+
+  const paginatedNews = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredNews.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredNews, currentPage, itemsPerPage]);
+
+  const handlePageChange = (page) => {
+    if (typeof page === 'number' && page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      if (typeof window !== 'undefined') {
+        const el = document.getElementById('news-list-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
+
+  const getPageNumbers = () => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const pages = [];
+    if (currentPage <= 4) {
+      pages.push(1, 2, 3, 4, 5, '...', totalPages);
+    } else if (currentPage >= totalPages - 3) {
+      pages.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+    } else {
+      pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+    }
+    return pages;
+  };
+
   return (
     <div className="min-h-screen bg-[#fcfdfa] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 font-sans pb-28 pt-28 sm:pt-36 relative overflow-hidden selection:bg-[#a2d45e]/30 transition-colors duration-300">
       
@@ -308,7 +348,7 @@ export default function NewsPage() {
             )}
 
             {/* LATEST NEWS HEADER */}
-            <div className="pt-2">
+            <div id="news-list-section" className="pt-2 scroll-mt-28">
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-2 h-2 rounded-full bg-[#2d5a3c] dark:bg-[#a2d45e]" />
                 <h3 className="text-xl sm:text-2xl font-serif text-[#122016] dark:text-white">
@@ -340,7 +380,7 @@ export default function NewsPage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {filteredNews.map((item) => (
+                  {paginatedNews.map((item) => (
                     <Link key={item.id} href={`/news/${item.slug || item.id}`} className="block">
                       <div className="group rounded-[1.8rem] bg-white/80 dark:bg-[#0b1c14]/80 hover:bg-white dark:hover:bg-[#10271c] backdrop-blur-xl border border-white/95 dark:border-[#183a27] p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-center shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_10px_30px_rgba(0,25,12,0.06)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
                         {/* Image Thumbnail */}
@@ -389,50 +429,56 @@ export default function NewsPage() {
               )}
             </div>
 
-            {/* PAGINATION */}
-            <div className="pt-6 flex items-center justify-center gap-2 select-none">
-              <button 
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                className="w-8 h-8 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d5e2d6] dark:border-[#183a27] text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#11261a] transition-colors shadow-sm disabled:opacity-40 cursor-pointer"
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft size={16} />
-              </button>
-
-              {[1, 2, 3, 4, 5].map((pageNum) => (
-                <button
-                  key={pageNum}
-                  onClick={() => setCurrentPage(pageNum)}
-                  className={`w-8 h-8 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                    currentPage === pageNum
-                      ? 'bg-[#1b3726] dark:bg-[#154628] text-white shadow-sm scale-105'
-                      : 'bg-white dark:bg-[#0b1c14] hover:bg-[#eaf1e4] dark:hover:bg-[#11261a] text-[#384c3e] dark:text-slate-300 border border-[#d5e2d6] dark:border-[#183a27]'
-                  }`}
+            {/* CLEAN PAGINATION CONTROLS (Only visible if > 10 items) */}
+            {totalPages > 1 && (
+              <div className="pt-8 flex items-center justify-center gap-2 select-none border-t border-[#e8efe9] dark:border-[#183a27]">
+                <button 
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="w-8 h-8 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d5e2d6] dark:border-[#183a27] text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#11261a] transition-colors shadow-xs disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                  title="Previous Page"
+                  aria-label="Previous Page"
                 >
-                  {pageNum}
+                  <ChevronLeft size={16} />
                 </button>
-              ))}
 
-              <span className="text-xs text-[#7f9484] dark:text-slate-500 px-1 font-bold">...</span>
+                {getPageNumbers().map((page, idx) => {
+                  if (page === '...') {
+                    return (
+                      <span key={`dots-${idx}`} className="w-6 text-center text-xs text-[#7f9484] dark:text-slate-500 font-bold select-none">
+                        ...
+                      </span>
+                    );
+                  }
+                  const isCurrent = currentPage === page;
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`w-8 h-8 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${
+                        isCurrent
+                          ? 'bg-[#1b3726] dark:bg-[#a2d45e] text-white dark:text-[#031008] shadow-sm scale-105'
+                          : 'bg-white dark:bg-[#0b1c14] hover:bg-[#eaf1e4] dark:hover:bg-[#11261a] text-[#384c3e] dark:text-slate-300 border border-[#d5e2d6] dark:border-[#183a27]'
+                      }`}
+                      aria-label={`Page ${page}`}
+                      aria-current={isCurrent ? 'page' : undefined}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
 
-              <button
-                onClick={() => setCurrentPage(10)}
-                className={`w-8 h-8 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                  currentPage === 10
-                    ? 'bg-[#1b3726] dark:bg-[#154628] text-white shadow-sm'
-                    : 'bg-white dark:bg-[#0b1c14] hover:bg-[#eaf1e4] dark:hover:bg-[#11261a] text-[#384c3e] dark:text-slate-300 border border-[#d5e2d6] dark:border-[#183a27]'
-                }`}
-              >
-                10
-              </button>
-
-              <button 
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, 10))}
-                className="w-8 h-8 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d5e2d6] dark:border-[#183a27] text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#11261a] transition-colors shadow-sm cursor-pointer"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
+                <button 
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="w-8 h-8 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d5e2d6] dark:border-[#183a27] text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#11261a] transition-colors shadow-xs disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                  title="Next Page"
+                  aria-label="Next Page"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            )}
 
           </div>
 
@@ -461,9 +507,11 @@ export default function NewsPage() {
                       <stat.icon size={15} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0" />
                       <span>{stat.label}</span>
                     </div>
-                    <span className="px-2 py-0.5 rounded-md bg-[#eaf1e4] dark:bg-[#11261a] text-[#2d5a3c] dark:text-[#a2d45e] font-bold text-[11px]">
-                      {stat.count}
-                    </span>
+                    {Number(stat.count) > 0 && (
+                      <span className="px-2 py-0.5 rounded-md bg-[#eaf1e4] dark:bg-[#11261a] text-[#2d5a3c] dark:text-[#a2d45e] font-bold text-[11px]">
+                        {stat.count}
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>
