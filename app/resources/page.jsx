@@ -12,7 +12,7 @@ import {
   Info,
   ArrowRight,
   Sparkles,
-  Layers, 
+  Layers,
   Calendar,
   SlidersHorizontal,
   X,
@@ -64,10 +64,10 @@ export default function AcademicResourcesPage() {
               const catLower = (d.category || '').toLowerCase();
               const themeKey = d.themeColor || d.theme_color || (
                 catLower.includes('guide') ? 'cyan' :
-                catLower.includes('toolkit') ? 'amber' :
-                catLower.includes('course') ? 'lime' :
-                catLower.includes('brochure') ? 'crimson' :
-                catLower.includes('submission') ? 'indigo' : 'emerald'
+                  catLower.includes('toolkit') ? 'amber' :
+                    catLower.includes('course') ? 'lime' :
+                      catLower.includes('brochure') ? 'crimson' :
+                        catLower.includes('submission') ? 'indigo' : 'emerald'
               );
               const themePreset = THEME_PRESETS[themeKey] || THEME_PRESETS.emerald;
 
@@ -87,10 +87,10 @@ export default function AcademicResourcesPage() {
                 status: hasDownload ? 'download' : 'coming_soon',
                 coverType: d.coverType || d.cover_type || (
                   catLower.includes('guide') ? 'guide' :
-                  catLower.includes('toolkit') ? 'toolkit' :
-                  catLower.includes('course') ? 'courseware' :
-                  catLower.includes('brochure') ? 'brochure' :
-                  catLower.includes('submission') ? 'submission' : 'report'
+                    catLower.includes('toolkit') ? 'toolkit' :
+                      catLower.includes('course') ? 'courseware' :
+                        catLower.includes('brochure') ? 'brochure' :
+                          catLower.includes('submission') ? 'submission' : 'report'
                 ),
                 themeColor: themeKey,
                 customBadge: d.customBadge || d.custom_badge || '',
@@ -139,7 +139,7 @@ export default function AcademicResourcesPage() {
 
   return (
     <div className="min-h-screen bg-[#f3f5ed] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 font-sans pb-28 pt-24 sm:pt-28 relative overflow-hidden selection:bg-[#a2d45e]/30 transition-colors duration-300">
-      
+
       {/* Ambient soft background glows */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[6%] -left-36 w-[550px] h-[550px] bg-[#e1ecd6]/70 dark:bg-emerald-950/30 rounded-full blur-3xl" />
@@ -154,10 +154,10 @@ export default function AcademicResourcesPage() {
         {/* 1. HERO SECTION - SEAMLESS BLEND TO BG */}
         {/* =================================================================== */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-10 items-center pt-2 relative">
-          
+
           {/* Left Content Column */}
           <div className="lg:col-span-5 xl:col-span-5 space-y-6 z-10 lg:-ml-2 xl:-ml-6">
-            
+
             {/* Breadcrumb Trail */}
             <div className="flex items-center gap-2 text-xs font-medium text-[#485b4d] dark:text-slate-400">
               <Link href="/" className="hover:text-[#1b3726] dark:hover:text-white transition-colors flex items-center gap-1.5">
@@ -243,7 +243,7 @@ export default function AcademicResourcesPage() {
 
           {/* Right Hero Visual with Organic Blended Aesthetic */}
           <div className="lg:col-span-7 xl:col-span-7 relative w-full">
-            
+
             {/* Soft Ambient Aura behind campus visual */}
             <div className="absolute -inset-4 bg-gradient-to-tr from-emerald-500/15 via-teal-500/10 to-transparent rounded-tl-[10rem] rounded-[4rem] blur-2xl -z-10 pointer-events-none opacity-80 dark:opacity-40" />
 
@@ -275,7 +275,7 @@ export default function AcademicResourcesPage() {
 
             {/* Campus Frame Container with Mockup's Sweeping Arch & Gradients that Blend to BG */}
             <div className="relative w-full h-[460px] sm:h-[530px] lg:h-[560px] rounded-tl-[6rem] sm:rounded-tl-[8rem] lg:rounded-tl-[9rem] rounded-tr-[3.5rem] rounded-br-[3.5rem] rounded-bl-[3.5rem] overflow-hidden shadow-2xl border border-white/60 dark:border-white/10 select-none group z-20">
-              
+
               {/* Campus Architecture Image */}
               <img
                 src="/campus_building.jpg"
@@ -339,7 +339,7 @@ export default function AcademicResourcesPage() {
         {/* =================================================================== */}
         <div id="resources-catalog" className="scroll-mt-32 space-y-4">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            
+
             {/* Clean Text Category Pills */}
             <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar">
               {CATEGORIES.map((cat) => {
@@ -348,11 +348,10 @@ export default function AcademicResourcesPage() {
                   <button
                     key={cat.id}
                     onClick={() => setActiveCategory(cat.id)}
-                    className={`px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                      isActive
+                    className={`px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${isActive
                         ? 'bg-[#122b1c] dark:bg-emerald-600 text-white shadow-md'
                         : 'bg-white/80 dark:bg-[#0c2217]/40 backdrop-blur-xl hover:bg-white dark:hover:bg-[#112d1f]/70 text-[#3b4e41] dark:text-slate-200 border border-[#dee8df] dark:border-emerald-500/20 shadow-xs'
-                    }`}
+                      }`}
                   >
                     {cat.label}
                   </button>
@@ -388,11 +387,10 @@ export default function AcademicResourcesPage() {
                   else if (sortOrder === 'az') setSortOrder('za');
                   else setSortOrder('default');
                 }}
-                className={`p-2.5 rounded-full border border-[#dee8df] dark:border-emerald-500/20 transition-colors shadow-xs cursor-pointer ${
-                  sortOrder !== 'default'
+                className={`p-2.5 rounded-full border border-[#dee8df] dark:border-emerald-500/20 transition-colors shadow-xs cursor-pointer ${sortOrder !== 'default'
                     ? 'bg-[#122b1c] dark:bg-emerald-600 text-white'
                     : 'bg-white/80 dark:bg-[#0c2217]/40 backdrop-blur-xl text-[#4d6052] dark:text-slate-300 hover:bg-slate-50'
-                }`}
+                  }`}
                 title={`Sort: ${sortOrder === 'az' ? 'A to Z' : sortOrder === 'za' ? 'Z to A' : 'Default'}`}
               >
                 <SlidersHorizontal size={16} />
@@ -455,13 +453,13 @@ export default function AcademicResourcesPage() {
               >
                 {/* Subtle glass reflection highlight on top edge */}
                 <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 dark:via-emerald-400/30 to-transparent pointer-events-none" />
-                
+
                 {/* Ambient glowing radial blob in card corner */}
                 <div className="absolute -top-10 -right-10 w-28 h-28 bg-emerald-500/5 dark:bg-emerald-400/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-500" />
 
                 {/* Horizontal split inside each card */}
                 <div className="grid grid-cols-12 gap-3.5 sm:gap-4 items-stretch relative z-10">
-                  
+
                   {/* Left Column: Document Preview Cover */}
                   <div className="col-span-4 sm:col-span-4 flex items-center justify-center">
                     <div className="w-full max-w-[115px] sm:max-w-[125px] aspect-[1/1.38]">
@@ -538,12 +536,12 @@ export default function AcademicResourcesPage() {
         {/* 4. BOTTOM VALUE BANNER ("KNOWLEDGE SHARED TODAY") - GLASSMORPHISM */}
         {/* =================================================================== */}
         <div className="rounded-[2.2rem] sm:rounded-[2.8rem] bg-white/75 dark:bg-[#0c2217]/35 backdrop-blur-2xl border border-white/80 dark:border-emerald-500/20 p-6 sm:p-8 lg:p-10 shadow-[0_12px_40px_rgba(0,0,0,0.04)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.4)] relative overflow-hidden transition-all duration-300">
-          
+
           {/* Top subtle highlight reflection */}
           <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 dark:via-emerald-400/30 to-transparent pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
-            
+
             {/* Left Column: Heading Quote */}
             <div className="lg:col-span-6 space-y-3">
               <h2 className="text-2xl sm:text-[28px] lg:text-[30px] font-serif italic text-[#14261a] dark:text-white leading-snug">
@@ -616,7 +614,7 @@ export default function AcademicResourcesPage() {
       {howToUseModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="relative w-full max-w-xl bg-white/90 dark:bg-[#071d13]/90 backdrop-blur-2xl border border-white/80 dark:border-emerald-500/30 rounded-[2.5rem] p-6 sm:p-8 shadow-2xl space-y-6">
-            
+
             <div className="flex items-center justify-between pb-3 border-b border-[#e2ebd0] dark:border-white/10">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-full bg-[#eaf1e4] dark:bg-emerald-950/80 text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center border dark:border-emerald-500/30">

@@ -16,11 +16,9 @@ export default function SearchModal({ isOpen, onClose }) {
     { title: 'About the Institution', category: 'Primary Page', href: '/about', icon: Info, desc: 'CLESE 2024 establishment, 5 core objectives & collaborations' },
     { title: 'Administration', category: 'Primary Page', href: '/administration', icon: ShieldCheck, desc: 'Single Administrator (CLESE) CMS panel & SEO management' },
     { title: 'Departments', category: 'Primary Page', href: '/departments', icon: Building2, desc: 'Learning Engineering, STEM Education & Sustainability divisions' },
-    { title: 'Faculty', category: 'Primary Page', href: '/faculty', icon: UserCheck, desc: 'Dynamic Faculty Management System, Dr. Divya C. Senan & scholars' },
-    { title: 'Events', category: 'Primary Page', href: '/events', icon: Calendar, desc: '4th SIET Conference, Prompt Engg lecture, STEM camps & workshops' },
+      { title: 'Events', category: 'Primary Page', href: '/events', icon: Calendar, desc: '4th SIET Conference, Prompt Engg lecture, STEM camps & workshops' },
     { title: 'News & Announcements', category: 'Primary Page', href: '/news', icon: Newspaper, desc: 'STEM 4 Girls ICSSR launch, SIET 44 schools project & FYUGP course' },
-    { title: 'Media / Gallery', category: 'Primary Page', href: '/gallery', icon: ImageIcon, desc: 'Dynamic image gallery, photo collections & event media' },
-    { title: 'Academic Information', category: 'Primary Page', href: '/academics', icon: BookOpen, desc: 'Portal framework, degree courses, M.Ed/Ph.D learning engineering' },
+      { title: 'Academic Information', category: 'Primary Page', href: '/academics', icon: BookOpen, desc: 'Portal framework, degree courses, M.Ed/Ph.D learning engineering' },
     { title: 'Contact', category: 'Primary Page', href: '/contact', icon: Mail, desc: 'University of Kerala Kariavattom Campus address & lenseedu24@gmail.com' }
   ];
 

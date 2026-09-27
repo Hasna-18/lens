@@ -99,7 +99,7 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#eef4ea]/50 to-transparent blur-3xl rounded-full" />
       </div>
 
-      <div className="relative z-10 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col justify-center gap-6 sm:gap-8 lg:gap-10">
+      <div className="relative z-10 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col justify-center gap-12 sm:gap-16 lg:gap-24">
 
         {/* ========================================================================= */}
         {/* 1. HERO AREA: TEXT & OVERLAPPING IMAGE/GLASS PANEL */}
@@ -134,10 +134,21 @@ export default function HomePage() {
 
               {/* Headline */}
               <h1 className="text-[2.2rem] xs:text-[2.6rem] sm:text-[3.5rem] lg:text-[4.5rem] xl:text-[5rem] font-medium text-[#112318] dark:text-white leading-[1.04] tracking-tight font-serif">
-                Empowering minds.<br />
-                Building a <span className="italic text-[#1a5e35] dark:text-[#a2d45e] hover:brightness-110 transition-all duration-300">sustainable</span><br />
-                future.
+                <span className="typewriter-word" style={{'--i':0}}>Empowering</span> <span className="typewriter-word" style={{'--i':1}}>minds.</span><br />
+                <span className="typewriter-word" style={{'--i':2}}>Building</span> <span className="typewriter-word" style={{'--i':3}}>a</span> <span className="typewriter-word" style={{'--i':4}}><span className="italic text-[#1a5e35] dark:text-[#a2d45e] hover:brightness-110 transition-all duration-300">sustainable</span></span><br />
+                <span className="typewriter-word" style={{'--i':5}}>future.</span>
               </h1>
+              <style jsx>{`
+                .typewriter-word {
+                  opacity: 0;
+                  display: inline-block;
+                  animation: typeFade 0.5s forwards;
+                  animation-delay: calc(var(--i) * 0.2s);
+                }
+                @keyframes typeFade {
+                  to { opacity: 1; }
+                }
+              `}</style>
 
               {/* Subtext */}
               <p className="text-[#556758] dark:text-slate-300 text-[12px] sm:text-[14px] xl:text-[16px] leading-[1.6] max-w-[480px]">
@@ -554,7 +565,57 @@ export default function HomePage() {
         </div>
 
         {/* ========================================================================= */}
-        {/* 8. OUR IMPACT */}
+        {/* 8. CREATE PROJECT SHOWCASE */}
+        {/* ========================================================================= */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-center mt-6 sm:mt-10 mb-6 relative group">
+
+          {/* Left Visual */}
+          <div className="lg:col-span-5 flex items-center justify-center relative cursor-pointer z-10 group/img">
+            <img
+              src="/create.png"
+              alt="CREATE Project"
+              className="w-full max-w-[280px] sm:max-w-sm lg:max-w-md xl:max-w-lg h-auto object-contain group-hover/img:scale-105 transition-transform duration-700 ease-out"
+              onError={(e) => {
+                e.currentTarget.src = "/events/events_book_plant.jpg";
+              }}
+            />
+          </div>
+
+          {/* Center Copy */}
+          <div className="lg:col-span-7 space-y-4 sm:space-y-6 lg:pl-6 relative z-10">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="px-3 py-1.5 rounded-full bg-[#1b3726] dark:bg-[#a2d45e] text-white dark:text-[#0a1a11] text-[10px] sm:text-[11px] font-bold tracking-wider uppercase shadow-sm">
+                SPARC II FUNDED
+              </span>
+              <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.15em] text-[#2d5c3f] dark:text-[#86af4f] uppercase flex items-center gap-1.5">
+                <Sparkles size={12} /> Global Collaboration
+              </span>
+            </div>
+            
+            <h3 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#122016] dark:text-white leading-[1.1] tracking-tight">
+              CREATE <span className="italic font-light text-[#2d5c3f] dark:text-[#a2d45e]">Project</span>
+            </h3>
+            
+            <p className="text-[13px] sm:text-[14px] lg:text-[15px] text-[#4d6052] dark:text-[#c2d8c7] leading-relaxed max-w-2xl font-light">
+              CREATE aims to advance climate science research, energy education, and ecological sustainability through international collaboration between Indian and global institutions. A visionary project promoting cross-border innovation and green education.
+            </p>
+            
+            <div className="pt-3 sm:pt-5">
+              <a
+                href="https://www.createsparc.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-full bg-[#1b3726] hover:bg-[#254c35] dark:bg-white dark:hover:bg-[#f4f7f2] text-white dark:text-[#0a1a11] text-[11px] sm:text-[13px] font-bold uppercase tracking-wider inline-flex items-center gap-3 transition-all duration-300 shadow-[0_5px_20px_rgba(27,55,38,0.15)] dark:shadow-[0_5px_20px_rgba(255,255,255,0.1)] hover:shadow-[0_8px_25px_rgba(27,55,38,0.25)] dark:hover:shadow-[0_8px_25px_rgba(255,255,255,0.25)] hover:-translate-y-1 active:translate-y-0 cursor-pointer group/btn"
+              >
+                <span>Visit CREATE Platform</span>
+                <ArrowRight size={16} className="group-hover/btn:translate-x-1.5 transition-transform duration-300" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* 9. OUR IMPACT */}
         {/* ========================================================================= */}
         <div className="space-y-3 sm:space-y-4">
           <h3 className="text-xl sm:text-2xl font-serif text-[#122016] dark:text-white">
@@ -591,7 +652,7 @@ export default function HomePage() {
         </div>
 
         {/* ========================================================================= */}
-        {/* 9. BUILDING PARTNERSHIPS. DRIVING CHANGE. SHOWCASE */}
+        {/* 10. BUILDING PARTNERSHIPS. DRIVING CHANGE. SHOWCASE */}
         {/* ========================================================================= */}
         <div className="rounded-[2rem] sm:rounded-[2.4rem] bg-gradient-to-r from-[#f7f9f5] via-white to-[#f4f8f2] dark:from-[#0b1c14] dark:via-[#08160f] dark:to-[#040e09] border border-white/95 dark:border-[#183a27] p-4 sm:p-8 lg:p-10 shadow-[0_10px_35px_rgba(0,0,0,0.03)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)] hover:shadow-2xl transition-all duration-500 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-center">
 
@@ -620,7 +681,7 @@ export default function HomePage() {
             </p>
             <div className="pt-1 sm:pt-2">
               <Link
-                href="/projects"
+                href="/initiatives"
                 className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#1b3726] hover:bg-[#254c35] text-white text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider inline-flex items-center gap-2 transition-all duration-300 shadow-sm hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer dark:bg-[#1b3726] dark:hover:bg-[#234631] dark:border dark:border-[#2d5c3f] group"
               >
                 <span>Our Initiatives</span>
@@ -653,6 +714,8 @@ export default function HomePage() {
           </div>
 
         </div>
+
+
 
       </div>
 

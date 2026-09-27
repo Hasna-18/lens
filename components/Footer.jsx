@@ -58,7 +58,6 @@ export default function Footer() {
               {[
                 { name: 'About Us', href: '/about' },
                 { name: 'Initiatives', href: '/initiatives' },
-                { name: 'Research & Projects', href: '/projects' },
                 { name: 'Events & Programmes', href: '/events' },
                 { name: 'News & Media', href: '/news' }
               ].map((link, idx) => (
@@ -79,7 +78,6 @@ export default function Footer() {
                 { name: 'Publications', href: '/publications' },
                 { name: 'Resources Hub', href: '/resources' },
                 { name: 'Academic Team', href: '/team' },
-                { name: 'Media Gallery', href: '/gallery' }
               ].map((link, idx) => (
                 <li key={idx}>
                   <Link href={link.href} className="text-[#556758] dark:text-slate-400 hover:text-[#1b3726] dark:hover:text-white hover:translate-x-1 inline-block transition-all duration-200">

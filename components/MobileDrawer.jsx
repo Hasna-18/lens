@@ -16,11 +16,8 @@ export default function MobileDrawer({ isOpen, onClose, onOpenSearch }) {
     { href: '/about', label: 'About Us', icon: Info, desc: 'Vision, Objectives & Centre' },
     { href: '/events', label: 'Events & Conferences', icon: Calendar, desc: 'Conferences & Workshops' },
     { href: '/initiatives', label: 'Initiatives & Outreach', icon: Sparkles, desc: 'State-wide School STEM Camps' },
-    { href: '/projects', label: 'Research & Projects', icon: Leaf, desc: 'Grants & Global Collaborations' },
     { href: '/resources', label: 'Academic Resources', icon: FileText, desc: 'Courseware, Toolkits & Downloads' },
     { href: '/news', label: 'News & Insights', icon: Newspaper, desc: 'Announcements & Media Features' },
-    { href: '/gallery', label: 'Media & Gallery', icon: ImageIcon, desc: 'Dynamic Image Collections' },
-    { href: '/faculty', label: 'Faculty Profiles', icon: UserCheck, desc: 'Academic Leadership' },
     { href: '/contact', label: 'Contact & Location', icon: Mail, desc: 'University of Kerala Campus' }
   ];
 
