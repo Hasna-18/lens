@@ -18,11 +18,13 @@ import {
   Sparkles
 } from 'lucide-react';
 import { getFromCache, fetchWithCache, prefetchEndpoint } from '../../lib/clientCache';
+import { sortEventsLatestFirst } from '../../lib/eventUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 function formatEventsList(data) {
   if (!Array.isArray(data)) return [];
-  return data.map(item => ({
+  const sorted = sortEventsLatestFirst(data);
+  return sorted.map(item => ({
     ...item,
     id: item.id,
     slug: item.slug || String(item.id),

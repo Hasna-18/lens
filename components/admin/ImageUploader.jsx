@@ -92,16 +92,15 @@ export default function ImageUploader({
           <ImageIcon size={13} className="text-[#2d5a3c]" />
           {label}
         </label>
-        
+
         <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs">
           <button
             type="button"
             onClick={() => setActiveTab('upload')}
-            className={`px-2.5 py-1 rounded-md transition-all font-medium flex items-center gap-1 ${
-              activeTab === 'upload'
+            className={`px-2.5 py-1 rounded-md transition-all font-medium flex items-center gap-1 ${activeTab === 'upload'
                 ? 'bg-white text-[#2d5a3c] shadow-xs font-semibold'
                 : 'text-slate-500 hover:text-slate-800'
-            }`}
+              }`}
           >
             <UploadCloud size={12} />
             Cloud Upload
@@ -109,11 +108,10 @@ export default function ImageUploader({
           <button
             type="button"
             onClick={() => setActiveTab('url')}
-            className={`px-2.5 py-1 rounded-md transition-all font-medium flex items-center gap-1 ${
-              activeTab === 'url'
+            className={`px-2.5 py-1 rounded-md transition-all font-medium flex items-center gap-1 ${activeTab === 'url'
                 ? 'bg-white text-[#2d5a3c] shadow-xs font-semibold'
                 : 'text-slate-500 hover:text-slate-800'
-            }`}
+              }`}
           >
             <LinkIcon size={12} />
             URL / Path
@@ -128,11 +126,10 @@ export default function ImageUploader({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => !uploading && fileInputRef.current?.click()}
-          className={`relative border-2 border-dashed rounded-xl p-4 transition-all cursor-pointer text-center group ${
-            isDragOver
+          className={`relative border-2 border-dashed rounded-xl p-4 transition-all cursor-pointer text-center group ${isDragOver
               ? 'border-[#2d5a3c] bg-emerald-50/50'
               : 'border-slate-200 hover:border-[#2d5a3c] bg-slate-50/60 hover:bg-emerald-50/20'
-          } ${uploading ? 'pointer-events-none opacity-80' : ''}`}
+            } ${uploading ? 'pointer-events-none opacity-80' : ''}`}
         >
           <input
             ref={fileInputRef}

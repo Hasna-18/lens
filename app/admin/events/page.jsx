@@ -8,6 +8,7 @@ import {
 import Link from 'next/link';
 import ImageUploader from '../../../components/admin/ImageUploader';
 import { slugify } from '../../../lib/slug';
+import { sortEventsLatestFirst } from '../../../lib/eventUtils';
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
@@ -187,7 +188,7 @@ export default function AdminEventsPage() {
 
       if (eventsRes.ok) {
         const eventsData = await eventsRes.json();
-        if (Array.isArray(eventsData)) setEvents(eventsData);
+        if (Array.isArray(eventsData)) setEvents(sortEventsLatestFirst(eventsData));
       }
 
       if (settingsRes.ok) {

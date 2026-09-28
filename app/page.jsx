@@ -34,11 +34,14 @@ import {
 } from 'lucide-react';
 
 import { getFromCache, fetchWithCache, prefetchEndpoint } from '../lib/clientCache';
+import { sortEventsLatestFirst } from '../lib/eventUtils';
 
 function formatEvents(data) {
   if (!Array.isArray(data)) return [];
-  return data.map((item) => ({
+  const sorted = sortEventsLatestFirst(data);
+  return sorted.map((item) => ({
     id: item.id,
+    slug: item.slug,
     day: item.dateDay || item.date_day || item.day || '14',
     month: item.dateMonth || item.date_month || item.month || 'MAR',
     year: item.dateYear || item.date_year || item.year || '2025',
