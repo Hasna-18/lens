@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, MapPin, Mail, Phone } from 'lucide-react';
+import { ArrowRight, MapPin, Mail, Phone, Facebook, Linkedin, Youtube, Instagram, Twitter } from 'lucide-react';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -34,18 +34,20 @@ export default function Footer() {
             {/* Social Icons */}
             <div className="flex items-center gap-3 pt-2">
               {[
-                { name: 'Facebook', href: '#', icon: 'f' },
-                { name: 'LinkedIn', href: '#', icon: 'in' },
-                { name: 'YouTube', href: '#', icon: '▶' },
-                { name: 'Instagram', href: '#', icon: '📷' }
+                { name: 'Facebook', href: '#', icon: Facebook },
+                { name: 'LinkedIn', href: '#', icon: Linkedin },
+                { name: 'YouTube', href: '#', icon: Youtube },
+                { name: 'Instagram', href: '#', icon: Instagram }
               ].map((item, idx) => (
                 <a
                   key={idx}
                   href={item.href}
                   aria-label={item.name}
-                  className="w-9 h-9 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d5e2d6] dark:border-[#1e3d2b] flex items-center justify-center text-xs font-semibold text-[#14261a] dark:text-slate-300 hover:text-white hover:bg-[#1b3726] dark:hover:border-[#a2d45e] dark:hover:bg-[#122b1e] transition-all duration-300 shadow-xs"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d5e2d6] dark:border-[#1e3d2b] flex items-center justify-center text-[#14261a] dark:text-slate-300 hover:text-white hover:bg-[#1b3726] dark:hover:border-[#a2d45e] dark:hover:bg-[#122b1e] transition-all duration-300 shadow-xs"
                 >
-                  <span>{item.icon}</span>
+                  <item.icon size={15} />
                 </a>
               ))}
             </div>
@@ -111,9 +113,8 @@ export default function Footer() {
             <Link href="/privacy" className="hover:text-[#122016] dark:hover:text-white transition-colors">Privacy Policy</Link>
             <span>|</span>
             <Link href="/terms" className="hover:text-[#122016] dark:hover:text-white transition-colors">Terms of Use</Link>
-            <span>|</span>
-            <Link href="/sitemap" className="hover:text-[#122016] dark:hover:text-white transition-colors">Sitemap</Link>
-          </div>
+
+                     </div>
         </div>
 
       </div>

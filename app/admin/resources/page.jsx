@@ -573,30 +573,42 @@ export default function AdminResourcesPage() {
                         <div className="flex items-center justify-between p-1.5 px-2.5 rounded-lg bg-emerald-50/90 dark:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-500/20 text-[10px] font-bold text-emerald-900 dark:text-emerald-300">
                           <div className="flex items-center gap-1.5 min-w-0">
                             <CheckCircle2 size={12} className="text-emerald-700 dark:text-emerald-400 shrink-0" />
-                            <span className="truncate">PDF Ready ({item.size || 'PDF'})</span>
+                            <span className="truncate">PDF Attached ({item.size || 'PDF'})</span>
                           </div>
-                          <a
-                            href={item.downloadUrl}
-                            download
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-[9.5px] text-emerald-800 dark:text-emerald-300 underline hover:text-emerald-950 flex items-center gap-0.5 shrink-0"
-                          >
-                            <Download size={10} />
-                            <span>Preview</span>
-                          </a>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <a
+                              href={`/api/resources/download?id=${item.id}&mode=preview`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[9.5px] text-emerald-800 dark:text-emerald-300 hover:text-emerald-950 dark:hover:text-white font-bold flex items-center gap-1 hover:underline"
+                              title="Preview document in browser viewer"
+                            >
+                              <Eye size={11} />
+                              <span>Preview</span>
+                            </a>
+                            <span className="text-emerald-400 dark:text-emerald-700">•</span>
+                            <a
+                              href={`/api/resources/download?id=${item.id}&mode=download`}
+                              download
+                              className="text-[9.5px] text-emerald-800 dark:text-emerald-300 hover:text-emerald-950 dark:hover:text-white font-bold flex items-center gap-1 hover:underline"
+                              title="Download document file"
+                            >
+                              <Download size={11} />
+                              <span>Download</span>
+                            </a>
+                          </div>
                         </div>
                       ) : (
                         <div className="flex items-center justify-between p-1.5 px-2.5 rounded-lg bg-amber-50/90 dark:bg-amber-950/50 border border-amber-200/80 dark:border-amber-500/20 text-[10px] font-bold text-amber-900 dark:text-amber-300">
                           <div className="flex items-center gap-1.5">
                             <AlertCircle size={12} className="text-amber-700 dark:text-amber-400 shrink-0" />
-                            <span>No PDF</span>
+                            <span>No PDF Uploaded</span>
                           </div>
                           <button
                             onClick={() => handleOpenEdit(item)}
-                            className="text-[9.5px] text-amber-800 dark:text-amber-300 underline hover:text-amber-950 cursor-pointer"
+                            className="text-[9.5px] text-amber-800 dark:text-amber-300 underline hover:text-amber-950 font-bold cursor-pointer"
                           >
-                            Attach
+                            Attach PDF
                           </button>
                         </div>
                       )}

@@ -264,9 +264,9 @@ export default function PdfUploader({
 
           <div className="flex items-center gap-1.5 shrink-0">
             <a
-              href={value}
+              href={value.startsWith('/admin') ? value : `/api/resources/download?url=${encodeURIComponent(value)}&mode=preview`}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="px-2.5 py-1.5 text-[11px] font-bold text-[#1b3726] bg-white border border-[#d0e2d3] hover:bg-[#eaf2eb] rounded-lg transition-colors flex items-center gap-1"
               title="Preview / Download file in browser"
             >

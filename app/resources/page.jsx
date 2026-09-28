@@ -17,7 +17,9 @@ import {
   SlidersHorizontal,
   X,
   Globe,
-  Lightbulb
+  Lightbulb,
+  Eye,
+  ExternalLink
 } from 'lucide-react';
 import PublicationCover, { THEME_PRESETS } from '../../components/PublicationCover';
 
@@ -504,23 +506,36 @@ export default function AcademicResourcesPage() {
 
                 </div>
 
-                {/* Bottom Card Footer: Date & Action Button */}
-                <div className="pt-3 mt-2.5 border-t border-[#f0f4ef] dark:border-white/10 flex items-center justify-between relative z-10">
-                  <div className="flex items-center gap-1.5 text-[10.5px] text-[#718476] dark:text-slate-400 font-medium">
+                {/* Bottom Card Footer: Date & Action Buttons */}
+                <div className="pt-3 mt-2.5 border-t border-[#f0f4ef] dark:border-white/10 flex items-center justify-between relative z-10 gap-2">
+                  <div className="flex items-center gap-1.5 text-[10.5px] text-[#718476] dark:text-slate-400 font-medium shrink-0">
                     <Calendar size={12} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
                     <span>{res.date}</span>
                   </div>
 
                   {res.status === 'download' ? (
-                    <a
-                      href={res.downloadUrl}
-                      download
-                      className="px-3.5 py-1.5 rounded-full bg-[#122b1c] hover:bg-[#1d442c] dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
-                      title={`Download ${res.title}`}
-                    >
-                      <span>Download</span>
-                      <Download size={11} />
-                    </a>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <a
+                        href={`/api/resources/download?id=${res.id}&mode=preview`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 rounded-full bg-white/90 dark:bg-white/10 hover:bg-white dark:hover:bg-white/20 border border-[#d5e2d6] dark:border-white/15 text-[#1b3726] dark:text-emerald-300 text-[11px] font-semibold flex items-center gap-1.5 transition-all shadow-2xs hover:shadow-xs cursor-pointer"
+                        title={`Preview ${res.title} in browser`}
+                      >
+                        <Eye size={12} />
+                        <span>Preview</span>
+                      </a>
+
+                      <a
+                        href={`/api/resources/download?id=${res.id}&mode=download`}
+                        download
+                        className="px-3 py-1.5 rounded-full bg-[#122b1c] hover:bg-[#1d442c] dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer hover:scale-[1.02]"
+                        title={`Download ${res.title}`}
+                      >
+                        <Download size={11} />
+                        <span>Download</span>
+                      </a>
+                    </div>
                   ) : (
                     <span className="px-3 py-1 rounded-full bg-[#edf2ed] dark:bg-white/10 text-[#768a7b] dark:text-slate-300 dark:border dark:border-white/10 text-[10.5px] font-medium flex items-center gap-1 opacity-90 select-none">
                       Coming Soon

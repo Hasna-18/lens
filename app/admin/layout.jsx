@@ -4,19 +4,16 @@ import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
-  ShieldCheck,
   Calendar,
   FileText,
   LayoutDashboard,
   ExternalLink,
   LogOut,
   Sparkles,
-  Database,
-  Building,
-  CheckCircle2,
   BookOpen,
   Mail
 } from 'lucide-react';
+import Footer from '../../components/Footer';
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
@@ -130,51 +127,43 @@ export default function AdminLayout({ children }) {
     <div className="min-h-screen bg-[#edf4e8] text-slate-900 font-sans flex flex-col justify-between selection:bg-[#2d5a3c]/20 selection:text-[#1b3726]">
       
       {/* ========================================================================= */}
-      {/* 1. ULTRA-PREMIUM ADMIN NAVBAR */}
+      {/* 1. STANDARD ADMIN NAVBAR */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-[#e2ece3] shadow-[0_4px_24px_rgba(20,40,25,0.04)] transition-all duration-300">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           
-          {/* Brand Area */}
-          <div className="flex items-center gap-3.5 shrink-0">
-            <Link href="/admin" className="flex items-center gap-3 group">
-              <img
-                src="/logo.png"
-                alt="LEnSE Logo"
-                className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-sm"
-              />
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className="font-serif font-bold text-base sm:text-lg text-[#132418] tracking-tight group-hover:text-[#2d5a3c] transition-colors">
-                    LEnSE Console
-                  </span>
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[9.5px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#eef5ee] text-[#2d5a3c] border border-[#d6e5d8]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2d5a3c] animate-pulse" />
-                    Admin
-                  </span>
-                </div>
-                <span className="text-[11px] text-[#556959] font-medium hidden sm:block">
-                  University of Kerala • Executive Management
-                </span>
-              </div>
-            </Link>
-          </div>
+          {/* Brand */}
+          <Link href="/admin" className="flex items-center gap-3 shrink-0">
+            <img
+              src="/logo.png"
+              alt="LEnSE Logo"
+              className="h-9 w-auto object-contain"
+            />
+            <div className="flex items-baseline gap-2">
+              <span className="font-bold text-base text-slate-900 tracking-tight">
+                LEnSE
+              </span>
+              <span className="text-xs font-medium text-slate-500">
+                Admin Panel
+              </span>
+            </div>
+          </Link>
 
-          {/* Central Capsule Navigation */}
-          <nav className="hidden md:flex items-center gap-1.5 p-1 rounded-full bg-[#f1f6f1] border border-[#d8e5d9] shadow-inner">
+          {/* Navigation Links */}
+          <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                     item.active
-                      ? 'bg-white text-[#183a27] shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-[#d6e5d8]'
-                      : 'text-[#4d6352] hover:text-[#183a27] hover:bg-white/60'
+                      ? 'bg-[#edf4e8] text-[#1b3726] font-semibold'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <Icon size={14} className={item.active ? 'text-[#2d5a3c]' : 'text-[#6b8270]'} />
+                  <Icon size={16} className={item.active ? 'text-[#2d5a3c]' : 'text-slate-400'} />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -182,61 +171,59 @@ export default function AdminLayout({ children }) {
           </nav>
 
           {/* Right Action Tools */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="flex items-center gap-3">
             
-          
-
-            {/* Public Website Preview Link */}
+            {/* View Public Site */}
             <Link
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-[#f3f7f2] border border-[#dbe6dc] text-xs font-bold text-[#2d4032] shadow-xs transition-all hover:scale-[1.02]"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
               title="Preview public site in new tab"
             >
-              <ExternalLink size={13} className="text-[#2d5a3c]" />
-              <span className="hidden sm:inline">View Public Site</span>
+              <ExternalLink size={14} className="text-slate-500" />
+              <span>View Site</span>
             </Link>
 
-            {/* Admin User Profile Pill */}
-            <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-[#dbe6dc] shadow-xs">
-              <div className="w-6 h-6 rounded-full bg-[#2d5a3c] text-white flex items-center justify-center text-[10px] font-bold">
+            {/* Admin User */}
+            <div className="hidden md:flex items-center gap-2 text-xs text-slate-600 font-medium px-2 py-1 bg-slate-50 rounded-lg border border-slate-100">
+              <div className="w-5 h-5 rounded-full bg-[#1b3726] text-white flex items-center justify-center text-[10px] font-bold">
                 {adminUser ? adminUser.charAt(0).toUpperCase() : 'A'}
               </div>
-              <span className="text-xs font-bold text-[#1a2f21]">{adminUser}</span>
+              <span className="max-w-[120px] truncate">{adminUser}</span>
             </div>
 
             {/* Logout Button */}
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#fdf2f2] hover:bg-[#fce4e4] border border-[#f5c6c6] text-[#b91c1c] text-xs font-bold transition-all hover:scale-[1.02] cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors cursor-pointer"
               title="Sign out of Admin Console"
             >
-              <LogOut size={13} />
-              <span className="hidden sm:inline">{loggingOut ? 'Signing out...' : 'Logout'}</span>
+              <LogOut size={14} />
+              <span>{loggingOut ? 'Signing out...' : 'Logout'}</span>
             </button>
 
           </div>
 
         </div>
 
-        {/* Mobile Navigation Row */}
-        <div className="md:hidden flex items-center justify-around border-t border-[#e2ece3] px-2 py-1.5 bg-[#edf4e8]">
+        {/* Mobile Navigation Bar */}
+        <div className="lg:hidden overflow-x-auto border-t border-slate-200 px-3 py-2 bg-slate-50 flex items-center gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   item.active
-                    ? 'bg-white text-[#183a27] shadow-xs border border-[#d6e5d8]'
-                    : 'text-[#586e5c]'
+                    ? 'bg-white text-[#1b3726] font-semibold shadow-xs border border-slate-200'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                <Icon size={14} />
-                <span>{item.label.split(' ')[0]}</span>
+                <Icon size={14} className={item.active ? 'text-[#2d5a3c]' : 'text-slate-400'} />
+                <span>{item.label}</span>
               </Link>
             );
           })}
@@ -251,67 +238,9 @@ export default function AdminLayout({ children }) {
       </main>
 
       {/* ========================================================================= */}
-      {/* 3. EXECUTIVE ADMIN FOOTER */}
+      {/* 3. STANDARD FOOTER */}
       {/* ========================================================================= */}
-      <footer className="w-full bg-white border-t border-[#e2ece3] mt-20 pt-8 pb-10 shadow-[0_-4px_24px_rgba(20,40,25,0.02)]">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-[#ebf2ec] items-center">
-            
-            {/* Left: Centre Affiliation */}
-            <div className="md:col-span-6 space-y-1.5">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#2d5a3c]" />
-                <span className="text-xs font-bold uppercase tracking-wider text-[#2d5a3c]">
-                  LEnSE Management Console
-                </span>
-              </div>
-              <p className="font-serif text-sm sm:text-base text-[#14261a] font-normal">
-                Centre for Learning Engineering &amp; Sustainability Education
-              </p>
-              <p className="text-xs text-[#5f7464]">
-                University of Kerala, Kariavattom Campus, Thiruvananthapuram - 695581, Kerala, India
-              </p>
-            </div>
-
-            {/* Right: Fast Administrative Navigation */}
-            <div className="md:col-span-6 flex flex-wrap items-center md:justify-end gap-3 text-xs font-semibold text-[#445849]">
-              <Link href="/admin" className="hover:text-[#2d5a3c] transition-colors">
-                Dashboard
-              </Link>
-              <span>•</span>
-              <Link href="/admin/events" className="hover:text-[#2d5a3c] transition-colors">
-                Events Manager
-              </Link>
-              <span>•</span>
-              <Link href="/admin/news" className="hover:text-[#2d5a3c] transition-colors">
-                News &amp; Publications
-              </Link>
-              <span>•</span>
-              <Link href="/" target="_blank" className="hover:text-[#2d5a3c] transition-colors">
-                Public Site Preview
-              </Link>
-            </div>
-
-          </div>
-
-          {/* Bottom Copyright & Security Badge */}
-          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6e8373]">
-            <div>
-              &copy; 2024&ndash;2026 LEnSE, University of Kerala. All rights reserved.
-            </div>
-
-            <div className="flex items-center gap-4">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#2d5a3c] bg-[#eef5ee] px-2.5 py-1 rounded-full border border-[#d8e8da]">
-                <ShieldCheck size={13} />
-                Encrypted Session • Master Admin
-              </span>
-              <span className="text-[11px] text-[#869b8b]">v2.4 LTS</span>
-            </div>
-          </div>
-
-        </div>
-      </footer>
+      <Footer />
 
     </div>
   );
