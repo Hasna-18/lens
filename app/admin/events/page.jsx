@@ -184,8 +184,8 @@ export default function AdminEventsPage() {
     setLoading(true);
     try {
       const [eventsRes, settingsRes] = await Promise.all([
-        fetch('/api/events'),
-        fetch('/api/event-settings')
+        fetch('/api/events', { cache: 'no-store' }),
+        fetch('/api/event-settings', { cache: 'no-store' })
       ]);
 
       if (eventsRes.ok) {
@@ -211,7 +211,7 @@ export default function AdminEventsPage() {
   useEffect(() => {
     async function verifyAuthAndFetch() {
       try {
-        const res = await fetch('/api/admin/check');
+        const res = await fetch('/api/admin/check', { cache: 'no-store' });
         if (!res.ok) {
           router.replace('/admin/login');
           return;
@@ -254,7 +254,7 @@ export default function AdminEventsPage() {
       dateMonth: d.month,
       dateYear: d.year,
       category: cat.toUpperCase(),
-      imageUrl: '',
+      imageUrl: '/events/e1.png',
       filterType: cat
     });
     setShowAddForm(true);
@@ -273,7 +273,7 @@ export default function AdminEventsPage() {
       dateMonth: evt.dateMonth || '',
       dateYear: evt.dateYear || '',
       category: evt.category || 'CONFERENCE',
-      imageUrl: evt.imageUrl || '',
+      imageUrl: evt.imageUrl || '/events/e1.png',
       filterType: evt.filterType || 'Conferences'
     });
     setShowAddForm(true);
@@ -292,7 +292,11 @@ export default function AdminEventsPage() {
 
     setSaving(true);
     const isEditing = Boolean(editingEventId);
-    const payload = isEditing ? { ...eventForm, id: editingEventId } : eventForm;
+    const payload = {
+      ...eventForm,
+      imageUrl: eventForm.imageUrl && eventForm.imageUrl.trim() ? eventForm.imageUrl.trim() : '/events/e1.png',
+      ...(isEditing ? { id: editingEventId } : {})
+    };
 
     try {
       const res = await fetch('/api/events', {
@@ -314,10 +318,10 @@ export default function AdminEventsPage() {
 
       // Fast optimistic UI update without waiting for full page re-fetch
       const savedItem = {
-        ...eventForm,
+        ...payload,
         ...data,
         id: data.id || editingEventId || Date.now(),
-        slug: data.slug || eventForm.slug || slugify(eventForm.title),
+        slug: data.slug || payload.slug || slugify(payload.title),
         registrationCount: data.registrationCount || 0
       };
 
@@ -327,9 +331,11 @@ export default function AdminEventsPage() {
         setEvents(prev => sortEventsLatestFirst([savedItem, ...prev]));
       }
 
-      showToast('success', isEditing ? 'Event updated!' : 'Event published!');
+      showToast('success', isEditing ? 'Event updated!' : 'Event published to database!');
       setShowAddForm(false);
       setEditingEventId(null);
+      // Background sync to ensure fresh server IDs
+      fetchData();
     } catch (err) {
       showToast('error', err.message);
     } finally {
