@@ -69,10 +69,12 @@ export default function EventDetailPage({ params }) {
   const [registrationForm, setRegistrationForm] = useState({ name: '', phone: '', dob: '', institution: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [regError, setRegError] = useState('');
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setRegError('');
     try {
       const res = await fetch(`/api/events/${encodeURIComponent(eventSlug)}/register`, {
         method: 'POST',
@@ -87,11 +89,12 @@ export default function EventDetailPage({ params }) {
           setRegistrationForm({ name: '', phone: '', dob: '', institution: '' });
         }, 3000);
       } else {
-        alert("Registration failed. Please try again.");
+        const errData = await res.json().catch(() => ({}));
+        setRegError(errData.error || "Registration failed. Please try again.");
       }
     } catch (err) {
       console.error("Error registering:", err);
-      alert("Network error. Please try again.");
+      setRegError("Network error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -543,6 +546,12 @@ export default function EventDetailPage({ params }) {
                 </div>
               ) : (
                 <form onSubmit={handleRegisterSubmit} className="space-y-4">
+                  {regError && (
+                    <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-xl text-rose-700 dark:text-rose-300 text-xs font-semibold flex items-center gap-2">
+                      <AlertCircle size={15} className="shrink-0" />
+                      <span>{regError}</span>
+                    </div>
+                  )}
                   <div>
                     <label className="block text-xs font-bold text-[#445548] dark:text-slate-300 mb-1.5 uppercase tracking-wide">Full Name</label>
                     <input

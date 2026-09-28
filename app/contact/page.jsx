@@ -15,7 +15,8 @@ import {
   BookOpen,
   Users,
   Lightbulb,
-  Leaf
+  Leaf,
+  AlertCircle
 } from 'lucide-react';
 
 export default function ContactPage() {
@@ -27,7 +28,7 @@ export default function ContactPage() {
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -35,6 +36,7 @@ export default function ContactPage() {
     if (!form.name || !form.email || !form.message) return;
     
     setIsSubmitting(true);
+    setErrorMessage('');
     try {
       const res = await fetch('/api/enquiries', {
         method: 'POST',
@@ -49,11 +51,12 @@ export default function ContactPage() {
           setForm({ name: '', email: '', subject: 'General Enquiry', organization: '', message: '' });
         }, 4500);
       } else {
-        alert("Something went wrong. Please try again.");
+        const errData = await res.json().catch(() => ({}));
+        setErrorMessage(errData.error || "Something went wrong. Please try again.");
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to send message.");
+      setErrorMessage("Failed to send message. Please check your connection.");
     } finally {
       setIsSubmitting(false);
     }
@@ -212,6 +215,12 @@ export default function ContactPage() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5 mt-6 relative z-10">
+                {errorMessage && (
+                  <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 text-xs font-semibold flex items-center gap-2.5">
+                    <AlertCircle size={16} className="shrink-0" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black text-[#1b3726] dark:text-[#a2d45e] uppercase tracking-widest ml-2">Your Name *</label>

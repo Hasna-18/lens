@@ -295,11 +295,10 @@ export default function AdminResourcesPage() {
         {/* Toast Notification */}
         {toast.show && (
           <div
-            className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-5 py-3.5 rounded-2xl shadow-xl border text-xs font-bold animate-in slide-in-from-bottom duration-300 ${
-              toast.type === 'error'
+            className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-5 py-3.5 rounded-2xl shadow-xl border text-xs font-bold animate-in slide-in-from-bottom duration-300 ${toast.type === 'error'
                 ? 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950 dark:text-rose-200 dark:border-rose-800'
                 : 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-200 dark:border-emerald-800'
-            }`}
+              }`}
           >
             {toast.type === 'error' ? <AlertCircle size={16} /> : <CheckCircle2 size={16} />}
             <span>{toast.message}</span>
@@ -448,11 +447,10 @@ export default function AdminResourcesPage() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-                    selectedCategory === cat
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${selectedCategory === cat
                       ? 'bg-[#1b3726] dark:bg-emerald-600 text-white shadow-xs'
                       : 'bg-[#f0f5f0] dark:bg-white/10 text-[#3f5444] dark:text-slate-300 hover:bg-[#e4ece4] dark:hover:bg-white/20 hover:text-[#19241c] dark:hover:text-white'
-                  }`}
+                    }`}
                 >
                   {cat}
                 </button>
@@ -466,11 +464,10 @@ export default function AdminResourcesPage() {
                 else if (sortOrder === 'az') setSortOrder('za');
                 else setSortOrder('default');
               }}
-              className={`p-2 rounded-xl border border-[#d8e5da] dark:border-white/10 transition-colors shadow-xs cursor-pointer ${
-                sortOrder !== 'default'
+              className={`p-2 rounded-xl border border-[#d8e5da] dark:border-white/10 transition-colors shadow-xs cursor-pointer ${sortOrder !== 'default'
                   ? 'bg-[#1b3726] dark:bg-emerald-600 text-white'
                   : 'bg-white dark:bg-white/5 text-[#4d6052] dark:text-slate-300 hover:bg-slate-50'
-              }`}
+                }`}
               title={`Sort: ${sortOrder === 'az' ? 'A to Z' : sortOrder === 'za' ? 'Z to A' : 'Default'}`}
             >
               <SlidersHorizontal size={15} />
@@ -679,7 +676,7 @@ export default function AdminResourcesPage() {
               {/* Modal Body: Split Grid (Left: Live Preview, Right: Edit Form) */}
               <form onSubmit={handleSaveResource} className="p-5 sm:p-6 space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                  
+
                   {/* --------------------------------------------------------------- */}
                   {/* LEFT COLUMN: LIVE CARD & COVER PREVIEW */}
                   {/* --------------------------------------------------------------- */}
@@ -721,9 +718,8 @@ export default function AdminResourcesPage() {
                           <div>
                             <div className="flex items-center justify-between gap-1 flex-wrap mb-1">
                               <span
-                                className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
-                                  (THEME_PRESETS[formData.themeColor] || THEME_PRESETS.emerald).badgeStyle
-                                }`}
+                                className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${(THEME_PRESETS[formData.themeColor] || THEME_PRESETS.emerald).badgeStyle
+                                  }`}
                               >
                                 {formData.category}
                               </span>
@@ -768,7 +764,7 @@ export default function AdminResourcesPage() {
                   {/* RIGHT COLUMN: CUSTOMIZATION & FORM INPUTS */}
                   {/* --------------------------------------------------------------- */}
                   <div className="lg:col-span-7 space-y-4 max-h-[64vh] overflow-y-auto pr-1 no-scrollbar">
-                    
+
                     {/* A. TEMPLATE PICKER */}
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-[#1c2e21] dark:text-white flex items-center gap-1.5">
@@ -789,11 +785,10 @@ export default function AdminResourcesPage() {
                                   customBadge: prev.customBadge || tmpl.defaultBadge
                                 }))
                               }
-                              className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 ${
-                                isSelected
+                              className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 ${isSelected
                                   ? 'bg-[#eef5ee] dark:bg-emerald-950/60 border-[#2d5a3c] dark:border-emerald-400 ring-2 ring-[#2d5a3c]/20 shadow-xs'
                                   : 'bg-[#fbfdfb] dark:bg-white/5 border-[#d8e5da] dark:border-white/10 hover:border-[#b8cdbc] hover:bg-[#f6f9f6]'
-                              }`}
+                                }`}
                             >
                               <div className="flex items-center justify-between">
                                 <span className="text-xs font-bold text-[#142618] dark:text-white">
@@ -826,11 +821,10 @@ export default function AdminResourcesPage() {
                               key={t.id}
                               type="button"
                               onClick={() => setFormData((prev) => ({ ...prev, themeColor: t.id }))}
-                              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-medium transition-all cursor-pointer ${
-                                isSelected
+                              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-medium transition-all cursor-pointer ${isSelected
                                   ? 'bg-white dark:bg-white/15 border-slate-900 dark:border-white shadow-xs ring-2 ring-slate-900/10 dark:ring-white/20'
                                   : 'bg-[#fbfdfb] dark:bg-white/5 border-[#d8e5da] dark:border-white/10 hover:bg-[#f3f7f3]'
-                              }`}
+                                }`}
                             >
                               <span
                                 className="w-3.5 h-3.5 rounded-full shadow-xs shrink-0"

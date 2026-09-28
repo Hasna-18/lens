@@ -115,6 +115,8 @@ export default function AdminEventsPage() {
   const [editingInitiativeId, setEditingInitiativeId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState({ show: false, type: '', message: '' });
+  const [deleteModal, setDeleteModal] = useState({ show: false, id: null, title: '', deleting: false });
+  const [deleteInitModal, setDeleteInitModal] = useState({ show: false, id: null, title: '', deleting: false });
 
   const getTodayDMY = () => {
     const d = new Date();
@@ -162,7 +164,7 @@ export default function AdminEventsPage() {
 
   const showToast = (type, message) => {
     setToast({ show: true, type, message });
-    setTimeout(() => setToast({ show: false, type: '', message: '' }), 3500);
+    setTimeout(() => setToast({ show: false, type: '', message: '' }), 2500);
   };
 
   // Carousel timer
@@ -280,7 +282,7 @@ export default function AdminEventsPage() {
     showToast('info', `Editing event: "${evt.title}"`);
   };
 
-  // Submit Event Add / Update
+  // Submit Event Add / Update (Instant local state update + async API sync)
   const handleEventSubmit = async (e, proceedToDetails = false) => {
     if (e && e.preventDefault) e.preventDefault();
     if (!eventForm.title.trim()) {
@@ -289,13 +291,12 @@ export default function AdminEventsPage() {
     }
 
     setSaving(true);
-    try {
-      const isEditing = Boolean(editingEventId);
-      const method = isEditing ? 'PUT' : 'POST';
-      const payload = isEditing ? { ...eventForm, id: editingEventId } : eventForm;
+    const isEditing = Boolean(editingEventId);
+    const payload = isEditing ? { ...eventForm, id: editingEventId } : eventForm;
 
+    try {
       const res = await fetch('/api/events', {
-        method,
+        method: isEditing ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
@@ -306,15 +307,29 @@ export default function AdminEventsPage() {
       const targetSlugOrId = data.slug || editingEventId || data.id;
 
       if (proceedToDetails && targetSlugOrId) {
-        showToast('success', 'Event saved! Opening live platform visual editor...');
+        showToast('success', 'Event saved! Opening visual editor...');
         router.push(`/admin/events/${targetSlugOrId}`);
         return;
       }
 
-      showToast('success', isEditing ? 'Event updated successfully in database!' : 'New event published to database!');
+      // Fast optimistic UI update without waiting for full page re-fetch
+      const savedItem = {
+        ...eventForm,
+        ...data,
+        id: data.id || editingEventId || Date.now(),
+        slug: data.slug || eventForm.slug || slugify(eventForm.title),
+        registrationCount: data.registrationCount || 0
+      };
+
+      if (isEditing) {
+        setEvents(prev => sortEventsLatestFirst(prev.map(ev => (ev.id === editingEventId || ev.slug === savedItem.slug) ? savedItem : ev)));
+      } else {
+        setEvents(prev => sortEventsLatestFirst([savedItem, ...prev]));
+      }
+
+      showToast('success', isEditing ? 'Event updated!' : 'Event published!');
       setShowAddForm(false);
       setEditingEventId(null);
-      fetchData();
     } catch (err) {
       showToast('error', err.message);
     } finally {
@@ -322,21 +337,36 @@ export default function AdminEventsPage() {
     }
   };
 
-  // Delete event from DB
-  const handleDeleteEvent = async (id, title) => {
-    if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
+  // Delete event from DB with small popup confirmation & instant optimistic removal
+  const handlePromptDelete = (id, title) => {
+    setDeleteModal({ show: true, id, title, deleting: false });
+  };
+
+  const handleConfirmDelete = async () => {
+    const { id } = deleteModal;
+    if (!id) return;
+
+    setDeleteModal(prev => ({ ...prev, deleting: true }));
+
+    // Instant optimistic removal from UI
+    const prevEvents = [...events];
+    setEvents(prev => prev.filter(e => e.id !== id && e.slug !== id));
+    if (editingEventId === id) {
+      setShowAddForm(false);
+      setEditingEventId(null);
+    }
+    setDeleteModal({ show: false, id: null, title: '', deleting: false });
+    showToast('success', 'Event deleted');
 
     try {
       const res = await fetch(`/api/events?id=${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete event');
-      showToast('success', 'Event deleted from database');
-      if (editingEventId === id) {
-        setShowAddForm(false);
-        setEditingEventId(null);
+      if (!res.ok) {
+        setEvents(prevEvents);
+        showToast('error', 'Failed to delete event from database');
       }
-      fetchData();
     } catch (err) {
-      showToast('error', err.message);
+      setEvents(prevEvents);
+      showToast('error', err.message || 'Failed to delete event');
     }
   };
 
@@ -414,27 +444,39 @@ export default function AdminEventsPage() {
     }
   };
 
-  const handleDeleteInitiative = async (initId, title) => {
-    if (!confirm(`Are you sure you want to delete initiative "${title}"?`)) return;
+  // Delete Initiative with small popup confirmation
+  const handlePromptDeleteInitiative = (initId, title) => {
+    setDeleteInitModal({ show: true, id: initId, title, deleting: false });
+  };
+
+  const handleConfirmDeleteInitiative = async () => {
+    const { id: initId } = deleteInitModal;
+    if (!initId) return;
+
+    const prevInitiatives = settings.featuredInitiatives || [];
+    const updatedInitiatives = prevInitiatives.filter(item => item.id !== initId);
+    const updatedSettings = { ...settings, featuredInitiatives: updatedInitiatives };
+
+    // Instant optimistic removal
+    setSettings(updatedSettings);
+    if (currentInitiativeIndex >= updatedInitiatives.length) {
+      setCurrentInitiativeIndex(Math.max(0, updatedInitiatives.length - 1));
+    }
+    setDeleteInitModal({ show: false, id: null, title: '', deleting: false });
+    showToast('success', 'Initiative removed');
 
     try {
-      const updatedInitiatives = (settings.featuredInitiatives || []).filter(item => item.id !== initId);
-      const updatedSettings = { ...settings, featuredInitiatives: updatedInitiatives };
-
       const res = await fetch('/api/event-settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedSettings)
       });
-
-      if (!res.ok) throw new Error('Failed to delete initiative');
-
-      setSettings(updatedSettings);
-      if (currentInitiativeIndex >= updatedInitiatives.length) {
-        setCurrentInitiativeIndex(Math.max(0, updatedInitiatives.length - 1));
+      if (!res.ok) {
+        setSettings({ ...settings, featuredInitiatives: prevInitiatives });
+        showToast('error', 'Failed to delete initiative from database');
       }
-      showToast('success', 'Initiative removed from carousel');
     } catch (err) {
+      setSettings({ ...settings, featuredInitiatives: prevInitiatives });
       showToast('error', err.message);
     }
   };
@@ -508,16 +550,92 @@ export default function AdminEventsPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 pb-32 font-outfit relative">
 
-      {/* Toast Notification Alert */}
+      {/* Sleek Floating Toast Notification */}
       {toast.show && (
-        <div className={`fixed bottom-6 right-6 z-[60] px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border transition-all animate-bounce ${toast.type === 'success'
-            ? 'bg-emerald-50 text-emerald-900 border-emerald-300'
-            : toast.type === 'error'
-              ? 'bg-rose-50 text-rose-900 border-rose-300'
-              : 'bg-white text-slate-900 border-slate-300'
+        <div className={`fixed bottom-5 right-5 z-[70] px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2.5 border text-xs font-semibold backdrop-blur-md transition-all duration-300 ${toast.type === 'success'
+          ? 'bg-emerald-900/90 text-emerald-100 border-emerald-700/60 shadow-emerald-950/20'
+          : toast.type === 'error'
+            ? 'bg-rose-900/90 text-rose-100 border-rose-700/60 shadow-rose-950/20'
+            : 'bg-slate-900/90 text-slate-100 border-slate-700/60 shadow-slate-950/20'
           }`}>
-          {toast.type === 'success' ? <CheckCircle2 size={22} className="text-emerald-700" /> : <AlertCircle size={22} className="text-rose-600" />}
-          <span className="font-bold text-sm">{toast.message}</span>
+          {toast.type === 'success' ? <CheckCircle2 size={16} className="text-[#a2d45e] shrink-0" /> : <AlertCircle size={16} className="text-rose-400 shrink-0" />}
+          <span>{toast.message}</span>
+        </div>
+      )}
+
+      {/* Small Modern Delete Confirmation Popup */}
+      {deleteModal.show && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-200 space-y-4 animate-in zoom-in-95 duration-150">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0">
+                <Trash2 size={20} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-bold text-slate-900 leading-tight">Delete Event?</h4>
+                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                  Are you sure you want to delete <span className="font-semibold text-slate-800">"{deleteModal.title}"</span>? This cannot be undone.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setDeleteModal({ show: false, id: null, title: '', deleting: false })}
+                className="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-xs font-semibold transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                disabled={deleteModal.deleting}
+                className="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                {deleteModal.deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                <span>{deleteModal.deleting ? 'Deleting...' : 'Yes, Delete'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Small Modern Initiative Delete Confirmation Popup */}
+      {deleteInitModal.show && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-200 space-y-4 animate-in zoom-in-95 duration-150">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0">
+                <Trash2 size={20} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-bold text-slate-900 leading-tight">Delete Initiative?</h4>
+                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                  Remove <span className="font-semibold text-slate-800">"{deleteInitModal.title}"</span> from carousel?
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setDeleteInitModal({ show: false, id: null, title: '', deleting: false })}
+                className="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-xs font-semibold transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDeleteInitiative}
+                disabled={deleteInitModal.deleting}
+                className="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                {deleteInitModal.deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                <span>{deleteInitModal.deleting ? 'Deleting...' : 'Yes, Delete'}</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -597,8 +715,8 @@ export default function AdminEventsPage() {
                   key={cat.name}
                   onClick={() => setFilterCategory(cat.name)}
                   className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${isActive
-                      ? 'bg-[#2d5a3c] text-white shadow-xs'
-                      : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:bg-slate-100/70'
+                    ? 'bg-[#2d5a3c] text-white shadow-xs'
+                    : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:bg-slate-100/70'
                     }`}
                 >
                   <Icon size={14} className={isActive ? 'text-white' : 'text-[#2d5a3c]'} />
@@ -877,8 +995,8 @@ export default function AdminEventsPage() {
                         <span>Edit</span>
                       </button>
                       <button
-                        onClick={() => handleDeleteEvent(evt.slug || evt.id, evt.title)}
-                        className="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-colors"
+                        onClick={() => handlePromptDelete(evt.slug || evt.id, evt.title)}
+                        className="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-colors cursor-pointer"
                         title="Delete event"
                       >
                         <Trash2 size={12} />
@@ -960,8 +1078,8 @@ export default function AdminEventsPage() {
                   </button>
 
                   <button
-                    onClick={() => handleDeleteInitiative(activeInitiative.id, activeInitiative.title)}
-                    className="p-1.5 rounded-lg hover:bg-rose-100 text-slate-400 hover:text-rose-600 transition-colors text-[10px]"
+                    onClick={() => handlePromptDeleteInitiative(activeInitiative.id, activeInitiative.title)}
+                    className="p-1.5 rounded-lg hover:bg-rose-100 text-slate-400 hover:text-rose-600 transition-colors text-[10px] cursor-pointer"
                     title="Delete this initiative"
                   >
                     <Trash2 size={12} />

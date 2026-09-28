@@ -3,16 +3,16 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { 
-  Calendar, 
-  Layers, 
-  Settings, 
-  Plus, 
-  ExternalLink, 
-  ShieldCheck, 
-  Database, 
-  Sparkles, 
-  ArrowRight, 
+import {
+  Calendar,
+  Layers,
+  Settings,
+  Plus,
+  ExternalLink,
+  ShieldCheck,
+  Database,
+  Sparkles,
+  ArrowRight,
   CheckCircle2,
   LayoutDashboard,
   FileText,
@@ -89,18 +89,18 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
-      
+
       {/* ========================================================================= */}
       {/* 1. EXECUTIVE WELCOME HERO BANNER */}
       {/* ========================================================================= */}
       <div className="relative rounded-[2.5rem] bg-gradient-to-br from-[#1b3726] via-[#142e1f] to-[#0d2216] text-white p-7 sm:p-10 lg:p-12 shadow-[0_20px_50px_rgba(15,35,22,0.18)] border border-white/10 overflow-hidden">
-        
+
         {/* Soft Radial Ambient Glow */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,_rgba(162,212,94,0.18),transparent_70%)] pointer-events-none -mr-20 -mt-20" />
         <div className="absolute bottom-0 left-1/3 w-[400px] h-[400px] bg-[radial-gradient(circle_at_center,_rgba(45,90,60,0.3),transparent_70%)] pointer-events-none" />
 
         <div className="relative z-10 max-w-3xl space-y-4">
-          
+
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[#c2ec8b] text-xs font-bold uppercase tracking-wider">
             <Sparkles size={13} />
             <span>LEnSE Administrative Command Centre</span>
@@ -149,7 +149,7 @@ export default function AdminDashboardPage() {
       {/* 2. LIVE METRICS ROW */}
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
+
         {/* Metric 1: Events */}
         <div className="p-6 rounded-[2rem] bg-white border border-[#e2ece3] shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex items-center gap-4 group hover:-translate-y-1 transition-all duration-300">
           <div className="w-14 h-14 rounded-2xl bg-[#eef5ee] border border-[#d6e6d8] flex items-center justify-center text-[#2d5a3c] shrink-0 group-hover:scale-105 transition-transform">
@@ -199,7 +199,7 @@ export default function AdminDashboardPage() {
       {/* 3. MANAGEMENT MODULE CARDS */}
       {/* ========================================================================= */}
       <div className="space-y-6">
-        
+
         <div className="flex items-center justify-between border-b border-[#e2ece3] pb-3">
           <div className="flex items-center gap-2.5">
             <div className="w-2 h-2 rounded-full bg-[#2d5a3c]" />
@@ -210,7 +210,7 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          
+
           {/* Card 1: Events & Conferences */}
           <div className="rounded-[2.2rem] bg-white border border-[#e2ece3] p-6 sm:p-7 flex flex-col justify-between hover:border-[#2d5a3c]/60 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(20,40,25,0.06)] hover:-translate-y-1.5 transition-all duration-300 group">
             <div className="space-y-3.5">

@@ -21,6 +21,7 @@ export default function AdminInitiativesPage() {
   const [editingId, setEditingId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState({ show: false, type: '', message: '' });
+  const [deleteModal, setDeleteModal] = useState({ show: false, id: null, title: '', deleting: false });
 
   const initialForm = {
     title: '',
@@ -49,7 +50,7 @@ export default function AdminInitiativesPage() {
 
   const showToast = (type, message) => {
     setToast({ show: true, type, message });
-    setTimeout(() => setToast({ show: false, type: '', message: '' }), 3500);
+    setTimeout(() => setToast({ show: false, type: '', message: '' }), 2500);
   };
 
   const fetchInitiatives = async () => {
@@ -165,13 +166,22 @@ export default function AdminInitiativesPage() {
         body: JSON.stringify(payload)
       });
 
+      const data = await res.json();
       if (!res.ok) {
-        throw new Error('Failed to save initiative');
+        throw new Error(data.error || 'Failed to save initiative');
       }
 
-      showToast('success', editingId ? 'Initiative updated in database' : 'New initiative created in database');
+      // Fast optimistic update
+      const savedItem = { ...payload, id: data?.id || editingId || Date.now() };
+      if (editingId) {
+        setInitiatives(prev => prev.map(item => item.id === editingId ? savedItem : item));
+      } else {
+        setInitiatives(prev => [savedItem, ...prev]);
+      }
+
+      showToast('success', editingId ? 'Initiative updated!' : 'Initiative created!');
       setShowModal(false);
-      fetchInitiatives();
+      setEditingId(null);
     } catch (err) {
       console.error(err);
       showToast('error', err.message || 'Operation failed');
@@ -180,16 +190,30 @@ export default function AdminInitiativesPage() {
     }
   };
 
-  const handleDelete = async (id, title) => {
-    if (!window.confirm(`Are you sure you want to delete "${title}"?`)) return;
+  const handlePromptDelete = (id, title) => {
+    setDeleteModal({ show: true, id, title, deleting: false });
+  };
+
+  const handleConfirmDelete = async () => {
+    const { id } = deleteModal;
+    if (!id) return;
+
+    setDeleteModal(prev => ({ ...prev, deleting: true }));
+    const prevItems = [...initiatives];
+    
+    // Instant optimistic update
+    setInitiatives(prev => prev.filter(item => item.id !== id));
+    setDeleteModal({ show: false, id: null, title: '', deleting: false });
+    showToast('success', 'Initiative removed');
 
     try {
       const res = await fetch(`/api/initiatives/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete initiative');
-      showToast('success', 'Initiative removed from database');
-      fetchInitiatives();
+      if (!res.ok) {
+        setInitiatives(prevItems);
+        showToast('error', 'Failed to delete initiative from database');
+      }
     } catch (err) {
-      console.error(err);
+      setInitiatives(prevItems);
       showToast('error', err.message || 'Delete failed');
     }
   };
@@ -206,19 +230,58 @@ export default function AdminInitiativesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7faf6] py-10 px-4 sm:px-6 lg:px-8">
-      {/* Toast Notification */}
+    <div className="min-h-screen bg-[#f7faf6] py-10 px-4 sm:px-6 lg:px-8 font-sans">
+      {/* Sleek Floating Toast Notification */}
       {toast.show && (
-        <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-2xl shadow-xl text-white text-xs font-semibold backdrop-blur-md transition-all animate-in fade-in slide-in-from-bottom-5 ${
-          toast.type === 'success' ? 'bg-[#1b432a] border border-[#2d6e45]' : 'bg-rose-700 border border-rose-500'
-        }`}>
-          {toast.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+        <div className={`fixed bottom-5 right-5 z-[70] px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2.5 border text-xs font-semibold backdrop-blur-md transition-all duration-300 ${toast.type === 'success'
+          ? 'bg-emerald-900/90 text-emerald-100 border-emerald-700/60 shadow-emerald-950/20'
+          : 'bg-rose-900/90 text-rose-100 border-rose-700/60 shadow-rose-950/20'
+          }`}>
+          {toast.type === 'success' ? <CheckCircle2 size={16} className="text-[#a2d45e] shrink-0" /> : <AlertCircle size={16} className="text-rose-400 shrink-0" />}
           <span>{toast.message}</span>
         </div>
       )}
 
+      {/* Small Modern Delete Confirmation Popup */}
+      {deleteModal.show && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-200 space-y-4 animate-in zoom-in-95 duration-150">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0">
+                <Trash2 size={20} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-bold text-slate-900 leading-tight">Delete Initiative?</h4>
+                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                  Are you sure you want to delete <span className="font-semibold text-slate-800">"{deleteModal.title}"</span>?
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setDeleteModal({ show: false, id: null, title: '', deleting: false })}
+                className="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-xs font-semibold transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                disabled={deleteModal.deleting}
+                className="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                {deleteModal.deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                <span>{deleteModal.deleting ? 'Deleting...' : 'Yes, Delete'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto space-y-8">
-        
+
         {/* Header Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-white border border-[#e2ece3] shadow-sm">
           <div>
@@ -323,8 +386,8 @@ export default function AdminInitiativesPage() {
                     <Edit3 size={15} />
                   </button>
                   <button
-                    onClick={() => handleDelete(item.id, item.title)}
-                    className="p-2.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition-all"
+                    onClick={() => handlePromptDelete(item.id, item.title)}
+                    className="p-2.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition-all cursor-pointer"
                     title="Delete Initiative"
                   >
                     <Trash2 size={15} />

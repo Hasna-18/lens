@@ -30,6 +30,8 @@ export default function AdminNewsResourcesPage() {
   const [editingId, setEditingId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState({ show: false, type: '', message: '' });
+  const [deleteNewsModal, setDeleteNewsModal] = useState({ show: false, id: null, title: '', deleting: false });
+  const [deleteResourceModal, setDeleteResourceModal] = useState({ show: false, id: null, title: '', deleting: false });
 
   const getTodayDateStr = () => new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   const getMonthYearStr = () => new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
@@ -66,7 +68,7 @@ export default function AdminNewsResourcesPage() {
 
   const showToast = (type, message) => {
     setToast({ show: true, type, message });
-    setTimeout(() => setToast({ show: false, type: '', message: '' }), 3500);
+    setTimeout(() => setToast({ show: false, type: '', message: '' }), 2500);
   };
 
   const fetchData = async () => {
@@ -170,39 +172,52 @@ export default function AdminNewsResourcesPage() {
       return;
     }
     setSaving(true);
-    try {
-      const isEditing = Boolean(editingId);
-      const method = isEditing ? 'PUT' : 'POST';
-      const finalSlug = newsForm.slug || slugify(newsForm.title);
-      const payload = isEditing
-        ? {
-            ...newsForm,
-            id: editingId,
-            slug: finalSlug,
-            details: {
-              ...(newsForm.details || {}),
-              aboutText: newsForm.content || newsForm.details?.aboutText || newsForm.desc
-            }
-          }
-        : {
-            ...newsForm,
-            slug: finalSlug,
-            details: {
-              aboutText: newsForm.content || newsForm.desc
-            }
-          };
+    const isEditing = Boolean(editingId);
+    const method = isEditing ? 'PUT' : 'POST';
+    const finalSlug = newsForm.slug || slugify(newsForm.title);
+    const payload = isEditing
+      ? {
+        ...newsForm,
+        id: editingId,
+        slug: finalSlug,
+        details: {
+          ...(newsForm.details || {}),
+          aboutText: newsForm.content || newsForm.details?.aboutText || newsForm.desc
+        }
+      }
+      : {
+        ...newsForm,
+        slug: finalSlug,
+        details: {
+          aboutText: newsForm.content || newsForm.desc
+        }
+      };
 
+    try {
       const res = await fetch('/api/news', {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      if (!res.ok) throw new Error('Failed to save news entry');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save news entry');
 
-      showToast('success', isEditing ? 'News updated successfully!' : 'News published to database!');
+      // Fast optimistic update
+      const savedItem = {
+        ...payload,
+        id: data?.id || editingId || Date.now(),
+        slug: data?.slug || finalSlug
+      };
+
+      if (isEditing) {
+        setNewsList(prev => prev.map(item => (item.id === editingId || item.slug === savedItem.slug) ? savedItem : item));
+      } else {
+        setNewsList(prev => [savedItem, ...prev]);
+      }
+
+      showToast('success', isEditing ? 'News updated!' : 'News published!');
       setShowNewsForm(false);
       setEditingId(null);
-      fetchData();
     } catch (err) {
       showToast('error', err.message);
     } finally {
@@ -210,14 +225,30 @@ export default function AdminNewsResourcesPage() {
     }
   };
 
-  const handleDeleteNews = async (idOrSlug, title) => {
-    if (!confirm(`Are you sure you want to delete news "${title}"?`)) return;
+  const handlePromptDeleteNews = (idOrSlug, title) => {
+    setDeleteNewsModal({ show: true, id: idOrSlug, title, deleting: false });
+  };
+
+  const handleConfirmDeleteNews = async () => {
+    const { id: idOrSlug } = deleteNewsModal;
+    if (!idOrSlug) return;
+
+    setDeleteNewsModal(prev => ({ ...prev, deleting: true }));
+    const prevNews = [...newsList];
+
+    // Instant optimistic update
+    setNewsList(prev => prev.filter(item => item.id !== idOrSlug && item.slug !== idOrSlug));
+    setDeleteNewsModal({ show: false, id: null, title: '', deleting: false });
+    showToast('success', 'News deleted');
+
     try {
       const res = await fetch(`/api/news?id=${idOrSlug}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete news');
-      showToast('success', 'News deleted from database');
-      fetchData();
+      if (!res.ok) {
+        setNewsList(prevNews);
+        showToast('error', 'Failed to delete news from database');
+      }
     } catch (err) {
+      setNewsList(prevNews);
       showToast('error', err.message);
     }
   };
@@ -258,22 +289,30 @@ export default function AdminNewsResourcesPage() {
       return;
     }
     setSaving(true);
-    try {
-      const isEditing = Boolean(editingId);
-      const method = isEditing ? 'PUT' : 'POST';
-      const payload = isEditing ? { ...resourceForm, id: editingId } : resourceForm;
+    const isEditing = Boolean(editingId);
+    const method = isEditing ? 'PUT' : 'POST';
+    const payload = isEditing ? { ...resourceForm, id: editingId } : resourceForm;
 
+    try {
       const res = await fetch('/api/resources', {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      if (!res.ok) throw new Error('Failed to save resource entry');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save resource entry');
 
-      showToast('success', isEditing ? 'Resource updated!' : 'Resource published to database!');
+      // Fast optimistic update
+      const savedItem = { ...payload, id: data?.id || editingId || Date.now() };
+      if (isEditing) {
+        setResourcesList(prev => prev.map(item => item.id === editingId ? savedItem : item));
+      } else {
+        setResourcesList(prev => [savedItem, ...prev]);
+      }
+
+      showToast('success', isEditing ? 'Resource updated!' : 'Resource published!');
       setShowResourceForm(false);
       setEditingId(null);
-      fetchData();
     } catch (err) {
       showToast('error', err.message);
     } finally {
@@ -281,18 +320,33 @@ export default function AdminNewsResourcesPage() {
     }
   };
 
-  const handleDeleteResource = async (id, title) => {
-    if (!confirm(`Are you sure you want to delete resource "${title}"?`)) return;
+  const handlePromptDeleteResource = (id, title) => {
+    setDeleteResourceModal({ show: true, id, title, deleting: false });
+  };
+
+  const handleConfirmDeleteResource = async () => {
+    const { id } = deleteResourceModal;
+    if (!id) return;
+
+    setDeleteResourceModal(prev => ({ ...prev, deleting: true }));
+    const prevResources = [...resourcesList];
+
+    // Instant optimistic update
+    setResourcesList(prev => prev.filter(item => item.id !== id));
+    setDeleteResourceModal({ show: false, id: null, title: '', deleting: false });
+    showToast('success', 'Resource deleted');
+
     try {
       const res = await fetch(`/api/resources?id=${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete resource');
-      showToast('success', 'Resource deleted from DB');
-      fetchData();
+      if (!res.ok) {
+        setResourcesList(prevResources);
+        showToast('error', 'Failed to delete resource from database');
+      }
     } catch (err) {
+      setResourcesList(prevResources);
       showToast('error', err.message);
     }
   };
-
 
   if (authChecking) {
     return (
@@ -308,22 +362,97 @@ export default function AdminNewsResourcesPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 pb-32 font-outfit relative">
 
-      {/* Toast */}
+      {/* Sleek Floating Toast Notification */}
       {toast.show && (
-        <div className={`fixed bottom-6 right-6 z-[60] px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border transition-all animate-bounce ${
-          toast.type === 'success' 
-            ? 'bg-emerald-50 text-emerald-900 border-emerald-300' 
-            : 'bg-rose-50 text-rose-900 border-rose-300'
-        }`}>
-          {toast.type === 'success' ? <CheckCircle2 size={22} className="text-emerald-700" /> : <AlertCircle size={22} className="text-rose-600" />}
-          <span className="font-bold text-sm">{toast.message}</span>
+        <div className={`fixed bottom-5 right-5 z-[70] px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2.5 border text-xs font-semibold backdrop-blur-md transition-all duration-300 ${toast.type === 'success'
+          ? 'bg-emerald-900/90 text-emerald-100 border-emerald-700/60 shadow-emerald-950/20'
+          : 'bg-rose-900/90 text-rose-100 border-rose-700/60 shadow-rose-950/20'
+          }`}>
+          {toast.type === 'success' ? <CheckCircle2 size={16} className="text-[#a2d45e] shrink-0" /> : <AlertCircle size={16} className="text-rose-400 shrink-0" />}
+          <span>{toast.message}</span>
+        </div>
+      )}
+
+      {/* Small Modern Delete News Confirmation Popup */}
+      {deleteNewsModal.show && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-200 space-y-4 animate-in zoom-in-95 duration-150">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0">
+                <Trash2 size={20} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-bold text-slate-900 leading-tight">Delete News Article?</h4>
+                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                  Are you sure you want to delete <span className="font-semibold text-slate-800">"{deleteNewsModal.title}"</span>?
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setDeleteNewsModal({ show: false, id: null, title: '', deleting: false })}
+                className="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-xs font-semibold transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDeleteNews}
+                disabled={deleteNewsModal.deleting}
+                className="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                {deleteNewsModal.deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                <span>{deleteNewsModal.deleting ? 'Deleting...' : 'Yes, Delete'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Small Modern Delete Resource Confirmation Popup */}
+      {deleteResourceModal.show && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-200 space-y-4 animate-in zoom-in-95 duration-150">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0">
+                <Trash2 size={20} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-bold text-slate-900 leading-tight">Delete Resource?</h4>
+                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                  Are you sure you want to delete <span className="font-semibold text-slate-800">"{deleteResourceModal.title}"</span>?
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setDeleteResourceModal({ show: false, id: null, title: '', deleting: false })}
+                className="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-xs font-semibold transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDeleteResource}
+                disabled={deleteResourceModal.deleting}
+                className="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                {deleteResourceModal.deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                <span>{deleteResourceModal.deleting ? 'Deleting...' : 'Yes, Delete'}</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
       {/* ADMIN FLOATING TOP CONTROLLER */}
       <div className="bg-white/95 backdrop-blur-xl sticky top-0 z-40 border-b border-slate-200 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
-          
+
           <div className="flex items-center gap-3">
             <span className="flex h-3 w-3 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -373,22 +502,20 @@ export default function AdminNewsResourcesPage() {
         <div className="flex items-center gap-3 border-b border-slate-200 pb-4">
           <button
             onClick={() => setActiveTab('news')}
-            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
-              activeTab === 'news'
+            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${activeTab === 'news'
                 ? 'bg-[#2d5a3c] text-white shadow-xs'
                 : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:bg-slate-50'
-            }`}
+              }`}
           >
             <FileText size={16} />
             <span>News & Updates ({newsList.length})</span>
           </button>
           <button
             onClick={() => setActiveTab('resources')}
-            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
-              activeTab === 'resources'
+            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${activeTab === 'resources'
                 ? 'bg-[#2d5a3c] text-white shadow-xs'
                 : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:bg-slate-50'
-            }`}
+              }`}
           >
             <FileBox size={16} />
             <span>Academic Resources ({resourcesList.length})</span>
@@ -398,7 +525,7 @@ export default function AdminNewsResourcesPage() {
 
       {/* MAIN CONTENT AREA */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        
+
         {loading ? (
           <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-xs">
             <Loader2 className="animate-spin text-[#2d5a3c] mx-auto mb-2" size={28} />
@@ -423,16 +550,16 @@ export default function AdminNewsResourcesPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tag Badge *</label>
-                      <input type="text" required value={newsForm.tag} onChange={(e) => setNewsForm({...newsForm, tag: e.target.value.toUpperCase()})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 uppercase focus:bg-white focus:border-[#2d5a3c] outline-none" />
+                      <input type="text" required value={newsForm.tag} onChange={(e) => setNewsForm({ ...newsForm, tag: e.target.value.toUpperCase() })} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 uppercase focus:bg-white focus:border-[#2d5a3c] outline-none" />
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Category *</label>
-                      <select value={newsForm.category} onChange={(e) => setNewsForm({...newsForm, category: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none">
+                      <select value={newsForm.category} onChange={(e) => setNewsForm({ ...newsForm, category: e.target.value })} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none">
                         {newsCategories.map(c => <option key={c} value={c}>{c}</option>)}
                       </select>
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">News Title *</label>
                     <input
@@ -494,17 +621,17 @@ export default function AdminNewsResourcesPage() {
 
                   <div>
                     <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Description / Snippet *</label>
-                    <textarea rows={2} required value={newsForm.desc} onChange={(e) => setNewsForm({...newsForm, desc: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" />
+                    <textarea rows={2} required value={newsForm.desc} onChange={(e) => setNewsForm({ ...newsForm, desc: e.target.value })} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" />
                   </div>
 
                   <div>
                     <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Full Article Content / Details</label>
-                    <textarea rows={4} value={newsForm.content || ''} onChange={(e) => setNewsForm({...newsForm, content: e.target.value})} placeholder="Detailed story content displayed on the full article page..." className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" />
+                    <textarea rows={4} value={newsForm.content || ''} onChange={(e) => setNewsForm({ ...newsForm, content: e.target.value })} placeholder="Detailed story content displayed on the full article page..." className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" />
                   </div>
 
                   <div>
                     <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Date String *</label>
-                    <input type="text" required value={newsForm.date} onChange={(e) => setNewsForm({...newsForm, date: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" placeholder="15 May 2025" />
+                    <input type="text" required value={newsForm.date} onChange={(e) => setNewsForm({ ...newsForm, date: e.target.value })} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" placeholder="15 May 2025" />
                   </div>
 
                   {/* News Image with Local Device ImageUploader */}
@@ -521,19 +648,19 @@ export default function AdminNewsResourcesPage() {
                   <div className="pt-3 flex gap-3 border-t border-slate-100">
                     <button type="button" onClick={() => setShowNewsForm(false)} className="px-5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 font-bold text-xs hover:bg-slate-50 transition-colors">Cancel</button>
                     <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-xl bg-[#2d5a3c] hover:bg-[#23462f] text-white font-extrabold text-xs flex justify-center items-center gap-2 shadow-xs disabled:opacity-50 transition-all cursor-pointer">
-                      {saving ? <Loader2 className="animate-spin" size={14}/> : <CheckCircle2 size={14}/>} Save News
+                      {saving ? <Loader2 className="animate-spin" size={14} /> : <CheckCircle2 size={14} />} Save News
                     </button>
                   </div>
                 </form>
               </div>
             )}
 
-                   {newsList.slice((newsPage - 1) * newsPerPage, newsPage * newsPerPage).map(item => (
+            {newsList.slice((newsPage - 1) * newsPerPage, newsPage * newsPerPage).map(item => (
               <div key={item.id} className="bg-white rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-center shadow-xs border border-slate-200/90 hover:border-[#2d5a3c]/30 hover:shadow-md transition-all relative group overflow-hidden">
                 <div className="w-full sm:w-48 h-32 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
                   <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => { e.currentTarget.src = "/events/e1.png"; }} />
                 </div>
-                
+
                 <div className="flex-1 min-w-0 w-full">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 text-[#2d5a3c] text-[10px] font-black uppercase tracking-wider border border-emerald-200">{item.tag}</span>
@@ -555,7 +682,7 @@ export default function AdminNewsResourcesPage() {
                   <button onClick={() => handleStartNewsEdit(item)} className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1 transition-colors">
                     <Edit3 size={13} /> Edit
                   </button>
-                  <button onClick={() => handleDeleteNews(item.slug || item.id, item.title)} className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold flex items-center gap-1 transition-colors">
+                  <button onClick={() => handlePromptDeleteNews(item.slug || item.id, item.title)} className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer">
                     <Trash2 size={13} /> Delete
                   </button>
                 </div>
@@ -581,11 +708,10 @@ export default function AdminNewsResourcesPage() {
                   <button
                     key={p}
                     onClick={() => setNewsPage(p)}
-                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                      newsPage === p
+                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-colors cursor-pointer ${newsPage === p
                         ? 'bg-[#2d5a3c] text-white shadow-xs'
                         : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
-                    }`}
+                      }`}
                   >
                     {p}
                   </button>
@@ -625,7 +751,7 @@ export default function AdminNewsResourcesPage() {
                   <button onClick={() => handleStartResourceEdit(item)} className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1 transition-colors">
                     <Edit3 size={13} /> Edit
                   </button>
-                  <button onClick={() => handleDeleteResource(item.id, item.title)} className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold flex items-center gap-1 transition-colors">
+                  <button onClick={() => handlePromptDeleteResource(item.id, item.title)} className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer">
                     <Trash2 size={13} /> Delete
                   </button>
                 </div>
@@ -659,19 +785,19 @@ export default function AdminNewsResourcesPage() {
             <form onSubmit={handleResourceSubmit} className="space-y-4 max-h-[75vh] overflow-y-auto pr-2 custom-scrollbar">
               <div>
                 <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Document Title *</label>
-                <input type="text" required value={resourceForm.title} onChange={(e) => setResourceForm({...resourceForm, title: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:bg-white focus:border-[#2d5a3c] outline-none" />
+                <input type="text" required value={resourceForm.title} onChange={(e) => setResourceForm({ ...resourceForm, title: e.target.value })} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:bg-white focus:border-[#2d5a3c] outline-none" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Category *</label>
-                  <select value={resourceForm.category} onChange={(e) => setResourceForm({...resourceForm, category: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none">
+                  <select value={resourceForm.category} onChange={(e) => setResourceForm({ ...resourceForm, category: e.target.value })} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none">
                     {resourceCategories.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">File Type *</label>
-                  <select value={resourceForm.type} onChange={(e) => setResourceForm({...resourceForm, type: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none">
+                  <select value={resourceForm.type} onChange={(e) => setResourceForm({ ...resourceForm, type: e.target.value })} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none">
                     {resourceTypes.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
@@ -680,28 +806,28 @@ export default function AdminNewsResourcesPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">File Size String *</label>
-                  <input type="text" required value={resourceForm.size} onChange={(e) => setResourceForm({...resourceForm, size: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" placeholder="1.2 MB" />
+                  <input type="text" required value={resourceForm.size} onChange={(e) => setResourceForm({ ...resourceForm, size: e.target.value })} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" placeholder="1.2 MB" />
                 </div>
                 <div>
                   <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Release Date *</label>
-                  <input type="text" required value={resourceForm.date} onChange={(e) => setResourceForm({...resourceForm, date: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" placeholder="March 2025" />
+                  <input type="text" required value={resourceForm.date} onChange={(e) => setResourceForm({ ...resourceForm, date: e.target.value })} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" placeholder="March 2025" />
                 </div>
               </div>
 
               <div>
                 <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Description</label>
-                <textarea rows={3} required value={resourceForm.desc} onChange={(e) => setResourceForm({...resourceForm, desc: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" />
+                <textarea rows={3} required value={resourceForm.desc} onChange={(e) => setResourceForm({ ...resourceForm, desc: e.target.value })} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" />
               </div>
 
               <div>
                 <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">Download URL Link or File Path *</label>
-                <input type="text" required value={resourceForm.downloadUrl} onChange={(e) => setResourceForm({...resourceForm, downloadUrl: e.target.value})} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" placeholder="https://... or /admin/resources/file.pdf" />
+                <input type="text" required value={resourceForm.downloadUrl} onChange={(e) => setResourceForm({ ...resourceForm, downloadUrl: e.target.value })} className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-800 focus:bg-white focus:border-[#2d5a3c] outline-none" placeholder="https://... or /admin/resources/file.pdf" />
               </div>
 
               <div className="pt-3 flex gap-3 border-t border-slate-100">
                 <button type="button" onClick={() => setShowResourceForm(false)} className="flex-1 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 font-bold text-xs hover:bg-slate-50 transition-colors">Cancel</button>
                 <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-xl bg-[#2d5a3c] hover:bg-[#23462f] text-white font-extrabold text-xs flex justify-center items-center gap-2 shadow-xs disabled:opacity-50 transition-all cursor-pointer">
-                  {saving ? <Loader2 className="animate-spin" size={14}/> : <CheckCircle2 size={14}/>} Save Resource
+                  {saving ? <Loader2 className="animate-spin" size={14} /> : <CheckCircle2 size={14} />} Save Resource
                 </button>
               </div>
             </form>
@@ -709,7 +835,8 @@ export default function AdminNewsResourcesPage() {
         </div>
       )}
 
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }
