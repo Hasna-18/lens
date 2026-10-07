@@ -5,7 +5,7 @@ export default {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './lib/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: ['class', '[data-theme="dark"]'],
+  darkMode: 'class',
   corePlugins: {
     preflight: false,
   },
@@ -19,6 +19,19 @@ export default {
           400: '#38bdf8',
           500: '#06b6d4',
         },
+        sky: {
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+        },
+        blue: {
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+          950: '#0a192f',
+        },
         purple: {
           500: '#8b5cf6',
           600: '#7c3aed',
@@ -27,9 +40,10 @@ export default {
           500: '#ec4899',
         },
         dark: {
-          900: '#080c14',
-          800: '#0d1322',
-          700: '#121a2c',
+          950: '#030712',
+          900: '#080e1a',
+          800: '#0d1829',
+          700: '#13233c',
         }
       },
       fontFamily: {
@@ -39,6 +53,7 @@ export default {
       },
       boxShadow: {
         'glow-cyan': '0 0 25px rgba(6, 182, 212, 0.35)',
+        'glow-blue': '0 0 25px rgba(2, 132, 199, 0.35)',
         'glow-purple': '0 0 25px rgba(139, 92, 246, 0.35)',
         'glass': '0 16px 40px 0 rgba(0, 0, 0, 0.45)',
       }

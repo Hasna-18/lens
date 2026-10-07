@@ -15,11 +15,11 @@ export default function Footer() {
   };
 
   return (
-    <footer className="w-full bg-[#f4f7f1] dark:bg-[#020b06] border-t border-[#d8e5d9] dark:border-[#122419] text-[#556758] dark:text-slate-400 font-['Plus_Jakarta_Sans',sans-serif] relative z-20 pt-16 pb-12 transition-colors duration-300">
+    <footer className="w-full bg-slate-50 dark:bg-[#030712] border-t border-slate-200/80 dark:border-blue-950/60 text-slate-600 dark:text-slate-400 font-['Plus_Jakarta_Sans',sans-serif] relative z-20 pt-16 pb-12 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         
         {/* Top Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-16 border-b border-[#d8e5d9] dark:border-white/5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-16 border-b border-slate-200 dark:border-white/5">
           
           {/* Column 1: Brand & Socials (lg:col-span-3) */}
           <div className="lg:col-span-3 space-y-6">
@@ -27,7 +27,7 @@ export default function Footer() {
               <img
                 src="/logo.png"
                 alt="CLESE Logo"
-                className="h-12 w-auto object-contain drop-shadow-[0_0_10px_rgba(162,212,94,0.3)] transition-transform duration-300 group-hover:scale-105"
+                className="h-12 w-auto object-contain drop-shadow-[0_0_10px_rgba(56,189,248,0.3)] transition-transform duration-300 group-hover:scale-105"
               />
             </Link>
 
@@ -45,7 +45,7 @@ export default function Footer() {
                   aria-label={item.name}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d5e2d6] dark:border-[#1e3d2b] flex items-center justify-center text-[#14261a] dark:text-slate-300 hover:text-white hover:bg-[#1b3726] dark:hover:border-[#a2d45e] dark:hover:bg-[#122b1e] transition-all duration-300 shadow-xs"
+                  className="w-9 h-9 rounded-full bg-white dark:bg-[#080f1e] border border-blue-100 dark:border-blue-900/50 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-white hover:bg-blue-600 dark:hover:border-sky-400 dark:hover:bg-sky-600 transition-all duration-300 shadow-xs"
                 >
                   <item.icon size={15} />
                 </a>
@@ -55,7 +55,7 @@ export default function Footer() {
 
           {/* Column 2: Explore (lg:col-span-2) */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className="font-['Outfit'] font-bold text-xs text-[#122016] dark:text-white uppercase tracking-[0.15em]">Explore</h4>
+            <h4 className="font-['Outfit'] font-bold text-xs text-slate-900 dark:text-white uppercase tracking-[0.15em]">Explore</h4>
             <ul className="space-y-2.5 text-xs list-none p-0">
               {[
                 { name: 'About Us', href: '/about' },
@@ -64,7 +64,7 @@ export default function Footer() {
                 { name: 'News & Media', href: '/news' }
               ].map((link, idx) => (
                 <li key={idx}>
-                  <Link href={link.href} className="text-[#556758] dark:text-slate-400 hover:text-[#1b3726] dark:hover:text-white hover:translate-x-1 inline-block transition-all duration-200">
+                  <Link href={link.href} className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-sky-300 hover:translate-x-1 inline-block transition-all duration-200">
                     {link.name}
                   </Link>
                 </li>
@@ -74,7 +74,7 @@ export default function Footer() {
 
           {/* Column 3: Resources (lg:col-span-2) */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className="font-['Outfit'] font-bold text-xs text-[#122016] dark:text-white uppercase tracking-[0.15em]">Resources</h4>
+            <h4 className="font-['Outfit'] font-bold text-xs text-slate-900 dark:text-white uppercase tracking-[0.15em]">Resources</h4>
             <ul className="space-y-2.5 text-xs list-none p-0">
               {[
                 { name: 'Publications', href: '/publications' },
@@ -82,7 +82,7 @@ export default function Footer() {
                 { name: 'Academic Team', href: '/team' },
               ].map((link, idx) => (
                 <li key={idx}>
-                  <Link href={link.href} className="text-[#556758] dark:text-slate-400 hover:text-[#1b3726] dark:hover:text-white hover:translate-x-1 inline-block transition-all duration-200">
+                  <Link href={link.href} className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-sky-300 hover:translate-x-1 inline-block transition-all duration-200">
                     {link.name}
                   </Link>
                 </li>
@@ -92,29 +92,28 @@ export default function Footer() {
 
           {/* Column 4: Connect (lg:col-span-2) */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className="font-['Outfit'] font-bold text-xs text-[#122016] dark:text-white uppercase tracking-[0.15em]">Connect</h4>
-            <ul className="space-y-3 text-xs list-none p-0 text-[#556758] dark:text-slate-400">
+            <h4 className="font-['Outfit'] font-bold text-xs text-slate-900 dark:text-white uppercase tracking-[0.15em]">Connect</h4>
+            <ul className="space-y-3 text-xs list-none p-0 text-slate-600 dark:text-slate-400">
               <li className="flex items-start gap-2">
-                <MapPin size={14} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0 mt-0.5" />
+                <MapPin size={14} className="text-blue-600 dark:text-sky-400 shrink-0 mt-0.5" />
                 <span className="leading-snug">University of Kerala, Kariavattom Campus, Thiruvananthapuram - 695581, Kerala, India</span>
               </li>
               <li className="flex items-center gap-2">
-                <Mail size={14} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0" />
-                <a href="mailto:lenseedu24@gmail.com" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">lenseedu24@gmail.com</a>
+                <Mail size={14} className="text-blue-600 dark:text-sky-400 shrink-0" />
+                <a href="mailto:lenseedu24@gmail.com" className="hover:text-blue-600 dark:hover:text-sky-300 transition-colors">lenseedu24@gmail.com</a>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Copyright Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6b7e70] dark:text-slate-500">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-500">
           <p>© 2024 LEnSE • Centre for Learning Engineering and Sustainability Education, University of Kerala. All Rights Reserved.</p>
-          <div className="flex items-center gap-4 text-[#556758] dark:text-slate-400">
-            <Link href="/privacy" className="hover:text-[#122016] dark:hover:text-white transition-colors">Privacy Policy</Link>
+          <div className="flex items-center gap-4 text-slate-600 dark:text-slate-400">
+            <Link href="/privacy" className="hover:text-blue-600 dark:hover:text-white transition-colors">Privacy Policy</Link>
             <span>|</span>
-            <Link href="/terms" className="hover:text-[#122016] dark:hover:text-white transition-colors">Terms of Use</Link>
-
-                     </div>
+            <Link href="/terms" className="hover:text-blue-600 dark:hover:text-white transition-colors">Terms of Use</Link>
+          </div>
         </div>
 
       </div>

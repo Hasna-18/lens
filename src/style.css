@@ -2634,3 +2634,29 @@ button {
 .gallery-card:hover img {
   transform: scale(1.06);
 }
+
+/* Continuous Logo Marquee Moving to the Right */
+@keyframes marquee-scroll-right {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-scroll-right 30s linear infinite;
+}
+
+.animate-marquee-right:hover {
+  animation-play-state: paused;
+}
+
+.marquee-mask {
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
