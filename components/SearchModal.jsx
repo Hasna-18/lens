@@ -10,16 +10,15 @@ export default function SearchModal({ isOpen, onClose }) {
   const [query, setQuery] = useState('');
   const router = useRouter();
 
-  // 10 Primary Pages from CLESE Specification PDF
+  // Core Navigation Pages aligned with LEnSE portal
   const searchItems = [
-    { title: 'Home Page', category: 'Primary Page', href: '/', icon: Home, desc: 'CLESE Academic Portal overview, vision, and project scope' },
-    { title: 'About the Institution', category: 'Primary Page', href: '/about', icon: Info, desc: 'CLESE 2024 establishment, 5 core objectives & collaborations' },
-    { title: 'Administration', category: 'Primary Page', href: '/administration', icon: ShieldCheck, desc: 'Single Administrator (CLESE) CMS panel & SEO management' },
-    { title: 'Departments', category: 'Primary Page', href: '/departments', icon: Building2, desc: 'Learning Engineering, STEM Education & Sustainability divisions' },
-      { title: 'Events', category: 'Primary Page', href: '/events', icon: Calendar, desc: '4th SIET Conference, Prompt Engg lecture, STEM camps & workshops' },
-    { title: 'News & Announcements', category: 'Primary Page', href: '/news', icon: Newspaper, desc: 'STEM 4 Girls ICSSR launch, SIET 44 schools project & FYUGP course' },
-      { title: 'Academic Information', category: 'Primary Page', href: '/academics', icon: BookOpen, desc: 'Portal framework, degree courses, M.Ed/Ph.D learning engineering' },
-    { title: 'Contact', category: 'Primary Page', href: '/contact', icon: Mail, desc: 'University of Kerala Kariavattom Campus address & lenseedu24@gmail.com' }
+    { title: 'Home', category: 'Main Portal', href: '/', icon: Home, desc: 'Centre for Learning Engineering & STEM Education overview, vision, and project scope' },
+    { title: 'About Us', category: 'Institutional', href: '/about', icon: Info, desc: 'LEnSE establishment, core objectives, research leadership & collaborations' },
+    { title: 'Events & Conferences', category: 'Programs', href: '/events', icon: Calendar, desc: '4th SIET Conference, Prompt Engineering lectures, STEM camps & workshops' },
+    { title: 'Initiatives & Outreach', category: 'Outreach', href: '/initiatives', icon: Sparkles, desc: 'STEM 4 Girls ICSSR launch, SIET 44 schools project & state-wide education camps' },
+    { title: 'Academic Resources', category: 'Academics', href: '/resources', icon: BookOpen, desc: 'Curriculum framework, research toolkits, publications & downloadable courseware' },
+    { title: 'News & Announcements', category: 'Media', href: '/news', icon: Newspaper, desc: 'Latest updates, campus press releases, faculty highlights & notifications' },
+    { title: 'Contact & Location', category: 'Office', href: '/contact', icon: Mail, desc: 'Director’s Office, University of Kerala Kariavattom Campus & lenseedu24@gmail.com' }
   ];
 
   const filteredItems = searchItems.filter(item =>
@@ -53,10 +52,10 @@ export default function SearchModal({ isOpen, onClose }) {
       >
         {/* Search Input Bar */}
         <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
-          <Search size={22} className="text-amber-500 shrink-0" />
+          <Search size={22} className="text-[#1a6dff] shrink-0" />
           <input
             type="text"
-            placeholder="Search CLESE 10 primary pages, faculty, events, news..."
+            placeholder="Search LEnSE pages, programs, events, resources, news..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
@@ -84,39 +83,39 @@ export default function SearchModal({ isOpen, onClose }) {
                 <div
                   key={idx}
                   onClick={() => handleSelect(item.href)}
-                  className="group flex items-start gap-3.5 p-3 sm:p-3.5 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800/80 cursor-pointer transition-all border border-transparent hover:border-amber-400/30"
+                  className="group flex items-start gap-3.5 p-3 sm:p-3.5 rounded-2xl hover:bg-blue-50/70 dark:hover:bg-slate-800/80 cursor-pointer transition-all border border-transparent hover:border-blue-200/60 dark:hover:border-blue-500/30"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#1a6dff] dark:text-sky-400 flex items-center justify-center shrink-0 group-hover:bg-gradient-to-r group-hover:from-[#0a6cff] group-hover:to-[#1fa2ff] group-hover:text-white transition-all shadow-2xs">
                     <Icon size={20} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-outfit font-bold text-sm text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                      <span className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-[#1a6dff] dark:group-hover:text-sky-400 transition-colors">
                         {item.title}
                       </span>
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-blue-50 dark:bg-white/10 text-[#1a6dff] dark:text-sky-300">
                         {item.category}
                       </span>
                     </div>
                     <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">{item.desc}</p>
                   </div>
-                  <ArrowRight size={16} className="text-slate-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0 mt-2" />
+                  <ArrowRight size={16} className="text-[#1a6dff] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0 mt-2" />
                 </div>
               );
             })
           ) : (
             <div className="py-12 text-center text-slate-500">
-              <Sparkles size={32} className="mx-auto mb-2 text-amber-500/50" />
+              <Sparkles size={32} className="mx-auto mb-2 text-blue-400/50" />
               <p className="text-sm font-semibold">No pages matching &quot;{query}&quot;</p>
-              <p className="text-xs text-slate-400 mt-1">Try searching for &quot;Faculty&quot;, &quot;Events&quot;, &quot;News&quot;, or &quot;Administration&quot;</p>
+              <p className="text-xs text-slate-400 mt-1">Try searching for &quot;Events&quot;, &quot;Initiatives&quot;, &quot;Resources&quot;, or &quot;Contact&quot;</p>
             </div>
           )}
         </div>
 
         {/* Modal Footer */}
         <div className="p-3 bg-slate-50 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500 px-5">
-          <span>CLESE • University of Kerala (10 Primary Pages)</span>
-          <span className="flex items-center gap-1 font-semibold text-amber-600 dark:text-amber-400">
+          <span>LEnSE • University of Kerala</span>
+          <span className="flex items-center gap-1 font-semibold text-[#1a6dff] dark:text-sky-400">
             Click to navigate
           </span>
         </div>

@@ -120,22 +120,27 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* Get Involved Button */}
+            {/* Get Involved Button (shown on tablet/desktop, cleanly accessible in drawer on mobile) */}
             <Link
               href="/contact"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white text-[11px] sm:text-xs font-semibold tracking-wide transition-all duration-300 shadow-[0_4px_16px_rgba(2,132,199,0.35)] hover:shadow-[0_6px_22px_rgba(2,132,199,0.5)] hover:-translate-y-0.5 active:translate-y-0 group"
+              className="hidden sm:flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white text-xs font-semibold tracking-wide transition-all duration-300 shadow-[0_4px_16px_rgba(2,132,199,0.35)] hover:shadow-[0_6px_22px_rgba(2,132,199,0.5)] hover:-translate-y-0.5 active:translate-y-0 group"
             >
               <span>Get Involved</span>
               <ArrowRight size={13} className="text-sky-200 group-hover:translate-x-1 transition-transform" />
             </Link>
 
-            {/* Mobile Hamburger Button */}
+            {/* Mobile Hamburger Button - matching rounded glass style */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-full bg-white/90 dark:bg-[#080f1e]/90 border border-blue-100/90 dark:border-white/10 text-slate-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 transition-colors cursor-pointer"
+              className="md:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#080f1e]/90 backdrop-blur-xl border border-blue-100/90 dark:border-white/15 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-white hover:border-blue-300 dark:hover:border-sky-400 hover:bg-blue-50 dark:hover:bg-sky-950/60 flex items-center justify-center transition-all duration-300 shadow-md group cursor-pointer"
               aria-label="Toggle navigation menu"
+              aria-expanded={mobileOpen}
             >
-              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+              {mobileOpen ? (
+                <X size={17} className="text-blue-600 dark:text-sky-400 transition-transform group-hover:rotate-90 duration-200" />
+              ) : (
+                <Menu size={17} className="transition-transform group-hover:scale-110 duration-200" />
+              )}
             </button>
           </div>
 
