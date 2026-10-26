@@ -15,11 +15,88 @@ import {
   ChevronLeft,
   ChevronRight,
   Shield,
-  Sparkles
+  Sparkles,
+  Globe,
+  Clock,
+  Atom,
+  Lightbulb
 } from 'lucide-react';
 import { getFromCache, fetchWithCache, prefetchEndpoint } from '../../lib/clientCache';
 import { sortEventsLatestFirst } from '../../lib/eventUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
+
+/* ---------- shared design system matching Home & About ---------- */
+const SERIF = { fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif" };
+const BLUE = 'text-[#1a6dff]';
+const GLASS =
+  'bg-gradient-to-br from-white/80 via-sky-50/60 to-blue-100/40 backdrop-blur-xl border border-white/90 shadow-[0_18px_45px_rgba(37,99,235,0.10),inset_0_1px_0_rgba(255,255,255,1)]';
+
+const Wrap = ({ children, className = '' }) => (
+  <div className={`relative max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>
+);
+
+const Em = ({ children, light = false }) => (
+  <em style={SERIF} className={`italic font-normal ${light ? 'text-sky-300' : BLUE}`}>{children}</em>
+);
+
+function SectionTag({ text, light = false, className = '' }) {
+  return (
+    <div className={`flex items-center gap-2.5 select-none ${className}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${light ? 'bg-sky-300' : 'bg-[#1a6dff]'}`} />
+      <span className={`text-[11px] font-bold tracking-[0.22em] uppercase ${light ? 'text-sky-200' : BLUE}`}>{text}</span>
+      <span className={`w-16 h-px ${light ? 'bg-white/20' : 'bg-blue-200'}`} />
+    </div>
+  );
+}
+
+function Dots({ rows = 5, cols = 10, className = '' }) {
+  return (
+    <div className={`grid gap-2 pointer-events-none select-none ${className}`} style={{ gridTemplateColumns: `repeat(${cols}, 3px)` }}>
+      {Array.from({ length: rows * cols }).map((_, i) => (
+        <span key={i} className="w-[3px] h-[3px] rounded-full bg-sky-400/60" />
+      ))}
+    </div>
+  );
+}
+
+/* Silky ocean streaks background for the hero (matching About page) */
+function OceanWaves() {
+  const colors = ['#ffffff', '#7dd3fc', '#0ea5e9', '#1d4ed8', '#bae6fd', '#0369a1'];
+  const streaks = Array.from({ length: 40 }, (_, i) => ({
+    d: `M -150 ${20 + i * 14} C 250 ${-80 + i * 12}, 650 ${240 - i * 3}, 1350 ${60 + i * 16}`,
+    c: colors[(i * 5) % colors.length],
+    w: 5 + ((i * 7) % 26),
+    o: 0.25 + ((i * 13) % 50) / 100,
+  }));
+  return (
+    <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" className="w-full h-full pointer-events-none" fill="none">
+      <defs>
+        <linearGradient id="ocean-base-events" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#eaf6ff" />
+          <stop offset="0.45" stopColor="#4cb8f5" />
+          <stop offset="1" stopColor="#1e40af" />
+        </linearGradient>
+        <filter id="ocean-blur-events"><feGaussianBlur stdDeviation="8" /></filter>
+      </defs>
+      <rect width="1200" height="600" fill="url(#ocean-base-events)" />
+      <g filter="url(#ocean-blur-events)">
+        {streaks.map((s, i) => (
+          <path key={i} d={s.d} stroke={s.c} strokeWidth={s.w} opacity={s.o} strokeLinecap="round" />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
+function getCategoryIcon(catName) {
+  const c = (catName || '').toLowerCase();
+  if (c.includes('conf')) return Users;
+  if (c.includes('work')) return BookOpen;
+  if (c.includes('train') || c.includes('course') || c.includes('lect')) return GraduationCap;
+  if (c.includes('stem') || c.includes('lab')) return FlaskConical;
+  if (c.includes('outreach') || c.includes('comm')) return Shield;
+  return Calendar;
+}
 
 function formatEventsList(data) {
   if (!Array.isArray(data)) return [];
@@ -35,7 +112,6 @@ function formatEventsList(data) {
     subtitle: item.subtitle || '',
     location: item.location || (item.details && item.details.venue) || 'Thiruvananthapuram, Kerala',
     duration: item.duration || (item.details && item.details.time) || '2 Days Event',
-    imageUrl: item.imageUrl || item.image_url || '/events/conference.jpg',
     dateDay: item.dateDay || item.date_day || '14',
     dateMonth: item.dateMonth || item.date_month || 'MAR',
     dateYear: item.dateYear || item.date_year || '2025'
@@ -213,104 +289,85 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fcfdfa] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 font-sans pb-20 sm:pb-24 selection:bg-[#a2d45e]/30 pt-24 sm:pt-28 relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-[#f4f8ff] text-slate-800 font-sans pb-20 sm:pb-28 selection:bg-blue-100 relative overflow-hidden">
 
       {/* ============================================================ */}
-      {/* 0. HERO BACKGROUND ART (Continuous Organic Canvas Blend) */}
+      {/* 0. HERO SECTION (Crisp & Clean - Matching About Page) */}
       {/* ============================================================ */}
-      <div className="absolute top-0 right-0 w-[55%] sm:w-[65%] lg:w-[68%] xl:w-[62%] h-[380px] sm:h-[650px] lg:h-[840px] pointer-events-none z-0 overflow-hidden select-none">
-        <img
-          src="/event1.png"
-          alt="LEnSE Events Botanical Illustration"
-          fetchPriority="high"
-          decoding="async"
-          className="w-full h-full object-cover object-[78%_25%] sm:object-right-top scale-[1.03]"
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-        {/* Soft Organic Fades into canvas */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/85 dark:via-[#031008]/85 via-[15%] sm:via-[18%] to-transparent to-[55%] w-full h-full" />
-        <div className="absolute bottom-0 left-0 right-0 h-28 sm:h-48 bg-gradient-to-t from-[#fcfdfa] dark:from-[#031008] via-[#fcfdfa]/70 dark:via-[#031008]/70 to-transparent" />
-        <div className="absolute top-0 left-0 right-0 h-16 sm:h-20 bg-gradient-to-b from-[#fcfdfa] dark:from-[#031008] to-transparent" />
-      </div>
+      <section className="relative overflow-hidden min-h-[calc(100vh-70px)] sm:min-h-screen flex flex-col justify-center py-20 sm:py-24">
+        {/* Ocean Waves Background matching About page */}
+        <div className="absolute inset-y-0 right-0 w-full lg:w-[75%] pointer-events-none select-none">
+          <OceanWaves />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#f4f8ff] via-[#f4f8ff]/70 to-transparent" />
+        </div>
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#f4f8ff] via-[#f4f8ff]/85 to-transparent pointer-events-none" />
 
-      {/* Ambient Glows */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#dbe9dd]/50 via-[#e4efe3]/30 to-transparent blur-[120px] rounded-full" />
-      </div>
+        {/* Decorative Ring + Dots on left edge (matching About page) */}
+        <div className="hidden lg:block absolute -left-[270px] top-[22%] w-[320px] h-[320px] rounded-full border border-sky-400/50 pointer-events-none" />
+        <div className="hidden lg:block absolute left-[80px] top-[60%] w-2.5 h-2.5 rounded-full bg-[#1a6dff] pointer-events-none" />
+        <Dots rows={8} cols={5} className="hidden lg:grid absolute left-3 bottom-16 pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 space-y-5 sm:space-y-12">
-
-        {/* ============================================================ */}
-        {/* 1. HERO SECTION (Side-by-side in Mobile & Desktop) */}
-        {/* ============================================================ */}
-        <div className="grid grid-cols-12 gap-2 sm:gap-6 lg:gap-8 items-center min-h-[220px] sm:min-h-[440px] lg:min-h-[500px] pt-1 sm:pt-4">
-
-          {/* Left: Text & CTA */}
-          <div className="col-span-7 sm:col-span-7 lg:col-span-7 space-y-2 sm:space-y-4 z-10">
-            {/* Breadcrumb */}
-            <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-semibold text-[#485b4d] dark:text-slate-400">
-              <Home size={12} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-              <Link href="/" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">Home</Link>
-              <span className="text-[#879b8c] dark:text-slate-500">&gt;</span>
-              <span className="text-[#1b3726] dark:text-[#a2d45e] font-bold">Events</span>
-            </div>
-
-            <h1 className="text-[1.7rem] xs:text-[2.1rem] sm:text-[3.2rem] lg:text-[4.2rem] font-normal text-[#131f17] dark:text-white leading-[1.06] tracking-tight font-serif">
-              Events that<br />
-              <span className="italic text-[#1a5e35] dark:text-[#a2d45e] font-serif font-normal">inspire change.</span>
-            </h1>
-
-            <p className="text-[#405245] dark:text-slate-300 text-[9.5px] xs:text-[11px] sm:text-[13.5px] leading-[1.45] sm:leading-[1.55] max-w-[440px] font-normal">
-              Discover seminars, workshops, conferences and training programmes that bring people together to share knowledge, spark ideas and create a more sustainable future.
-            </p>
-
-            <div className="pt-0.5 sm:pt-2">
-              <a
-                href="#events-section"
-                className="px-3.5 sm:px-7 py-2 sm:py-3.5 rounded-full bg-[#1b3726] hover:bg-[#254d35] text-white text-[10px] sm:text-[12px] font-bold tracking-wide inline-flex items-center gap-1.5 sm:gap-3 transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 group cursor-pointer dark:bg-[#1b432a] dark:hover:bg-[#245437]"
-              >
-                <span>Explore All Events</span>
-                <ArrowRight size={12} className="group-hover:translate-x-1.5 transition-transform duration-300 sm:w-3.5 sm:h-3.5" />
-              </a>
-            </div>
-          </div>
-
-          {/* Right: Floating 18+ Glass Badge */}
-          <div className="col-span-5 sm:col-span-5 lg:col-span-5 relative flex items-start justify-end pt-1 sm:pt-6">
-            <div className="relative w-full max-w-[130px] xs:max-w-[160px] sm:max-w-[220px]">
-
-              {/* Floating Glass Card */}
-              <div className="bg-white/85 dark:bg-[#0b1c14]/85 backdrop-blur-xl p-2.5 xs:p-3 sm:p-5 rounded-2xl sm:rounded-[2rem] border border-white/95 dark:border-[#183a27] shadow-[0_10px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_20px_45px_rgba(0,0,0,0.5)] z-20 hover:-translate-y-1 transition-all duration-300 relative w-full">
-
-                {/* Calendar Icon Badge on top right */}
-                <div className="w-6 h-6 sm:w-10 sm:h-10 rounded-full bg-white dark:bg-[#132c1e] backdrop-blur-2xl border border-white dark:border-[#1e422c] shadow-sm flex items-center justify-center absolute -top-2 -right-2 sm:-top-3 sm:-right-3 text-[#1b3726] dark:text-[#a2d45e] z-30">
-                  <Calendar size={12} strokeWidth={1.75} className="text-[#1b3726] dark:text-[#a2d45e] sm:w-5 sm:h-5" />
+        <Wrap className="w-full relative z-10 my-auto">
+          <div className="grid lg:grid-cols-12 items-center gap-10 lg:gap-8">
+            {/* Left Copy */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="flex items-center gap-3">
+                <span className={`flex items-center gap-2 text-[11px] font-bold tracking-[0.24em] uppercase ${BLUE}`}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1a6dff]" />LEnSE EVENTS
+                </span>
+                <span className="text-slate-300">|</span>
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                  <Home size={12} className="text-[#1a6dff]" />
+                  <Link href="/" className="hover:text-[#1a6dff] transition-colors">Home</Link>
+                  <span className="text-slate-300">&gt;</span>
+                  <span className="text-[#1a6dff]">Events</span>
                 </div>
-
-                <p className="text-[6.5px] xs:text-[7.5px] sm:text-[9.5px] font-bold text-[#455c4a] dark:text-[#a2d45e] uppercase tracking-wider mb-0.5">
-                  UPCOMING EVENTS
-                </p>
-
-                <h3 className="text-xl xs:text-2xl sm:text-4xl font-serif text-[#0f1d13] dark:text-white mb-0.5 tracking-tight font-normal leading-none">
-                  {events.length > 0 ? `${events.length}+` : '10+'}
-                </h3>
-
-                <p className="text-[6.5px] xs:text-[7.5px] sm:text-[10px] text-[#4a5e4f] dark:text-slate-300 leading-tight font-medium">
-                  Interactive talks, workshops and more.
-                </p>
               </div>
 
+              <h1 style={SERIF} className="text-[52px] sm:text-[66px] lg:text-[74px] leading-[1.03] tracking-tight text-slate-900 font-normal">
+                Events that<br />
+                <em className={`${BLUE} font-normal`}>inspire change.</em>
+              </h1>
+
+              <p className="text-slate-600 text-[15px] sm:text-[16px] leading-[1.8] max-w-[500px]">
+                Discover seminars, workshops, conferences and training programmes that bring people together to share knowledge, spark ideas and create a more sustainable future.
+              </p>
+
+              <div className="pt-2">
+                <a href="#events-section" className="inline-flex">
+                  <span className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#0a6cff] to-[#1fa2ff] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3 shadow-[0_12px_26px_rgba(10,108,255,0.4)] hover:scale-[1.03] transition">
+                    EXPLORE ALL EVENTS <ArrowRight size={13} />
+                  </span>
+                </a>
+              </div>
+            </div>
+
+            {/* Right: Floating Glass Card (Matching About Page Estd Card) */}
+            <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end hidden sm:flex">
+              <div className="relative w-[300px] sm:w-[320px] rounded-[1.8rem] p-7 sm:p-8 bg-gradient-to-br from-white/55 via-sky-50/40 to-blue-100/30 backdrop-blur-xl border border-white/80 shadow-[0_25px_60px_rgba(2,60,140,0.22),inset_0_1px_0_rgba(255,255,255,0.95)] hover:-translate-y-1 transition duration-300">
+                <span className="absolute -top-3.5 -right-3.5 w-9 h-9 rounded-full bg-white/90 border border-white text-sky-500 flex items-center justify-center shadow-md">
+                  <Sparkles size={17} />
+                </span>
+                <p className="text-[10px] font-bold tracking-[0.22em] text-slate-600 uppercase mb-1">UPCOMING EVENTS</p>
+                <p style={SERIF} className="text-6xl sm:text-[68px] text-slate-900 leading-none my-2 font-normal">
+                  {events.length > 0 ? `${events.length}+` : '18+'}
+                </p>
+                <p className="text-[13.5px] text-slate-600 leading-relaxed max-w-[210px] mt-2">
+                  Promoting innovative, inclusive and sustainable learning events.
+                </p>
+              </div>
             </div>
           </div>
+        </Wrap>
+      </section>
 
-        </div>
+      <Wrap className="space-y-10 sm:space-y-14 relative z-10">
 
         {/* ============================================================ */}
         {/* 2. FIVE CATEGORY CARDS DOCK (1 Row of 5 Columns) */}
         {/* ============================================================ */}
-        <div className="p-1 sm:p-3.5 rounded-[1.3rem] sm:rounded-[2.6rem] bg-white dark:bg-[#0b1c14] border border-[#e8efe9] dark:border-[#183a27] shadow-[0_4px_20px_rgba(0,0,0,0.02)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.3)] relative z-20">
-          <div className="grid grid-cols-5 divide-x divide-[#e8efe9] dark:divide-[#183a27]">
+        <div className={`${GLASS} rounded-[2rem] sm:rounded-[2.4rem] p-2.5 sm:p-4 shadow-[0_20px_50px_rgba(37,99,235,0.08)]`}>
+          <div className="grid grid-cols-2 sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-blue-100/70 gap-2 sm:gap-0">
             {categories.map((cat, i) => {
               const isSelected = selectedCategory === cat.name;
               const Icon = cat.icon;
@@ -318,21 +375,23 @@ export default function EventsPage() {
                 <div
                   key={i}
                   onClick={() => handleCategorySelect(cat.name)}
-                  className={`flex flex-col items-center text-center px-0.5 sm:px-3 py-1 sm:py-3.5 group transition-all duration-300 rounded-xl sm:rounded-2xl cursor-pointer ${isSelected
-                      ? 'bg-[#f0f6ee] dark:bg-[#132c1e]'
-                      : 'hover:bg-white/60 dark:hover:bg-[#10271c]'
+                  className={`flex flex-col items-center text-center px-2 sm:px-4 py-3 sm:py-4 group transition-all duration-300 rounded-2xl cursor-pointer ${isSelected
+                    ? 'bg-blue-50/90 shadow-sm ring-2 ring-[#1a6dff]/30'
+                    : 'hover:bg-white/60'
                     }`}
                 >
-                  <div className={`w-7 h-7 sm:w-12 sm:h-12 rounded-full bg-[#f4f8f3] dark:bg-[#11261a] border border-[#e2ede4] dark:border-[#1e422c] shadow-xs flex items-center justify-center text-[#1b3726] dark:text-[#a2d45e] mb-1 sm:mb-2 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 ${isSelected ? 'ring-2 ring-[#2d5a3c] dark:ring-[#a2d45e] bg-white dark:bg-[#1e422c]' : ''
+                  <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center mb-2.5 transition-all duration-300 ${isSelected
+                    ? 'bg-[#1a6dff] text-white shadow-md scale-105'
+                    : 'bg-blue-50 border border-blue-100 text-[#1a6dff] group-hover:scale-105'
                     }`}>
-                    <Icon size={12} strokeWidth={1.5} className="sm:w-5 sm:h-5" />
+                    <Icon size={20} strokeWidth={1.6} />
                   </div>
 
-                  <h4 className="text-[7.5px] xs:text-[8.5px] sm:text-[14px] font-serif font-semibold text-[#101e14] dark:text-white mb-0.5 leading-tight group-hover:text-[#1b3726] dark:group-hover:text-[#a2d45e] transition-colors break-words">
+                  <h4 style={SERIF} className={`text-[15px] sm:text-[16px] font-normal mb-1 leading-tight transition-colors ${isSelected ? 'text-[#1a6dff] font-bold' : 'text-slate-900 group-hover:text-[#1a6dff]'}`}>
                     {cat.name}
                   </h4>
 
-                  <p className="text-[5.5px] xs:text-[6.5px] sm:text-[10.5px] text-[#556758] dark:text-slate-400 leading-[1.2] whitespace-pre-line font-medium">
+                  <p className="text-[11px] text-slate-500 leading-snug whitespace-pre-line font-normal">
                     {cat.desc}
                   </p>
                 </div>
@@ -342,152 +401,148 @@ export default function EventsPage() {
         </div>
 
         {/* ============================================================ */}
+        {/* 3. MAIN SECTION: EXPLORE WHAT'S NEXT & EVENTS TIMELINE */}
         {/* ============================================================ */}
-        {/* 3. MAIN SECTION: EXPLORE WHAT'S NEXT & EVENTS TIMELINE (2-COLUMN) */}
-        {/* ============================================================ */}
-        <div id="events-section" className="relative z-20 grid grid-cols-1 lg:grid-cols-12 gap-8 pt-1 sm:pt-6">
-          <div className="lg:col-span-8 space-y-3 sm:space-y-6">
+        <div id="events-section" className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 pt-2 sm:pt-4 items-start">
+
+          {/* Left Column: Events Timeline */}
+          <div className="lg:col-span-8 space-y-5 sm:space-y-6">
 
             {/* Section Header */}
-            <div className="flex items-center justify-between pb-2 border-b border-[#e8efe9] dark:border-[#183a27]">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#2d5a3c] dark:bg-[#a2d45e]" />
-                  <span className="text-[8px] sm:text-[10.5px] font-bold tracking-[0.2em] text-[#4d5e50] dark:text-[#a2d45e] uppercase">
-                    UPCOMING EVENTS
-                  </span>
-                </div>
-                <h2 className="text-xl xs:text-2xl sm:text-3xl lg:text-[2.6rem] font-serif font-normal text-[#142218] dark:text-white tracking-tight">
-                  Explore what's next.
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-blue-100">
+              <div className="space-y-1">
+                <SectionTag text="UPCOMING EVENTS" />
+                <h2 style={SERIF} className="text-3xl sm:text-4xl font-normal text-[#0f1a3a] tracking-tight">
+                  Explore what's <Em>next.</Em>
                 </h2>
               </div>
 
               <button
                 onClick={() => { setSelectedCategory('All'); setCurrentPage(1); }}
-                className="px-2.5 py-1 sm:px-4 sm:py-1.5 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[9.5px] sm:text-[12px] font-bold text-[#183120] dark:text-[#a2d45e] hover:bg-[#f0f6ee] dark:hover:bg-[#132c1e] flex items-center gap-1 sm:gap-1.5 transition-all shadow-xs group cursor-pointer"
+                className="self-start sm:self-auto px-4 py-2 rounded-full bg-white/90 border border-blue-100 text-xs font-bold text-[#1a6dff] hover:bg-blue-50 flex items-center gap-2 transition shadow-sm cursor-pointer"
               >
                 <span>View All Events</span>
-                <ArrowRight size={11} className="group-hover:translate-x-1 transition-transform duration-300" />
+                <ArrowRight size={13} />
               </button>
             </div>
 
-            {/* Events List */}
-            <div className="space-y-2.5 sm:space-y-4">
+            {/* Events List (NO IMAGES) */}
+            <div className="space-y-4">
               {loading ? (
-                <div className="bg-white dark:bg-[#0b1c14] rounded-[2rem] border border-[#e8efe9] dark:border-[#183a27] p-12 text-center shadow-xs">
+                <div className={`${GLASS} rounded-[2rem] p-12 text-center`}>
                   <LoadingSpinner message="Fetching upcoming events..." />
                 </div>
               ) : paginatedEvents.length === 0 ? (
-                <div className="text-center py-12 bg-white dark:bg-[#0b1c14] rounded-[2rem] border border-[#e8efe9] dark:border-[#183a27] p-8 shadow-xs">
-                  <div className="w-12 h-12 bg-[#f4f8f3] dark:bg-[#11261a] rounded-full flex items-center justify-center text-[#2d5a3c] dark:text-[#a2d45e] mx-auto mb-3 shadow-xs">
-                    <Calendar size={20} />
+                <div className={`${GLASS} text-center py-12 rounded-[2rem] p-8`}>
+                  <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-full flex items-center justify-center text-[#1a6dff] mx-auto mb-3 shadow-sm">
+                    <Calendar size={22} />
                   </div>
-                  <h3 className="text-base font-serif text-[#122016] dark:text-white mb-1">No events found in this category</h3>
-                  <p className="text-xs text-[#526656] dark:text-slate-400 max-w-sm mx-auto mb-4">
+                  <h3 style={SERIF} className="text-xl font-normal text-slate-900 mb-1">No events found in this category</h3>
+                  <p className="text-xs text-slate-500 max-w-sm mx-auto mb-4">
                     Check back soon for upcoming announcements in this category.
                   </p>
                   <button
                     onClick={() => { setSelectedCategory('All'); setCurrentPage(1); }}
-                    className="px-5 py-2 rounded-full bg-[#1b3726] dark:bg-[#154628] text-white text-[11px] font-bold uppercase tracking-wider hover:bg-[#244833] transition-colors cursor-pointer"
+                    className="px-5 py-2.5 rounded-full bg-[#1a6dff] text-white text-[11px] font-bold uppercase tracking-wider hover:scale-105 transition shadow-sm cursor-pointer"
                   >
                     Show All Events
                   </button>
                 </div>
               ) : (
-                paginatedEvents.map((evt) => (
-                  <Link key={evt.id} href={`/events/${evt.slug || evt.id}`} className="block group">
-                    <div className="flex items-center gap-2 sm:gap-6">
+                paginatedEvents.map((evt) => {
+                  const CategoryIcon = getCategoryIcon(evt.categoryTag || evt.category);
+                  return (
+                    <Link key={evt.id} href={`/events/${evt.slug || evt.id}`} className="block group">
+                      <div className="flex items-center gap-3 sm:gap-5">
 
-                      {/* Left Date Column */}
-                      <div className="w-9 sm:w-16 text-center shrink-0">
-                        <span className="block text-base xs:text-lg sm:text-3xl font-serif font-normal text-[#122016] dark:text-white leading-none">
-                          {evt.dateDay}
-                        </span>
-                        <span className="block text-[7.5px] sm:text-[10.5px] font-bold text-[#556758] dark:text-[#a2d45e] mt-0.5 uppercase tracking-wider">
-                          {evt.dateMonth}
-                        </span>
-                        <span className="block text-[7px] sm:text-[9px] text-[#7a8e7e] dark:text-slate-400 font-medium">
-                          {evt.dateYear}
-                        </span>
-                      </div>
-
-                      {/* Event White Glass Card */}
-                      <div className="flex-1 rounded-[1.2rem] sm:rounded-[2.2rem] bg-white dark:bg-[#0b1c14] border border-[#e8efe9] dark:border-[#183a27] p-2 sm:p-4 flex items-center gap-2.5 sm:gap-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-xl hover:-translate-y-1 hover:border-[#1a5e35]/30 transition-all duration-300 w-full relative min-w-0 overflow-hidden">
-
-                        {/* Image Thumbnail with Explicit Dimensions */}
-                        <div className="w-[82px] min-w-[82px] sm:w-[176px] sm:min-w-[176px] h-[64px] sm:h-[110px] rounded-xl sm:rounded-2xl overflow-hidden shrink-0 bg-slate-100 dark:bg-[#05110a] shadow-xs relative">
-                          <img
-                            src={evt.imageUrl}
-                            alt={evt.title}
-                            loading="lazy"
-                            decoding="async"
-                            className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out absolute inset-0 block"
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            onError={(e) => {
-                              e.currentTarget.src = "/events/conference.jpg";
-                            }}
-                          />
-                        </div>
-
-                        {/* Content Area */}
-                        <div className="flex-1 py-0.5 sm:py-1 w-full flex flex-col justify-center min-w-0">
-                          <span className="inline-block px-1.5 sm:px-2.5 py-0.5 rounded text-[7px] sm:text-[8.5px] font-bold uppercase tracking-widest bg-[#eaf1e4] dark:bg-[#11261a] text-[#2d5a3c] dark:text-[#a2d45e] mb-0.5 sm:mb-1 w-max">
-                            {evt.categoryTag || evt.category}
+                        {/* Left Date Column */}
+                        <div className="w-12 sm:w-16 text-center shrink-0">
+                          <span style={SERIF} className="block text-2xl sm:text-3xl font-normal text-[#0f1a3a] leading-none">
+                            {evt.dateDay}
                           </span>
+                          <span className="block text-[9.5px] sm:text-[11px] font-bold text-[#1a6dff] mt-1 uppercase tracking-wider">
+                            {evt.dateMonth}
+                          </span>
+                          <span className="block text-[8.5px] sm:text-[9.5px] text-slate-400 font-medium">
+                            {evt.dateYear}
+                          </span>
+                        </div>
 
-                          <h3 className="text-[10.5px] xs:text-[12px] sm:text-[16px] font-serif font-semibold text-[#122016] dark:text-white leading-snug mb-0.5 sm:mb-1 group-hover:text-[#1b3726] dark:group-hover:text-[#a2d45e] transition-colors line-clamp-1 sm:line-clamp-2">
-                            {evt.title}
-                          </h3>
+                        {/* Event Card (Pristine Vector / Icon Badge, No Images) */}
+                        <div className={`${GLASS} flex-1 rounded-[1.8rem] sm:rounded-[2.2rem] p-3.5 sm:p-5 flex items-center gap-3.5 sm:gap-5 hover:-translate-y-1 transition duration-300 w-full relative min-w-0 overflow-hidden`}>
 
-                          <p className="text-[8px] xs:text-[9.5px] sm:text-[12px] text-[#445548] dark:text-slate-300 leading-tight sm:leading-relaxed line-clamp-1 sm:line-clamp-2 mb-1 font-normal">
-                            {evt.subtitle || evt.desc || 'Explore collaborative learning and sustainability education initiatives.'}
-                          </p>
-
-                          <div className="flex flex-wrap items-center gap-1.5 sm:gap-3.5 text-[7.5px] sm:text-[11px] text-[#556758] dark:text-slate-400 font-medium">
-                            <span className="flex items-center gap-1 truncate">
-                              <MapPin size={9} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0 sm:w-3 sm:h-3" />
-                              {evt.location || 'Kazhakkoottam, Kerala'}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Calendar size={9} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0 sm:w-3 sm:h-3" />
-                              {evt.duration || 'Session'}
-                            </span>
+                          {/* Image Thumbnail from DB */}
+                          <div className="w-[84px] min-w-[84px] sm:w-[155px] sm:min-w-[155px] h-[72px] sm:h-[105px] rounded-2xl overflow-hidden shrink-0 bg-slate-100 relative border border-white shadow-sm">
+                            <img
+                              src={evt.imageUrl}
+                              alt={evt.title}
+                              loading="lazy"
+                              decoding="async"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out absolute inset-0 block"
+                              onError={(e) => {
+                                e.currentTarget.src = "/events/conference.jpg";
+                              }}
+                            />
                           </div>
-                        </div>
 
-                        {/* Right Circular Arrow Button */}
-                        <div className="w-6 h-6 sm:w-9 sm:h-9 rounded-full bg-[#f4f8f3] dark:bg-[#11261a] border border-[#e2ede4] dark:border-[#183a27] shadow-xs flex items-center justify-center text-[#14261a] dark:text-[#a2d45e] group-hover:bg-[#1b3726] dark:group-hover:bg-[#a2d45e] group-hover:text-white dark:group-hover:text-[#031008] transition-all duration-300 shrink-0 cursor-pointer group-hover:scale-110 mr-0.5">
-                          <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform duration-300 sm:w-3.5 sm:h-3.5 text-[#2d5a3c] group-hover:text-white dark:text-[#a2d45e]" />
-                        </div>
+                          {/* Content Area */}
+                          <div className="flex-1 py-0.5 sm:py-1 w-full flex flex-col justify-center min-w-0">
+                            <span className="inline-block px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] font-bold uppercase tracking-wider bg-blue-50 text-[#1a6dff] mb-1.5 w-max border border-blue-100">
+                              {evt.categoryTag || evt.category}
+                            </span>
 
+                            <h3 style={SERIF} className="text-[16px] sm:text-[19px] font-normal text-[#0f1a3a] leading-tight mb-1 group-hover:text-[#1a6dff] transition-colors line-clamp-1 sm:line-clamp-2">
+                              {evt.title}
+                            </h3>
+
+                            <p className="text-[11.5px] sm:text-[13px] text-slate-500 leading-relaxed line-clamp-1 sm:line-clamp-2 mb-2 font-normal">
+                              {evt.subtitle || evt.desc || 'Explore collaborative learning and sustainability education initiatives.'}
+                            </p>
+
+                            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[10.5px] sm:text-[11.5px] text-slate-500 font-medium">
+                              <span className="flex items-center gap-1.5 truncate">
+                                <MapPin size={12} className="text-[#1a6dff] shrink-0" />
+                                {evt.location || 'Kazhakkoottam, Kerala'}
+                              </span>
+                              <span className="flex items-center gap-1.5">
+                                <Clock size={12} className="text-[#1a6dff] shrink-0" />
+                                {evt.duration || 'Session'}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Right Circular Arrow Button */}
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white shadow-[0_6px_14px_rgba(37,99,235,0.12)] border border-white flex items-center justify-center text-[#1a6dff] group-hover:bg-[#1a6dff] group-hover:text-white transition-all duration-300 shrink-0">
+                            <ArrowRight size={13} strokeWidth={2} />
+                          </div>
+
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))
+                    </Link>
+                  );
+                })
               )}
             </div>
 
             {/* ============================================================ */}
-            {/* PAGINATION CONTROLS (Calculated dynamically from total events) */}
+            {/* PAGINATION CONTROLS */}
             {/* ============================================================ */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-1.5 sm:gap-2 pt-3 sm:pt-6">
-                {/* Previous Page Button */}
+              <div className="flex items-center justify-center gap-2 pt-4 sm:pt-6">
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[#1b3726] dark:text-white flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#132c1e] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-xs cursor-pointer"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white border border-blue-100 text-slate-700 flex items-center justify-center hover:bg-blue-50 transition disabled:opacity-30 disabled:cursor-not-allowed shadow-sm cursor-pointer"
                   title="Previous Page"
                   aria-label="Previous Page"
                 >
-                  <ChevronLeft size={13} />
+                  <ChevronLeft size={14} />
                 </button>
 
-                {/* Dynamic Page Number Buttons */}
                 {getPageNumbers().map((page, idx) => {
                   if (page === '...') {
                     return (
-                      <span key={`ellipsis-${idx}`} className="w-5 text-center text-xs text-[#556758] dark:text-slate-400 select-none">
+                      <span key={`ellipsis-${idx}`} className="w-5 text-center text-xs text-slate-400 select-none">
                         ...
                       </span>
                     );
@@ -497,9 +552,9 @@ export default function EventsPage() {
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full text-[10.5px] sm:text-xs font-bold transition-all duration-300 cursor-pointer ${isCurrent
-                          ? 'bg-[#143422] dark:bg-[#a2d45e] text-white dark:text-[#031008] scale-105 shadow-md'
-                          : 'bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[#14261a] dark:text-slate-300 hover:bg-[#f0f6ee] dark:hover:bg-[#132c1e]'
+                      className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer ${isCurrent
+                        ? 'bg-[#1a6dff] text-white shadow-md scale-105'
+                        : 'bg-white border border-blue-100 text-slate-700 hover:bg-blue-50 shadow-sm'
                         }`}
                       aria-label={`Page ${page}`}
                       aria-current={isCurrent ? 'page' : undefined}
@@ -509,43 +564,40 @@ export default function EventsPage() {
                   );
                 })}
 
-                {/* Next Page Button */}
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-[#0b1c14] border border-[#d6e2d7] dark:border-[#183a27] text-[#1b3726] dark:text-white flex items-center justify-center hover:bg-[#eaf1e4] dark:hover:bg-[#132c1e] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-xs cursor-pointer"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white border border-blue-100 text-slate-700 flex items-center justify-center hover:bg-blue-50 transition disabled:opacity-30 disabled:cursor-not-allowed shadow-sm cursor-pointer"
                   title="Next Page"
                   aria-label="Next Page"
                 >
-                  <ChevronRight size={13} />
+                  <ChevronRight size={14} />
                 </button>
               </div>
             )}
           </div>
 
-          {/* Right Column: Sidebar (Stats + Carousel) */}
+          {/* Right Column: Sidebar (Stats + Carousel, No Images) */}
           <div className="lg:col-span-4 space-y-6">
 
-            {/* LIVE IMPACT STATISTICS (Sidebar Version) */}
-            <div className="bg-white/70 dark:bg-[#0b1c14]/80 backdrop-blur-xl rounded-[2rem] p-6 border border-[#e8efe9] dark:border-[#183a27] shadow-[0_4px_20px_rgba(0,0,0,0.02)] relative z-20">
-              <div className="flex items-center pb-4 mb-4 border-b border-[#e8efe9] dark:border-[#183a27]">
-                <span className="text-[11px] font-black uppercase text-[#4d5e50] dark:text-[#a2d45e] tracking-wider">
-                  Live Impact Statistics
-                </span>
+            {/* LIVE IMPACT STATISTICS */}
+            <div className={`${GLASS} rounded-[2.2rem] p-6 shadow-sm`}>
+              <div className="pb-3.5 mb-4 border-b border-blue-100/70">
+                <SectionTag text="LIVE IMPACT STATISTICS" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3.5">
                 {[
                   { num: settings.stat1Number, text: settings.stat1Text },
                   { num: settings.stat2Number, text: settings.stat2Text },
                   { num: settings.stat3Number, text: settings.stat3Text },
                   { num: settings.stat4Number, text: settings.stat4Text }
                 ].map((stat, i) => (
-                  <div key={i} className="p-3.5 rounded-2xl bg-[#f8faf8] dark:bg-[#11261a] border border-[#e8efe9] dark:border-[#1e422c] shadow-sm hover:shadow-md hover:-translate-y-1 hover:border-[#2d5a3c]/30 transition-all duration-300">
-                    <span className="text-2xl font-bold text-[#131f17] dark:text-white leading-none font-serif block mb-1">
+                  <div key={i} className="p-4 rounded-2xl bg-white/70 border border-white shadow-sm hover:-translate-y-0.5 transition duration-300">
+                    <span style={SERIF} className={`text-2xl sm:text-3xl font-normal leading-none block mb-1 ${BLUE}`}>
                       {stat.num}
                     </span>
                     <span
-                      className="text-[10px] sm:text-[11px] text-[#556758] dark:text-slate-400 block font-medium leading-snug whitespace-pre-line"
+                      className="text-[11px] text-slate-500 block font-medium leading-snug"
                       dangerouslySetInnerHTML={{ __html: stat.text }}
                     />
                   </div>
@@ -553,126 +605,57 @@ export default function EventsPage() {
               </div>
             </div>
 
-            {/* FEATURED INITIATIVES CAROUSEL (Sidebar Version) */}
-            {settings.featuredInitiatives && settings.featuredInitiatives.length > 0 && (
-              <div className="bg-white/70 dark:bg-[#0b1c14]/80 backdrop-blur-xl rounded-[2rem] p-6 border border-[#e8efe9] dark:border-[#183a27] shadow-[0_4px_20px_rgba(0,0,0,0.02)] relative z-20 overflow-hidden group hover:shadow-lg transition-all"
-                onMouseEnter={() => setIsCarouselPaused(true)}
-                onMouseLeave={() => setIsCarouselPaused(false)}
-              >
-                {(() => {
-                  const initiatives = settings.featuredInitiatives;
-                  const activeInit = initiatives[currentInitiativeIndex] || initiatives[0];
-                  return (
-                    <div className="flex flex-col gap-5">
-                      <div className="flex items-center justify-between">
-                        <div className="text-[9px] sm:text-[10px] font-extrabold text-[#2d5a3c] dark:text-[#a2d45e] tracking-wider uppercase flex items-center gap-1.5 bg-[#eaf1e4] dark:bg-[#11261a] px-3 py-1.5 rounded-lg border border-[#dce9de] dark:border-[#1e422c]">
-                          <Sparkles size={12} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                          <span>{activeInit.tag || 'FEATURED INITIATIVE'}</span>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2 min-h-[70px] transition-all duration-300">
-                        <h3 className="text-xl sm:text-2xl font-serif font-black text-[#131f17] dark:text-white leading-tight">
-                          {activeInit.title}
-                        </h3>
-                        <p
-                          className="text-xs font-medium text-[#556758] dark:text-slate-300 leading-relaxed max-w-lg whitespace-pre-line"
-                          dangerouslySetInnerHTML={{ __html: activeInit.subtitle || '' }}
-                        />
-                      </div>
-
-                      <div className="w-full h-[180px] rounded-2xl overflow-hidden shadow-sm relative bg-slate-100 dark:bg-[#05110a]">
-                        <img
-                          key={currentInitiativeIndex}
-                          src={activeInit.imageUrl || "/events/e1.png"}
-                          alt={activeInit.title}
-                          className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-700"
-                          onError={(e) => { e.currentTarget.src = "/events/e1.png"; }}
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-4">
-                        <Link href={activeInit.link || '#'} className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#1b3726] hover:bg-[#254d35] text-white text-xs font-bold tracking-wide transition-all duration-300 shadow-md hover:scale-105 active:scale-95 group/btn dark:bg-[#a2d45e] dark:hover:bg-[#b8e874] dark:text-[#031008] w-full">
-                          <span>Learn More</span>
-                          <ArrowRight size={14} className="group-hover/btn:translate-x-1.5 transition-transform" />
-                        </Link>
-
-                        {/* Controls */}
-                        {initiatives.length > 1 && (
-                          <div className="flex items-center justify-center gap-2 bg-[#f4f8f3] dark:bg-[#11261a] p-1.5 rounded-full border border-[#e2ede4] dark:border-[#1e422c]">
-                            <button
-                              onClick={() => setCurrentInitiativeIndex((prev) => (prev - 1 + initiatives.length) % initiatives.length)}
-                              className="w-7 h-7 rounded-full hover:bg-white dark:hover:bg-[#183a27] text-[#1b3726] dark:text-[#a2d45e] flex items-center justify-center transition-colors shadow-sm"
-                            >
-                              <ChevronLeft size={14} />
-                            </button>
-                            <div className="flex items-center gap-1.5 px-2">
-                              {initiatives.map((_, idx) => (
-                                <span
-                                  key={idx}
-                                  onClick={() => setCurrentInitiativeIndex(idx)}
-                                  className={`block h-2 rounded-full cursor-pointer transition-all duration-300 ${idx === currentInitiativeIndex ? 'bg-[#2d5a3c] dark:bg-[#a2d45e] w-5' : 'bg-[#dce9de] dark:bg-[#2a4d36] w-2 hover:bg-[#b5cbb9]'}`}
-                                />
-                              ))}
-                            </div>
-                            <button
-                              onClick={() => setCurrentInitiativeIndex((prev) => (prev + 1) % initiatives.length)}
-                              className="w-7 h-7 rounded-full hover:bg-white dark:hover:bg-[#183a27] text-[#1b3726] dark:text-[#a2d45e] flex items-center justify-center transition-colors shadow-sm"
-                            >
-                              <ChevronRight size={14} />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })()}
-              </div>
-            )}
           </div>
         </div>
 
         {/* ============================================================ */}
-        {/* 4. FEATURED EVENT BANNER ("Be a part of the movement.") */}
+        {/* 4. FEATURED EVENT BANNER (Sleek Oceanic Vector Banner, No Images) */}
         {/* ============================================================ */}
-        <div className="pt-1 sm:pt-4">
-          <div className="rounded-[1.4rem] sm:rounded-[2.4rem] bg-[#143422] dark:bg-[#0b1c14] border border-white/10 dark:border-[#183a27] p-3.5 xs:p-4 sm:p-8 lg:p-10 shadow-xl text-white grid grid-cols-12 gap-3 sm:gap-8 items-center relative overflow-hidden group">
+        <div className="pt-2">
+          <div className="rounded-[2.4rem] bg-gradient-to-r from-[#041a45] via-[#0a3a9c] to-[#1d5be0] text-white p-7 sm:p-10 lg:p-12 shadow-[0_25px_60px_rgba(3,21,51,0.32)] grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative overflow-hidden">
+            <svg className="absolute inset-0 w-full h-full opacity-35 pointer-events-none" viewBox="0 0 1200 400" preserveAspectRatio="none" fill="none">
+              <path d="M0 240 C300 120 500 320 800 180 C1000 80 1100 160 1200 100 L1200 400 L0 400Z" fill="#38bdf8" opacity="0.4" />
+              <path d="M0 80 C240 -20 500 180 800 60 C1000 -20 1100 40 1200 10 L1200 0 L0 0Z" fill="#7dd3fc" opacity="0.3" />
+              <circle cx="950" cy="180" r="140" fill="#60a5fa" opacity="0.25" />
+            </svg>
 
             {/* Left Copy */}
-            <div className="col-span-6 sm:col-span-6 space-y-1.5 xs:space-y-2 sm:space-y-4 relative z-10">
-              <h3 className="text-base xs:text-lg sm:text-3xl lg:text-4xl font-serif text-white leading-tight">
+            <div className="md:col-span-7 space-y-4 relative z-10">
+              <SectionTag text="LEnSE MOVEMENT" light />
+              <h3 style={SERIF} className="text-3xl sm:text-4xl lg:text-5xl font-normal text-white leading-[1.12]">
                 Be a part of<br />
-                the movement.
+                <em style={SERIF} className="italic text-sky-300">the movement.</em>
               </h3>
 
-              <p className="text-[9px] xs:text-[10.5px] sm:text-[13px] text-[#c0d4c5] leading-relaxed max-w-sm font-normal">
-                Join inspiring events that create real-world impact.
+              <p className="text-sky-100/90 text-sm sm:text-base leading-relaxed max-w-md font-normal">
+                Join inspiring events, academic programs and research workshops that create real-world educational impact.
               </p>
 
-              <div className="pt-0.5 sm:pt-2">
-                <Link href="/about">
-                  <button className="px-3 xs:px-4 sm:px-6 py-1.5 sm:py-2.5 rounded-full bg-white hover:bg-[#f2f7f3] text-[#143422] text-[9.5px] xs:text-[10.5px] sm:text-xs font-bold tracking-wide flex items-center gap-1.5 transition-all duration-300 shadow-md hover:scale-105 active:scale-95 cursor-pointer">
-                    <span>Explore Events</span>
-                    <ArrowRight size={11} />
-                  </button>
+              <div className="pt-2">
+                <Link href="/about" className="inline-flex">
+                  <span className="px-6 py-3.5 rounded-full bg-white hover:bg-sky-50 text-[#0f1a3a] text-xs font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-md hover:scale-105 active:scale-95">
+                    <span>Explore About LEnSE</span>
+                    <ArrowRight size={13} className="text-[#1a6dff]" />
+                  </span>
                 </Link>
               </div>
             </div>
 
-            {/* Right Greenhouse Botanical Visual with Overlay Text */}
-            <div className="col-span-6 sm:col-span-6 h-[100px] xs:h-[130px] sm:h-56 rounded-xl sm:rounded-3xl overflow-hidden shadow-lg relative bg-slate-900">
-              <img
-                src="/about/about4.png"
-                alt="Greenhouse Learning"
-                className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out absolute inset-0 block"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                onError={(e) => {
-                  e.currentTarget.src = "/events/sustainability.jpg";
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-end p-2.5 sm:p-6">
-                <div className="text-right text-white font-serif italic text-[9.5px] xs:text-[12px] sm:text-lg drop-shadow-md leading-tight">
-                  Learning today,<br />leading tomorrow.
+            {/* Right Visual Image */}
+            <div className="md:col-span-5 relative z-10 flex justify-center md:justify-end">
+              <div className="w-full max-w-[340px] h-[190px] sm:h-[220px] rounded-3xl overflow-hidden shadow-2xl relative border border-white/20 bg-slate-900 group">
+                <img
+                  src="/about/about4.png"
+                  alt="Be a part of the movement"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  onError={(e) => {
+                    e.currentTarget.src = "/events/sustainability.jpg";
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#041a45]/90 via-[#041a45]/30 to-transparent flex items-end justify-end p-5">
+                  <div style={SERIF} className="text-right text-white italic text-sm sm:text-base leading-tight">
+                    Learning today,<br /><span className="text-sky-300">leading tomorrow.</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -681,37 +664,37 @@ export default function EventsPage() {
         </div>
 
         {/* ============================================================ */}
-        {/* 5. STAY UPDATED NEWSLETTER (Standard Clean Borderless Rounded Pill) */}
+        {/* 5. STAY UPDATED NEWSLETTER */}
         {/* ============================================================ */}
-        <div className="pt-1">
-          <div className="rounded-[1.4rem] sm:rounded-[2.4rem] bg-[#f4f7f2] dark:bg-[#0b1c14] border border-[#e4ede5] dark:border-[#183a27] p-3 xs:p-3.5 sm:p-7 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+        <div className="pt-2">
+          <div className={`${GLASS} rounded-[2.2rem] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_15px_40px_rgba(37,99,235,0.08)]`}>
 
             {/* Left Info */}
-            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-              <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white dark:bg-[#11261a] border border-[#dce8dc] dark:border-[#1e422c] flex items-center justify-center text-[#2d5a3c] dark:text-[#a2d45e] shadow-xs shrink-0">
-                <Mail size={16} strokeWidth={1.75} className="sm:w-5 sm:h-5" />
+            <div className="flex items-center gap-4 w-full md:w-auto">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1a6dff] shadow-sm shrink-0">
+                <Mail size={22} strokeWidth={1.75} />
               </div>
               <div>
-                <h3 className="text-base sm:text-2xl font-serif text-[#122016] dark:text-white leading-tight">
-                  Stay updated
+                <h3 style={SERIF} className="text-2xl sm:text-3xl font-normal text-[#0f1a3a] leading-tight">
+                  {settings.newsletterTitle || 'Stay updated'}
                 </h3>
-                <p className="text-[9px] xs:text-[9.5px] sm:text-xs text-[#526656] dark:text-slate-300 mt-0.5">
-                  Subscribe to our newsletter for upcoming events, insights and more.
+                <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-md font-normal">
+                  {settings.newsletterText || 'Subscribe to our newsletter for upcoming events, insights and more.'}
                 </p>
               </div>
             </div>
 
-            {/* Right Borderless Rounded Pill Input Form */}
-            <div className="w-full sm:w-auto shrink-0">
+            {/* Right Rounded Pill Form */}
+            <div className="w-full md:w-auto shrink-0">
               {subscribed ? (
-                <div className="flex items-center gap-2 text-xs font-bold text-[#2d5a3c] dark:text-[#a2d45e] bg-white dark:bg-[#11261a] px-5 py-2.5 rounded-full shadow-sm">
-                  <CheckCircle2 size={15} />
+                <div className="flex items-center gap-2 text-xs font-bold text-[#1a6dff] bg-blue-50 border border-blue-100 px-6 py-3 rounded-full shadow-sm">
+                  <CheckCircle2 size={16} />
                   <span>Thank you for subscribing!</span>
                 </div>
               ) : (
                 <form
                   onSubmit={handleSubscribe}
-                  className="bg-white dark:bg-[#05110a] rounded-full p-1 pl-4 pr-1 flex items-center shadow-[0_2px_15px_rgba(0,0,0,0.04)] dark:shadow-[0_2px_15px_rgba(0,0,0,0.4)] w-full sm:w-[320px] md:w-[350px]"
+                  className="bg-white rounded-full p-1.5 pl-5 pr-1.5 flex items-center shadow-[0_6px_20px_rgba(37,99,235,0.12)] border border-blue-100 w-full sm:w-[340px] md:w-[360px]"
                 >
                   <input
                     type="email"
@@ -719,14 +702,14 @@ export default function EventsPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     placeholder="Enter your email"
-                    className="text-[10.5px] xs:text-[11px] sm:text-xs text-slate-800 dark:text-white placeholder:text-[#889c8d] dark:placeholder-slate-500 bg-transparent border-0 outline-none ring-0 flex-1 font-medium min-w-0 pr-2"
+                    className="text-xs text-slate-800 placeholder:text-slate-400 bg-transparent border-0 outline-none ring-0 flex-1 font-medium min-w-0 pr-2"
                   />
                   <button
                     type="submit"
-                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#143422] dark:bg-[#a2d45e] hover:bg-[#254d35] dark:hover:bg-[#b8e874] text-white dark:text-[#031008] flex items-center justify-center transition-all duration-300 shrink-0 cursor-pointer shadow-sm hover:scale-105 active:scale-95"
+                    className="w-9 h-9 rounded-full bg-[#1a6dff] hover:bg-blue-600 text-white flex items-center justify-center transition shadow-md hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
                     title="Subscribe"
                   >
-                    <ArrowRight size={12} />
+                    <ArrowRight size={14} />
                   </button>
                 </form>
               )}
@@ -735,7 +718,7 @@ export default function EventsPage() {
           </div>
         </div>
 
-      </div>
+      </Wrap>
 
     </div>
   );

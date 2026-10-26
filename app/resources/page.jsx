@@ -12,20 +12,79 @@ import {
   Info,
   ArrowRight,
   Sparkles,
-  Layers,
   Calendar,
   SlidersHorizontal,
   X,
   Globe,
   Lightbulb,
   Eye,
-  ExternalLink
+  CheckCircle2
 } from 'lucide-react';
 import PublicationCover, { THEME_PRESETS } from '../../components/PublicationCover';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
-// ============================================================================
-// 1. DATA DEFINITIONS & SHOWCASE RESOURCES
-// ============================================================================
+/* ---------- shared design system matching About & Events ---------- */
+const SERIF = { fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif" };
+const BLUE = 'text-[#1a6dff]';
+const GLASS =
+  'bg-gradient-to-br from-white/80 via-sky-50/60 to-blue-100/40 backdrop-blur-xl border border-white/90 shadow-[0_18px_45px_rgba(37,99,235,0.10),inset_0_1px_0_rgba(255,255,255,1)]';
+
+const Wrap = ({ children, className = '' }) => (
+  <div className={`relative max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10 ${className}`}>{children}</div>
+);
+
+const Em = ({ children, light = false }) => (
+  <em style={SERIF} className={`italic font-normal ${light ? 'text-sky-300' : BLUE}`}>{children}</em>
+);
+
+function SectionTag({ text, light = false, className = '' }) {
+  return (
+    <div className={`flex items-center gap-2.5 select-none ${className}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${light ? 'bg-sky-300' : 'bg-[#1a6dff]'}`} />
+      <span className={`text-[11px] font-bold tracking-[0.22em] uppercase ${light ? 'text-sky-200' : BLUE}`}>{text}</span>
+      <span className={`w-16 h-px ${light ? 'bg-white/20' : 'bg-blue-200'}`} />
+    </div>
+  );
+}
+
+function Dots({ rows = 5, cols = 10, className = '' }) {
+  return (
+    <div className={`grid gap-2 pointer-events-none select-none ${className}`} style={{ gridTemplateColumns: `repeat(${cols}, 3px)` }}>
+      {Array.from({ length: rows * cols }).map((_, i) => (
+        <span key={i} className="w-[3px] h-[3px] rounded-full bg-sky-400/60" />
+      ))}
+    </div>
+  );
+}
+
+/* Silky ocean streaks background for the hero (matching About page) */
+function OceanWaves() {
+  const colors = ['#ffffff', '#7dd3fc', '#0ea5e9', '#1d4ed8', '#bae6fd', '#0369a1'];
+  const streaks = Array.from({ length: 40 }, (_, i) => ({
+    d: `M -150 ${20 + i * 14} C 250 ${-80 + i * 12}, 650 ${240 - i * 3}, 1350 ${60 + i * 16}`,
+    c: colors[(i * 5) % colors.length],
+    w: 5 + ((i * 7) % 26),
+    o: 0.25 + ((i * 13) % 50) / 100,
+  }));
+  return (
+    <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" className="w-full h-full pointer-events-none" fill="none">
+      <defs>
+        <linearGradient id="ocean-base-resources" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#eaf6ff" />
+          <stop offset="0.45" stopColor="#4cb8f5" />
+          <stop offset="1" stopColor="#1e40af" />
+        </linearGradient>
+        <filter id="ocean-blur-resources"><feGaussianBlur stdDeviation="8" /></filter>
+      </defs>
+      <rect width="1200" height="600" fill="url(#ocean-base-resources)" />
+      <g filter="url(#ocean-blur-resources)">
+        {streaks.map((s, i) => (
+          <path key={i} d={s.d} stroke={s.c} strokeWidth={s.w} opacity={s.o} strokeLinecap="round" />
+        ))}
+      </g>
+    </svg>
+  );
+}
 
 const CATEGORIES = [
   { id: 'All', label: 'All' },
@@ -36,15 +95,6 @@ const CATEGORIES = [
   { id: 'Toolkits', label: 'Toolkits' },
   { id: 'Guides', label: 'Guides' }
 ];
-
-// (Static data removed - all resources are fetched live from database via /api/resources)
-
-// ============================================================================
-// (Cover rendering handled by shared PublicationCover component)
-
-// ============================================================================
-// 3. MAIN PAGE COMPONENT
-// ============================================================================
 
 export default function AcademicResourcesPage() {
   const [activeCategory, setActiveCategory] = useState('All');
@@ -140,544 +190,408 @@ export default function AcademicResourcesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f5ed] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 font-sans pb-28 pt-24 sm:pt-28 relative overflow-hidden selection:bg-[#a2d45e]/30 transition-colors duration-300">
+    <div className="min-h-screen bg-[#f4f8ff] text-slate-800 font-sans pb-20 sm:pb-28 selection:bg-blue-100 relative overflow-hidden">
 
-      {/* Ambient soft background glows */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[6%] -left-36 w-[550px] h-[550px] bg-[#e1ecd6]/70 dark:bg-emerald-950/30 rounded-full blur-3xl" />
-        <div className="absolute top-[18%] right-0 w-[550px] h-[550px] bg-[#dbe8d0]/60 dark:bg-[#0e2a1b]/40 rounded-full blur-3xl" />
-        <div className="absolute top-[60%] -right-40 w-[650px] h-[650px] bg-[#dbe8d0]/60 dark:bg-emerald-950/25 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 left-10 w-[500px] h-[500px] bg-[#e1ecd6]/50 dark:bg-[#082014]/40 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-14 sm:space-y-20">
-
-        {/* =================================================================== */}
-        {/* 1. HERO SECTION - SEAMLESS BLEND TO BG */}
-        {/* =================================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-10 items-center pt-2 relative">
-
-          {/* Left Content Column */}
-          <div className="lg:col-span-5 xl:col-span-5 space-y-6 z-10 lg:-ml-2 xl:-ml-6">
-
-            {/* Breadcrumb Trail */}
-            <div className="flex items-center gap-2 text-xs font-medium text-[#485b4d] dark:text-slate-400">
-              <Link href="/" className="hover:text-[#1b3726] dark:hover:text-white transition-colors flex items-center gap-1.5">
-                <Home size={14} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                <span>Home</span>
-              </Link>
-              <span className="text-[#879b8c] dark:text-slate-500">&gt;</span>
-              <span className="text-[#1b3726] dark:text-[#a2d45e] font-semibold">Academic Resources</span>
-            </div>
-
-            {/* Tagline Badge */}
-            <div className="text-[11px] font-bold tracking-[0.22em] text-[#4e6252] dark:text-[#a2d45e] uppercase">
-              KNOWLEDGE SHAPES TOMORROW
-            </div>
-
-            {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-[4.25rem] font-serif font-normal text-[#122016] dark:text-white leading-[1.05] tracking-tight">
-              Resources &amp;<br />
-              <span className="italic font-normal text-[#1d3d29] dark:text-[#a2d45e]">Downloads</span>
-            </h1>
-
-            {/* Subtext Paragraph */}
-            <p className="text-[#405245] dark:text-slate-300 text-sm sm:text-[14.5px] leading-[1.7] max-w-lg font-normal">
-              Access digital courseware, conference proceedings, STEM learning toolkits, educator handbooks, and institutional reports published by LEnSE.
-            </p>
-
-            {/* Dual CTA Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3.5 pt-1">
-              <button
-                onClick={scrollToCatalog}
-                className="px-6 py-3 rounded-full bg-[#122b1c] hover:bg-[#1d442c] dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-xs font-semibold tracking-wide flex items-center gap-2.5 transition-all shadow-md cursor-pointer hover:scale-[1.02]"
-              >
-                <BookOpen size={15} />
-                <span>Explore Resources</span>
-                <ArrowRight size={14} />
-              </button>
-
-              <button
-                onClick={() => setHowToUseModalOpen(true)}
-                className="px-5 py-3 rounded-full bg-white/80 dark:bg-[#0c2217]/50 hover:bg-white dark:hover:bg-[#112d1f]/70 backdrop-blur-xl border border-[#d5e2d6] dark:border-emerald-500/25 text-[#19241c] dark:text-slate-200 text-xs font-medium flex items-center gap-2 transition-all shadow-xs cursor-pointer hover:scale-[1.02]"
-              >
-                <Info size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                <span>How to Use</span>
-              </button>
-            </div>
-
-            {/* 4 Value Pillars Row */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5 pt-5 border-t border-[#d8e4d9]/70 dark:border-white/10 mt-2">
-              <div className="flex items-center gap-2.5">
-                <BookOpen size={20} strokeWidth={1.5} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0" />
-                <div className="flex flex-col text-xs leading-tight">
-                  <span className="font-semibold text-[#14261a] dark:text-white">Learn</span>
-                  <span className="text-[#556758] dark:text-slate-400 font-normal">today</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2.5">
-                <Users size={20} strokeWidth={1.5} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0" />
-                <div className="flex flex-col text-xs leading-tight">
-                  <span className="font-semibold text-[#14261a] dark:text-white">Share</span>
-                  <span className="text-[#556758] dark:text-slate-400 font-normal">knowledge</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2.5">
-                <Leaf size={20} strokeWidth={1.5} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0" />
-                <div className="flex flex-col text-xs leading-tight">
-                  <span className="font-semibold text-[#14261a] dark:text-white">Create</span>
-                  <span className="text-[#556758] dark:text-slate-400 font-normal">impact</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2.5">
-                <Globe size={20} strokeWidth={1.5} className="text-[#2d5a3c] dark:text-[#a2d45e] shrink-0" />
-                <div className="flex flex-col text-xs leading-tight">
-                  <span className="font-semibold text-[#14261a] dark:text-white">Build a</span>
-                  <span className="text-[#556758] dark:text-slate-400 font-normal whitespace-nowrap">sustainable future</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Right Hero Visual with Organic Blended Aesthetic */}
-          <div className="lg:col-span-7 xl:col-span-7 relative w-full">
-
-            {/* Soft Ambient Aura behind campus visual */}
-            <div className="absolute -inset-4 bg-gradient-to-tr from-emerald-500/15 via-teal-500/10 to-transparent rounded-tl-[10rem] rounded-[4rem] blur-2xl -z-10 pointer-events-none opacity-80 dark:opacity-40" />
-
-            {/* Outer Circular Curved Text Arc (Top Left of Campus Photo) */}
-            <div className="absolute -top-16 -left-16 sm:-top-20 sm:-left-20 w-64 h-64 sm:w-72 sm:h-72 pointer-events-none z-10 select-none hidden md:block">
-              <svg viewBox="0 0 240 240" className="w-full h-full">
-                <defs>
-                  <path
-                    id="heroOrbitArc"
-                    d="M 40,120 A 80,80 0 0,1 200,120"
-                    fill="none"
-                  />
-                </defs>
-                <path
-                  d="M 48,120 A 72,72 0 1,1 192,120 A 72,72 0 1,1 48,120"
-                  fill="none"
-                  stroke="#799d81"
-                  strokeWidth="1.2"
-                  strokeDasharray="4 4"
-                  opacity="0.5"
-                />
-                <text className="text-[8.5px] font-sans font-semibold uppercase tracking-[0.22em] fill-[#4a7253] dark:fill-[#a2d45e]">
-                  <textPath href="#heroOrbitArc" startOffset="50%" textAnchor="middle">
-                    — LEARNING — ENGINEERING — SUSTAINABILITY •
-                  </textPath>
-                </text>
-              </svg>
-            </div>
-
-            {/* Campus Frame Container with Mockup's Sweeping Arch & Gradients that Blend to BG */}
-            <div className="relative w-full h-[460px] sm:h-[530px] lg:h-[560px] rounded-tl-[6rem] sm:rounded-tl-[8rem] lg:rounded-tl-[9rem] rounded-tr-[3.5rem] rounded-br-[3.5rem] rounded-bl-[3.5rem] overflow-hidden shadow-2xl border border-white/60 dark:border-white/10 select-none group z-20">
-
-              {/* Campus Architecture Image */}
-              <img
-                src="/campus_building.jpg"
-                alt="LEnSE Campus Architecture - Sustainable Learning Tomorrow"
-                className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02] group-hover:scale-105 transition-transform duration-1000"
-                onError={(e) => {
-                  e.currentTarget.src = "/home/bg.png";
-                }}
-              />
-
-              {/* Seamless Blending Gradients to Page Background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#f3f5ed] dark:from-[#031008] via-[#f3f5ed]/60 dark:via-[#031008]/65 via-[18%] to-transparent to-[50%] pointer-events-none z-10" />
-              <div className="absolute bottom-0 left-0 right-0 h-36 bg-gradient-to-t from-[#f3f5ed] dark:from-[#031008] via-[#f3f5ed]/40 dark:via-[#031008]/50 to-transparent pointer-events-none z-10" />
-              <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#f3f5ed]/50 dark:from-[#031008]/60 to-transparent pointer-events-none z-10" />
-
-              {/* Overlaid Frosted Glass Quote Card */}
-              <div className="absolute top-6 sm:top-8 left-6 sm:left-8 z-20 pointer-events-auto rounded-2xl sm:rounded-3xl bg-white/85 dark:bg-[#05180f]/80 backdrop-blur-2xl p-5 sm:p-6 shadow-[0_16px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.5)] border border-white/95 dark:border-emerald-500/30 max-w-[210px] sm:max-w-[230px]">
-                <p className="font-serif italic text-lg sm:text-xl text-[#1a3824] dark:text-[#a2d45e] leading-snug tracking-tight">
-                  “Open Knowledge<br />
-                  for a Brighter<br />
-                  Tomorrow”
-                </p>
-                <div className="w-8 h-[2px] bg-[#2d5a3c] dark:bg-[#a2d45e] mt-2.5 rounded-full opacity-85" />
-              </div>
-
-              {/* Building Facade Typography Overlay (Top Right) */}
-              <div className="absolute top-8 sm:top-10 right-8 sm:right-10 z-20 pointer-events-none hidden sm:flex flex-col gap-0.5 text-right">
-                <span className="text-xs sm:text-[13px] font-sans font-medium text-[#22382c] dark:text-emerald-100 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">Education</span>
-                <span className="text-xs sm:text-[13px] font-sans font-medium text-[#22382c] dark:text-emerald-100 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">Innovation</span>
-                <span className="text-xs sm:text-[13px] font-sans font-medium text-[#22382c] dark:text-emerald-100 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">Sustainability</span>
-                <span className="text-xs sm:text-[13px] font-sans font-medium text-[#22382c] dark:text-emerald-100 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">Impact</span>
-                <div className="w-6 h-[2px] bg-[#22382c] dark:bg-[#a2d45e] self-end mt-1 rounded-full opacity-80" />
-              </div>
-
-              {/* Floating Glass Pill Banner at bottom right */}
-              <div className="absolute bottom-6 right-6 left-6 sm:left-auto z-20 pointer-events-auto">
-                <div className="px-5 py-3 rounded-full bg-white/85 dark:bg-[#05180f]/80 backdrop-blur-2xl border border-white/95 dark:border-emerald-500/30 shadow-[0_16px_40px_rgba(0,0,0,0.12)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.6)] flex items-center justify-between gap-4 group/pill hover:bg-white dark:hover:bg-[#0a2719] transition-all">
-                  <div className="flex flex-col text-xs sm:text-[12.5px] font-serif italic text-[#14261a] dark:text-emerald-100 font-medium leading-tight">
-                    <span>Empowering Educators.</span>
-                    <span>Inspiring Learners.</span>
-                    <span>Building a Sustainable Future.</span>
-                  </div>
-                  <button
-                    onClick={scrollToCatalog}
-                    className="w-8 h-8 rounded-full bg-[#f0f4ee] hover:bg-[#122b1c] hover:text-white text-[#14261a] dark:bg-white/10 dark:text-white flex items-center justify-center group-hover/pill:scale-105 transition-all shrink-0 cursor-pointer shadow-xs"
-                    title="Explore resources"
-                  >
-                    <ArrowRight size={13} />
-                  </button>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
+      {/* ============================================================ */}
+      {/* 0. HERO SECTION (Crisp & Clean - Matching About Page) */}
+      {/* ============================================================ */}
+      <section className="relative overflow-hidden min-h-[calc(100vh-70px)] sm:min-h-screen flex flex-col justify-center py-20 sm:py-24">
+        {/* Ocean Waves Background matching About page */}
+        <div className="absolute inset-y-0 right-0 w-full lg:w-[75%] pointer-events-none select-none">
+          <OceanWaves />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#f4f8ff] via-[#f4f8ff]/70 to-transparent" />
         </div>
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#f4f8ff] via-[#f4f8ff]/85 to-transparent pointer-events-none" />
 
-        {/* =================================================================== */}
-        {/* 2. SEARCH & CATEGORY FILTER CONTROLS */}
-        {/* =================================================================== */}
-        <div id="resources-catalog" className="scroll-mt-32 space-y-4">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        {/* Decorative Ring + Dots on left edge (matching About page) */}
+        <div className="hidden lg:block absolute -left-[270px] top-[22%] w-[320px] h-[320px] rounded-full border border-sky-400/50 pointer-events-none" />
+        <div className="hidden lg:block absolute left-[80px] top-[60%] w-2.5 h-2.5 rounded-full bg-[#1a6dff] pointer-events-none" />
+        <Dots rows={8} cols={5} className="hidden lg:grid absolute left-3 bottom-16 pointer-events-none" />
 
-            {/* Clean Text Category Pills */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar">
-              {CATEGORIES.map((cat) => {
-                const isActive = activeCategory.toLowerCase() === cat.id.toLowerCase();
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={`px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${isActive
-                        ? 'bg-[#122b1c] dark:bg-emerald-600 text-white shadow-md'
-                        : 'bg-white/80 dark:bg-[#0c2217]/40 backdrop-blur-xl hover:bg-white dark:hover:bg-[#112d1f]/70 text-[#3b4e41] dark:text-slate-200 border border-[#dee8df] dark:border-emerald-500/20 shadow-xs'
-                      }`}
-                  >
-                    {cat.label}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Right Search Input & Sorter */}
-            <div className="flex items-center gap-2.5 w-full lg:w-auto">
-              <div className="relative flex-1 sm:w-80">
-                <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#7f9484] dark:text-slate-400" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search resources..."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-full bg-white/80 dark:bg-[#0c2217]/40 backdrop-blur-xl border border-[#dee8df] dark:border-emerald-500/20 text-xs font-medium text-[#19241c] dark:text-white placeholder:text-[#7f9484] dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2d5a3c]/30 dark:focus:ring-emerald-400/40 shadow-xs"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                  >
-                    <X size={13} />
-                  </button>
-                )}
-              </div>
-
-              {/* Sort Toggle Button */}
-              <button
-                onClick={() => {
-                  if (sortOrder === 'default') setSortOrder('az');
-                  else if (sortOrder === 'az') setSortOrder('za');
-                  else setSortOrder('default');
-                }}
-                className={`p-2.5 rounded-full border border-[#dee8df] dark:border-emerald-500/20 transition-colors shadow-xs cursor-pointer ${sortOrder !== 'default'
-                    ? 'bg-[#122b1c] dark:bg-emerald-600 text-white'
-                    : 'bg-white/80 dark:bg-[#0c2217]/40 backdrop-blur-xl text-[#4d6052] dark:text-slate-300 hover:bg-slate-50'
-                  }`}
-                title={`Sort: ${sortOrder === 'az' ? 'A to Z' : sortOrder === 'za' ? 'Z to A' : 'Default'}`}
-              >
-                <SlidersHorizontal size={16} />
-              </button>
-            </div>
-
-          </div>
-        </div>
-
-        {/* =================================================================== */}
-        {/* 3. DOWNLOADABLE RESOURCES 3-COLUMN GRID - GLASSMORPHISM CARDS */}
-        {/* =================================================================== */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {loading ? (
-            Array.from({ length: 6 }).map((_, idx) => (
-              <div
-                key={idx}
-                className="rounded-2xl sm:rounded-[1.6rem] bg-white/75 dark:bg-[#0c2217]/35 backdrop-blur-2xl border border-white/80 dark:border-emerald-500/20 p-4 sm:p-5 shadow-[0_8px_32px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] animate-pulse flex flex-col justify-between"
-              >
-                <div className="grid grid-cols-12 gap-3.5 sm:gap-4 items-stretch">
-                  <div className="col-span-4 flex items-center justify-center">
-                    <div className="w-full max-w-[115px] sm:max-w-[125px] aspect-[1/1.38] rounded-xl bg-slate-200/80 dark:bg-emerald-950/40" />
-                  </div>
-                  <div className="col-span-8 space-y-2 py-1">
-                    <div className="flex justify-between items-center">
-                      <div className="h-4 w-16 rounded bg-slate-200/80 dark:bg-emerald-950/50" />
-                      <div className="h-3 w-12 rounded bg-slate-200/60 dark:bg-emerald-950/40" />
-                    </div>
-                    <div className="h-4 w-5/6 rounded bg-slate-200/80 dark:bg-emerald-950/60 mt-2" />
-                    <div className="h-4 w-2/3 rounded bg-slate-200/80 dark:bg-emerald-950/60" />
-                    <div className="h-3 w-full rounded bg-slate-200/50 dark:bg-emerald-950/30 mt-3" />
-                    <div className="h-3 w-4/5 rounded bg-slate-200/50 dark:bg-emerald-950/30" />
-                  </div>
-                </div>
-                <div className="pt-3 mt-3 border-t border-[#f0f4ef] dark:border-white/10 flex items-center justify-between">
-                  <div className="h-3 w-20 rounded bg-slate-200/70 dark:bg-emerald-950/40" />
-                  <div className="h-6 w-20 rounded-full bg-slate-200/80 dark:bg-emerald-950/60" />
+        <Wrap className="w-full relative z-10 my-auto">
+          <div className="grid lg:grid-cols-12 items-center gap-10 lg:gap-8">
+            {/* Left Copy */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="flex items-center gap-3">
+                <span className={`flex items-center gap-2 text-[11px] font-bold tracking-[0.24em] uppercase ${BLUE}`}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1a6dff]" />OPEN REPOSITORY
+                </span>
+                <span className="text-slate-300">|</span>
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                  <Home size={12} className="text-[#1a6dff]" />
+                  <Link href="/" className="hover:text-[#1a6dff] transition-colors">Home</Link>
+                  <span className="text-slate-300">&gt;</span>
+                  <span className="text-[#1a6dff]">Resources</span>
                 </div>
               </div>
-            ))
-          ) : filteredResources.length === 0 ? (
-            <div className="col-span-full text-center py-20 bg-white/70 dark:bg-[#0c2217]/40 backdrop-blur-2xl rounded-[2.5rem] border border-white/90 dark:border-emerald-500/20 p-8 shadow-sm">
-              <BookOpen size={36} className="mx-auto text-[#718476] dark:text-slate-500 mb-3 opacity-60" />
-              <h4 className="text-lg font-serif text-[#122016] dark:text-white mb-1">No resources found</h4>
-              <p className="text-xs text-[#526656] dark:text-slate-400 max-w-sm mx-auto mb-4">
-                No materials matched your search &quot;{searchQuery}&quot;. Try clearing filters or searching for another keyword.
+
+              <h1 style={SERIF} className="text-[52px] sm:text-[66px] lg:text-[74px] leading-[1.03] tracking-tight text-slate-900 font-normal">
+                Resources &amp;<br />
+                <Em>Downloads.</Em>
+              </h1>
+
+              <p className="text-slate-600 text-[15px] sm:text-[16px] leading-[1.8] max-w-[500px]">
+                Access digital courseware, conference proceedings, STEM learning toolkits, educator handbooks, and institutional reports published by LEnSE.
               </p>
-              <button
-                onClick={() => { setActiveCategory('All'); setSearchQuery(''); }}
-                className="px-5 py-2 rounded-full bg-[#122b1c] dark:bg-emerald-600 text-white text-xs font-semibold cursor-pointer"
-              >
-                Reset Filters
-              </button>
+
+              <div className="flex flex-wrap items-center gap-3.5 pt-2">
+                <button
+                  onClick={scrollToCatalog}
+                  className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#0a6cff] to-[#1fa2ff] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3 shadow-[0_12px_26px_rgba(10,108,255,0.4)] hover:scale-[1.03] transition cursor-pointer"
+                >
+                  <BookOpen size={14} />
+                  <span>EXPLORE CATALOG</span>
+                  <ArrowRight size={13} />
+                </button>
+
+                <button
+                  onClick={() => setHowToUseModalOpen(true)}
+                  className="px-7 py-3.5 rounded-full bg-white/90 border border-white shadow-[0_10px_24px_rgba(37,99,235,0.12)] text-[#1a6dff] text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:scale-[1.03] transition cursor-pointer"
+                >
+                  <Info size={14} className="text-[#1a6dff]" />
+                  <span>HOW TO USE</span>
+                </button>
+              </div>
+
+              {/* 4 Value Pillars Row */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-5 border-t border-blue-100/80">
+                {[
+                  { title: 'Learn', sub: 'today', icon: BookOpen },
+                  { title: 'Share', sub: 'knowledge', icon: Users },
+                  { title: 'Create', sub: 'impact', icon: Leaf },
+                  { title: 'Build a', sub: 'sustainable future', icon: Globe }
+                ].map((p, i) => (
+                  <div key={i} className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1a6dff] shrink-0">
+                      <p.icon size={15} strokeWidth={1.75} />
+                    </div>
+                    <div className="flex flex-col text-xs leading-tight">
+                      <span className="font-bold text-slate-800">{p.title}</span>
+                      <span className="text-slate-500 text-[11px] font-normal">{p.sub}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          ) : (
-            filteredResources.map((res) => (
-              <div
-                key={res.id}
-                className="rounded-2xl sm:rounded-[1.6rem] bg-white/75 dark:bg-[#0c2217]/35 backdrop-blur-2xl border border-white/80 dark:border-emerald-500/20 p-4 sm:p-5 shadow-[0_8px_32px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:bg-white/90 dark:hover:bg-[#0f2c1e]/50 hover:shadow-[0_16px_40px_rgba(45,90,60,0.1)] dark:hover:shadow-[0_16px_40px_rgba(16,185,129,0.12)] hover:-translate-y-1 hover:border-[#2d5a3c]/40 dark:hover:border-emerald-400/40 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
-              >
-                {/* Subtle glass reflection highlight on top edge */}
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 dark:via-emerald-400/30 to-transparent pointer-events-none" />
 
-                {/* Ambient glowing radial blob in card corner */}
-                <div className="absolute -top-10 -right-10 w-28 h-28 bg-emerald-500/5 dark:bg-emerald-400/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-500" />
+            {/* Right: Floating Glass Card (Matching About Page Estd Card) */}
+            <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end hidden sm:flex">
+              <div className="relative w-[300px] sm:w-[320px] rounded-[1.8rem] p-7 sm:p-8 bg-gradient-to-br from-white/55 via-sky-50/40 to-blue-100/30 backdrop-blur-xl border border-white/80 shadow-[0_25px_60px_rgba(2,60,140,0.22),inset_0_1px_0_rgba(255,255,255,0.95)] hover:-translate-y-1 transition duration-300">
+                <span className="absolute -top-3.5 -right-3.5 w-9 h-9 rounded-full bg-white/90 border border-white text-sky-500 flex items-center justify-center shadow-md">
+                  <Sparkles size={17} />
+                </span>
+                <p className="text-[10px] font-bold tracking-[0.22em] text-slate-600 uppercase mb-1">OPEN PUBLICATIONS</p>
+                <p style={SERIF} className="text-6xl sm:text-[68px] text-slate-900 leading-none my-2 font-normal">
+                  {resourcesList.length > 0 ? `${resourcesList.length}+` : '12+'}
+                </p>
+                <p className="text-[13.5px] text-slate-600 leading-relaxed max-w-[210px] mt-2">
+                  Curated toolkits, reports and educational courseware.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Wrap>
+      </section>
 
-                {/* Horizontal split inside each card */}
-                <div className="grid grid-cols-12 gap-3.5 sm:gap-4 items-stretch relative z-10">
+      <Wrap className="space-y-10 sm:space-y-14 relative z-10">
 
-                  {/* Left Column: Document Preview Cover */}
-                  <div className="col-span-4 sm:col-span-4 flex items-center justify-center">
-                    <div className="w-full max-w-[115px] sm:max-w-[125px] aspect-[1/1.38]">
-                      <PublicationCover
-                        type={res.coverType}
-                        theme={res.themeColor}
-                        title={res.title}
-                        coverTitle={res.coverTitle}
-                        coverSubtitle={res.coverSubtitle}
-                        date={res.date}
-                        coverDate={res.coverDate}
-                        customBadge={res.customBadge}
-                        coverImage={res.coverImage}
-                      />
-                    </div>
-                  </div>
+        {/* ============================================================ */}
+        {/* 1. SEARCH & CATEGORY FILTER DOCK */}
+        {/* ============================================================ */}
+        <div id="resources-catalog" className="scroll-mt-28">
+          <div className={`${GLASS} rounded-[2rem] sm:rounded-[2.4rem] p-3 sm:p-5 shadow-[0_20px_50px_rgba(37,99,235,0.08)]`}>
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
 
-                  {/* Right Column: Information & Meta */}
-                  <div className="col-span-8 sm:col-span-8 flex flex-col justify-between space-y-1.5">
-                    <div>
-                      {/* Category Badge & Size */}
-                      <div className="flex items-center justify-between gap-1 flex-wrap mb-1">
-                        <span className={`px-2 py-0.5 rounded text-[9.5px] font-bold uppercase tracking-wider ${res.badgeStyle}`}>
-                          {res.category}
-                        </span>
-                        <span className="text-[10px] font-medium text-[#718476] dark:text-slate-400">
-                          {res.type} • {res.size}
-                        </span>
-                      </div>
+              {/* Category Pills */}
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0 no-scrollbar">
+                {CATEGORIES.map((cat) => {
+                  const isActive = activeCategory.toLowerCase() === cat.id.toLowerCase();
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer ${isActive
+                        ? 'bg-[#1a6dff] text-white shadow-md scale-105'
+                        : 'bg-white/80 border border-blue-100 text-slate-700 hover:bg-blue-50/80 shadow-2xs'
+                        }`}
+                    >
+                      {cat.label}
+                    </button>
+                  );
+                })}
+              </div>
 
-                      {/* Title */}
-                      <h3 className="text-[13.5px] sm:text-[14px] font-serif font-bold text-[#14261a] dark:text-white leading-[1.3] group-hover:text-[#2d5a3c] dark:group-hover:text-emerald-300 transition-colors line-clamp-3">
-                        {res.title}
-                      </h3>
-
-                      {/* Summary */}
-                      <p className="text-[11px] sm:text-[11.5px] text-[#4d6052] dark:text-slate-300 leading-relaxed font-normal line-clamp-3 mt-1.5">
-                        {res.desc}
-                      </p>
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* Bottom Card Footer: Date & Action Buttons */}
-                <div className="pt-3 mt-2.5 border-t border-[#f0f4ef] dark:border-white/10 flex items-center justify-between relative z-10 gap-2">
-                  <div className="flex items-center gap-1.5 text-[10.5px] text-[#718476] dark:text-slate-400 font-medium shrink-0">
-                    <Calendar size={12} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                    <span>{res.date}</span>
-                  </div>
-
-                  {res.status === 'download' ? (
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <a
-                        href={`/api/resources/download?id=${res.id}&mode=preview`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-3 py-1.5 rounded-full bg-white/90 dark:bg-white/10 hover:bg-white dark:hover:bg-white/20 border border-[#d5e2d6] dark:border-white/15 text-[#1b3726] dark:text-emerald-300 text-[11px] font-semibold flex items-center gap-1.5 transition-all shadow-2xs hover:shadow-xs cursor-pointer"
-                        title={`Preview ${res.title} in browser`}
-                      >
-                        <Eye size={12} />
-                        <span>Preview</span>
-                      </a>
-
-                      <a
-                        href={`/api/resources/download?id=${res.id}&mode=download`}
-                        download
-                        className="px-3 py-1.5 rounded-full bg-[#122b1c] hover:bg-[#1d442c] dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer hover:scale-[1.02]"
-                        title={`Download ${res.title}`}
-                      >
-                        <Download size={11} />
-                        <span>Download</span>
-                      </a>
-                    </div>
-                  ) : (
-                    <span className="px-3 py-1 rounded-full bg-[#edf2ed] dark:bg-white/10 text-[#768a7b] dark:text-slate-300 dark:border dark:border-white/10 text-[10.5px] font-medium flex items-center gap-1 opacity-90 select-none">
-                      Coming Soon
-                    </span>
+              {/* Search & Sort */}
+              <div className="flex items-center gap-2.5 w-full lg:w-auto">
+                <div className="relative flex-1 sm:w-80">
+                  <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search resources..."
+                    className="w-full pl-10 pr-8 py-2.5 rounded-full bg-white border border-blue-100 text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1a6dff]/30 shadow-xs"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    >
+                      <X size={13} />
+                    </button>
                   )}
                 </div>
+
+                {/* Sorter Button */}
+                <button
+                  onClick={() => {
+                    if (sortOrder === 'default') setSortOrder('az');
+                    else if (sortOrder === 'az') setSortOrder('za');
+                    else setSortOrder('default');
+                  }}
+                  className={`p-2.5 rounded-full border border-blue-100 transition-all shadow-xs cursor-pointer ${sortOrder !== 'default'
+                    ? 'bg-[#1a6dff] text-white'
+                    : 'bg-white text-slate-600 hover:bg-blue-50'
+                    }`}
+                  title={`Sort: ${sortOrder === 'az' ? 'A to Z' : sortOrder === 'za' ? 'Z to A' : 'Default'}`}
+                >
+                  <SlidersHorizontal size={16} />
+                </button>
               </div>
-            ))
-          )}
+
+            </div>
+          </div>
         </div>
 
-        {/* =================================================================== */}
-        {/* 4. BOTTOM VALUE BANNER ("KNOWLEDGE SHARED TODAY") - GLASSMORPHISM */}
-        {/* =================================================================== */}
-        <div className="rounded-[2.2rem] sm:rounded-[2.8rem] bg-white/75 dark:bg-[#0c2217]/35 backdrop-blur-2xl border border-white/80 dark:border-emerald-500/20 p-6 sm:p-8 lg:p-10 shadow-[0_12px_40px_rgba(0,0,0,0.04)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.4)] relative overflow-hidden transition-all duration-300">
-
-          {/* Top subtle highlight reflection */}
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 dark:via-emerald-400/30 to-transparent pointer-events-none" />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
-
-            {/* Left Column: Heading Quote */}
-            <div className="lg:col-span-6 space-y-3">
-              <h2 className="text-2xl sm:text-[28px] lg:text-[30px] font-serif italic text-[#14261a] dark:text-white leading-snug">
-                “Knowledge shared today<br />
-                builds a more equitable and sustainable tomorrow.”
+        {/* ============================================================ */}
+        {/* 2. DOWNLOADABLE RESOURCES 3-COLUMN GRID */}
+        {/* ============================================================ */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between pb-2 border-b border-blue-100">
+            <div className="space-y-1">
+              <SectionTag text="PUBLICATIONS & REPOSITORY" />
+              <h2 style={SERIF} className="text-3xl sm:text-4xl font-normal text-[#0f1a3a] tracking-tight">
+                Curated <Em>Publications.</Em>
               </h2>
-              <div className="w-10 h-[2.5px] bg-[#2d5a3c] dark:bg-[#a2d45e] rounded-full" />
             </div>
-
-            {/* Right Column: 4 Feature Highlights */}
-            <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
-              <div className="flex flex-col items-center text-center space-y-1.5">
-                <div className="w-10 h-10 rounded-full bg-[#eaf1e4] dark:bg-emerald-950/60 dark:border dark:border-emerald-500/30 text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center shadow-xs">
-                  <BookOpen size={18} strokeWidth={1.5} />
-                </div>
-                <span className="text-xs text-[#14261a] dark:text-white font-semibold leading-tight block">
-                  Open Access
-                </span>
-                <span className="text-[11px] text-[#556758] dark:text-slate-400 leading-tight block">
-                  for everyone
-                </span>
-              </div>
-
-              <div className="flex flex-col items-center text-center space-y-1.5">
-                <div className="w-10 h-10 rounded-full bg-[#eaf1e4] dark:bg-emerald-950/60 dark:border dark:border-emerald-500/30 text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center shadow-xs">
-                  <Users size={18} strokeWidth={1.5} />
-                </div>
-                <span className="text-xs text-[#14261a] dark:text-white font-semibold leading-tight block">
-                  Stronger
-                </span>
-                <span className="text-[11px] text-[#556758] dark:text-slate-400 leading-tight block">
-                  Communities
-                </span>
-              </div>
-
-              <div className="flex flex-col items-center text-center space-y-1.5">
-                <div className="w-10 h-10 rounded-full bg-[#eaf1e4] dark:bg-emerald-950/60 dark:border dark:border-emerald-500/30 text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center shadow-xs">
-                  <Lightbulb size={18} strokeWidth={1.5} />
-                </div>
-                <span className="text-xs text-[#14261a] dark:text-white font-semibold leading-tight block">
-                  Innovative
-                </span>
-                <span className="text-[11px] text-[#556758] dark:text-slate-400 leading-tight block">
-                  Education
-                </span>
-              </div>
-
-              <div className="flex flex-col items-center text-center space-y-1.5">
-                <div className="w-10 h-10 rounded-full bg-[#eaf1e4] dark:bg-emerald-950/60 dark:border dark:border-emerald-500/30 text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center shadow-xs">
-                  <Globe size={18} strokeWidth={1.5} />
-                </div>
-                <span className="text-xs text-[#14261a] dark:text-white font-semibold leading-tight block">
-                  Sustainable
-                </span>
-                <span className="text-[11px] text-[#556758] dark:text-slate-400 leading-tight block">
-                  Impact
-                </span>
-              </div>
-            </div>
-
+            <span className="text-xs font-semibold text-slate-500">
+              Showing {filteredResources.length} {filteredResources.length === 1 ? 'material' : 'materials'}
+            </span>
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {loading ? (
+              <div className="col-span-full py-16">
+                <LoadingSpinner message="Fetching academic resources..." />
+              </div>
+            ) : filteredResources.length === 0 ? (
+              <div className="col-span-full text-center py-20 bg-white/70 backdrop-blur-xl rounded-[2.5rem] border border-blue-100 p-8 shadow-sm">
+                <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-100 text-[#1a6dff] flex items-center justify-center mx-auto mb-3 shadow-xs">
+                  <BookOpen size={22} />
+                </div>
+                <h4 style={SERIF} className="text-xl font-normal text-slate-900 mb-1">No resources found</h4>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto mb-4">
+                  No materials matched your search &quot;{searchQuery}&quot;. Try clearing filters or searching for another keyword.
+                </p>
+                <button
+                  onClick={() => { setActiveCategory('All'); setSearchQuery(''); }}
+                  className="px-5 py-2.5 rounded-full bg-[#1a6dff] text-white text-xs font-bold uppercase tracking-wider hover:scale-105 transition shadow-sm cursor-pointer"
+                >
+                  Reset Filters
+                </button>
+              </div>
+            ) : (
+              filteredResources.map((res) => (
+                <div
+                  key={res.id}
+                  className={`${GLASS} rounded-[2rem] p-4 sm:p-5 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden`}
+                >
+                  {/* Card Content Split */}
+                  <div className="grid grid-cols-12 gap-3.5 sm:gap-4 items-stretch relative z-10">
+                    {/* Left Column: Publication Cover from Component */}
+                    <div className="col-span-4 flex items-center justify-center">
+                      <div className="w-full max-w-[115px] sm:max-w-[125px] aspect-[1/1.38] rounded-xl overflow-hidden shadow-sm">
+                        <PublicationCover
+                          type={res.coverType}
+                          theme={res.themeColor}
+                          title={res.title}
+                          coverTitle={res.coverTitle}
+                          coverSubtitle={res.coverSubtitle}
+                          date={res.date}
+                          coverDate={res.coverDate}
+                          customBadge={res.customBadge}
+                          coverImage={res.coverImage}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Right Column: Meta & Description */}
+                    <div className="col-span-8 flex flex-col justify-between space-y-1.5">
+                      <div>
+                        {/* Category Badge & Meta */}
+                        <div className="flex items-center justify-between gap-1 flex-wrap mb-1.5">
+                          <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-blue-50 text-[#1a6dff] border border-blue-100">
+                            {res.category}
+                          </span>
+                          <span className="text-[10px] font-medium text-slate-400">
+                            {res.type} • {res.size}
+                          </span>
+                        </div>
+
+                        {/* Title */}
+                        <h3 style={SERIF} className="text-[16px] sm:text-[17px] font-normal text-slate-900 group-hover:text-[#1a6dff] transition-colors leading-snug line-clamp-2">
+                          {res.title}
+                        </h3>
+
+                        {/* Summary */}
+                        <p className="text-[11px] sm:text-[11.5px] text-slate-500 leading-relaxed font-normal line-clamp-3 mt-1.5">
+                          {res.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Footer: Date & Buttons */}
+                  <div className="pt-3 mt-3 border-t border-blue-100/70 flex items-center justify-between relative z-10 gap-2">
+                    <div className="flex items-center gap-1.5 text-[10.5px] text-slate-500 font-medium shrink-0">
+                      <Calendar size={12} className="text-[#1a6dff]" />
+                      <span>{res.date}</span>
+                    </div>
+
+                    {res.status === 'download' ? (
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <a
+                          href={`/api/resources/download?id=${res.id}&mode=preview`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-1.5 rounded-full bg-white border border-blue-100 text-[#1a6dff] hover:bg-blue-50 text-[11px] font-bold flex items-center gap-1.5 transition shadow-2xs cursor-pointer"
+                          title={`Preview ${res.title} in browser`}
+                        >
+                          <Eye size={12} />
+                          <span>Preview</span>
+                        </a>
+
+                        <a
+                          href={`/api/resources/download?id=${res.id}&mode=download`}
+                          download
+                          className="px-3.5 py-1.5 rounded-full bg-[#1a6dff] hover:bg-blue-600 text-white text-[11px] font-bold flex items-center gap-1.5 transition shadow-xs hover:scale-105 active:scale-95 cursor-pointer"
+                          title={`Download ${res.title}`}
+                        >
+                          <Download size={11} />
+                          <span>Download</span>
+                        </a>
+                      </div>
+                    ) : (
+                      <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-400 text-[10.5px] font-medium flex items-center gap-1 opacity-90 select-none">
+                        Coming Soon
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
 
-      </div>
+        {/* ============================================================ */}
+        {/* 3. BOTTOM VALUE BANNER (Oceanic Design System) */}
+        {/* ============================================================ */}
+        <div className="pt-2">
+          <div className="rounded-[2.4rem] bg-gradient-to-r from-[#041a45] via-[#0a3a9c] to-[#1d5be0] text-white p-7 sm:p-10 lg:p-12 shadow-[0_25px_60px_rgba(3,21,51,0.32)] grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative overflow-hidden">
+            <svg className="absolute inset-0 w-full h-full opacity-35 pointer-events-none" viewBox="0 0 1200 400" preserveAspectRatio="none" fill="none">
+              <path d="M0 240 C300 120 500 320 800 180 C1000 80 1100 160 1200 100 L1200 400 L0 400Z" fill="#38bdf8" opacity="0.4" />
+              <path d="M0 80 C240 -20 500 180 800 60 C1000 -20 1100 40 1200 10 L1200 0 L0 0Z" fill="#7dd3fc" opacity="0.3" />
+              <circle cx="950" cy="180" r="140" fill="#60a5fa" opacity="0.25" />
+            </svg>
 
-      {/* =================================================================== */}
-      {/* 5. "HOW TO USE" MODAL */}
-      {/* =================================================================== */}
+            {/* Left Copy Quote */}
+            <div className="md:col-span-6 space-y-3 relative z-10">
+              <SectionTag text="KNOWLEDGE FOR TOMORROW" light />
+              <h2 style={SERIF} className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white leading-snug">
+                “Knowledge shared today<br />
+                <em style={SERIF} className="italic text-sky-300">builds a more equitable and sustainable tomorrow.”</em>
+              </h2>
+            </div>
+
+            {/* Right 4 Value Pillars */}
+            <div className="md:col-span-6 grid grid-cols-2 sm:grid-cols-4 gap-3 relative z-10">
+              {[
+                { title: 'Open Access', desc: 'for everyone', icon: BookOpen },
+                { title: 'Stronger', desc: 'Communities', icon: Users },
+                { title: 'Innovative', desc: 'Education', icon: Lightbulb },
+                { title: 'Sustainable', desc: 'Impact', icon: Globe }
+              ].map((item, i) => (
+                <div key={i} className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-center flex flex-col items-center justify-center hover:bg-white/15 transition">
+                  <div className="w-9 h-9 rounded-full bg-white/20 text-sky-300 flex items-center justify-center mb-2 shadow-xs">
+                    <item.icon size={17} strokeWidth={1.6} />
+                  </div>
+                  <span className="text-xs font-bold text-white block leading-tight">{item.title}</span>
+                  <span className="text-[10.5px] text-sky-200/80 block mt-0.5">{item.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </Wrap>
+
+      {/* ============================================================ */}
+      {/* 4. "HOW TO USE" MODAL */}
+      {/* ============================================================ */}
       {howToUseModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="relative w-full max-w-xl bg-white/90 dark:bg-[#071d13]/90 backdrop-blur-2xl border border-white/80 dark:border-emerald-500/30 rounded-[2.5rem] p-6 sm:p-8 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+          <div className="relative w-full max-w-xl bg-white/95 backdrop-blur-2xl border border-white rounded-[2.5rem] p-6 sm:p-8 shadow-2xl space-y-6">
 
-            <div className="flex items-center justify-between pb-3 border-b border-[#e2ebd0] dark:border-white/10">
+            <div className="flex items-center justify-between pb-3 border-b border-blue-100">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-full bg-[#eaf1e4] dark:bg-emerald-950/80 text-[#2d5a3c] dark:text-[#a2d45e] flex items-center justify-center border dark:border-emerald-500/30">
-                  <Info size={18} />
+                <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 text-[#1a6dff] flex items-center justify-center shadow-xs">
+                  <Info size={19} />
                 </div>
                 <div>
-                  <h3 className="text-lg font-serif font-bold text-[#14261a] dark:text-white">
+                  <h3 style={SERIF} className="text-xl font-normal text-slate-900">
                     How to Use LEnSE Academic Resources
                   </h3>
-                  <span className="text-[11px] text-[#556758] dark:text-slate-400">
+                  <span className="text-[11px] text-slate-500 font-medium">
                     Open Academic Repository • University of Kerala
                   </span>
                 </div>
               </div>
               <button
                 onClick={() => setHowToUseModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 text-slate-500 hover:text-slate-800 dark:hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center cursor-pointer transition-colors"
               >
                 <X size={16} />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs sm:text-[13px] text-[#405245] dark:text-slate-300 leading-relaxed">
-              <div className="p-3.5 rounded-2xl bg-[#f4f7f2] dark:bg-white/5 border border-[#e2ebd0] dark:border-white/10">
-                <strong className="text-[#14261a] dark:text-white block mb-1">Accessing Publications &amp; Guides:</strong>
-                <ul className="list-disc list-inside space-y-1 pl-1">
+            <div className="space-y-4 text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal">
+              <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100">
+                <strong className="text-slate-900 block mb-1.5 font-bold">Accessing Publications &amp; Guides:</strong>
+                <ul className="list-disc list-inside space-y-1 pl-1 text-slate-600">
                   <li>Click <strong>&quot;Download&quot;</strong> on any published resource to receive the complete PDF/Toolkit.</li>
+                  <li>Click <strong>&quot;Preview&quot;</strong> to inspect the document directly in a clean browser viewer.</li>
                   <li>Resources labeled <strong>&quot;Coming Soon&quot;</strong> are currently undergoing committee peer review.</li>
-                  <li>Use the category filters and keyword search to quickly locate specific curriculum materials.</li>
+                  <li>Use category tabs and instant search to filter by specific curriculum materials.</li>
                 </ul>
               </div>
 
-              <div className="space-y-2">
-                <strong className="text-[#14261a] dark:text-white block">Licensing &amp; Open Access:</strong>
+              <div className="space-y-1.5">
+                <strong className="text-slate-900 block font-bold">Licensing &amp; Open Access:</strong>
                 <p>
-                  All materials are released under the Creative Commons Attribution 4.0 (CC-BY) license. Educators and researchers are free to share, adapt, and build upon these materials with attribution.
+                  All materials are released under the Creative Commons Attribution 4.0 (CC-BY) license. Educators and researchers are free to share, adapt, and build upon these materials with proper attribution.
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-[#eaf1e4] dark:bg-emerald-950/60 text-[#1b3726] dark:text-emerald-300 flex items-center justify-between gap-3 border dark:border-emerald-500/30">
-                <span className="font-semibold text-xs">
-                  Have a suggestion or contribution?
-                </span>
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100 flex items-center justify-between gap-3 shadow-xs">
+                <div>
+                  <span className="font-bold text-xs text-slate-900 block">Have a suggestion or contribution?</span>
+                  <span className="text-[11px] text-slate-500">Submit proposed curriculum or feedback to our team.</span>
+                </div>
                 <Link
                   href="/contact"
-                  className="px-4 py-2 rounded-full bg-[#122b1c] dark:bg-emerald-600 text-white text-[11px] font-semibold flex items-center gap-1.5 shrink-0"
+                  className="px-4 py-2 rounded-full bg-[#1a6dff] hover:bg-blue-600 text-white text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 shrink-0 transition shadow-xs"
                 >
-                  <span>Contact Committee</span>
+                  <span>Contact</span>
                   <ArrowRight size={12} />
                 </Link>
               </div>
@@ -686,7 +600,7 @@ export default function AcademicResourcesPage() {
             <div className="flex justify-end pt-2">
               <button
                 onClick={() => setHowToUseModalOpen(false)}
-                className="px-5 py-2 rounded-full bg-slate-200 dark:bg-white/10 text-slate-800 dark:text-white text-xs font-semibold cursor-pointer hover:opacity-90"
+                className="px-6 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold cursor-pointer transition"
               >
                 Close
               </button>
