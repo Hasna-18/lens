@@ -2,1114 +2,530 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-    ArrowRight,
-    Sparkles,
-    Users,
-    GraduationCap,
-    Globe,
-    Monitor,
-    Brain,
-    Atom,
-    Building2,
-    HeartHandshake,
-    FlaskConical,
-    Mail,
-    MapPin,
-    Calendar,
-    Award,
-    Cpu,
-    Leaf,
-    FileText,
-    BookOpen,
+    ArrowRight, Sparkles, Users, User, GraduationCap, Globe, Monitor, Atom,
+    Landmark, Heart, FileText, BookOpen, Leaf, CheckCircle2,
+    ChevronLeft, ChevronRight, Settings, Gem, MapPin, Mail, Linkedin, Youtube, Instagram,
+    Tag, UsersRound,
 } from 'lucide-react';
 
-// =========================================================================
-// 3D ISOMETRIC GLOWING CRYSTAL CUBES (PURE CODE / SVG)
-// =========================================================================
-function StemIsometricCubes() {
-    const dx = 22;
-    const dy = 13;
-    const h = 26;
-    const originX = 85;
-    const originY = 125;
+/* ---------- shared tokens ---------- */
+const SERIF = { fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif" };
+const BLUE = 'text-[#1a6dff]';
+const GLASS =
+    'bg-white/65 backdrop-blur-xl border border-white/90 shadow-[0_18px_45px_rgba(37,99,235,0.10),inset_0_1px_0_rgba(255,255,255,1)]';
 
-    // Steps 0 to 4 (5 columns), with ascending heights 1 to 5
-    const stepsConfig = [
-        { u: 0, height: 1, top: 'url(#stem-top-0)', left: 'url(#stem-left-0)', right: 'url(#stem-right-0)' },
-        { u: 1, height: 2, top: 'url(#stem-top-1)', left: 'url(#stem-left-1)', right: 'url(#stem-right-1)' },
-        { u: 2, height: 3, top: 'url(#stem-top-2)', left: 'url(#stem-left-2)', right: 'url(#stem-right-2)' },
-        { u: 3, height: 4, top: 'url(#stem-top-3)', left: 'url(#stem-left-3)', right: 'url(#stem-right-3)' },
-        { u: 4, height: 5, top: 'url(#stem-top-4)', left: 'url(#stem-left-4)', right: 'url(#stem-right-4)' },
-    ];
+const Wrap = ({ children, className = '' }) => (
+    <div className={`relative max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10 ${className}`}>{children}</div>
+);
 
-    const cubes = [];
-    stepsConfig.forEach((step) => {
-        for (let v = 0; v < 2; v++) {
-            for (let w = 0; w < step.height; w++) {
-                const cx = originX + (step.u - v) * dx;
-                const cy = originY + (step.u + v) * dy - w * h;
-                cubes.push({
-                    key: `${step.u}-${v}-${w}`,
-                    cx,
-                    cy,
-                    depth: (step.u + v) * 100 + w,
-                    topFill: step.top,
-                    leftFill: step.left,
-                    rightFill: step.right,
-                    isTop: w === step.height - 1,
-                });
-            }
-        }
-    });
+const Em = ({ children, light = false }) => (
+    <em style={SERIF} className={`italic font-normal ${light ? 'text-sky-300' : BLUE}`}>{children}</em>
+);
 
-    // Painter's algorithm sort (back to front)
-    cubes.sort((a, b) => a.depth - b.depth);
-
+function SectionTag({ number, text, light = false, circle = false }) {
     return (
-        <svg
-            viewBox="0 0 240 220"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-full h-auto drop-shadow-[0_20px_35px_rgba(2,132,199,0.35)] select-none"
-        >
+        <div className="flex items-center gap-3 select-none">
+            {number && (circle ? (
+                <span style={SERIF} className="w-10 h-10 rounded-full bg-white/15 border border-white/40 backdrop-blur text-white flex items-center justify-center text-xl">{number}</span>
+            ) : (
+                <span style={SERIF} className="text-2xl italic text-slate-400/90 -ml-1 font-light">{number}</span>
+            ))}
+            <span className="flex items-center gap-2">
+                <span className={`w-1 h-1 rounded-full ${light ? 'bg-sky-300' : 'bg-[#1a6dff]'}`} />
+                <span className={`text-[9px] font-bold tracking-[0.22em] uppercase ${light ? 'text-sky-200' : BLUE}`}>{text}</span>
+            </span>
+        </div>
+    );
+}
+
+function Dots({ rows = 5, cols = 10, className = '' }) {
+    return (
+        <div className={`grid gap-2 pointer-events-none select-none ${className}`} style={{ gridTemplateColumns: `repeat(${cols}, 3px)` }}>
+            {Array.from({ length: rows * cols }).map((_, i) => (
+                <span key={i} className="w-[3px] h-[3px] rounded-full bg-sky-400/60" />
+            ))}
+        </div>
+    );
+}
+
+const ArrowBtn = ({ className = '' }) => (
+    <span className={`w-7 h-7 rounded-full bg-[#1a6dff] text-white flex items-center justify-center shadow-[0_6px_14px_rgba(26,109,255,0.4)] ${className}`}>
+        <ArrowRight size={13} />
+    </span>
+);
+
+const PillBtn = ({ href, children }) => (
+    <Link href={href} className="inline-flex">
+        <span className="px-6 py-3 rounded-full bg-white/90 border border-white shadow-[0_10px_24px_rgba(37,99,235,0.14)] text-[#1a6dff] text-[10px] font-bold uppercase tracking-wider flex items-center gap-3 hover:scale-[1.03] transition">
+            {children}<ArrowRight size={12} />
+        </span>
+    </Link>
+);
+
+/* ---------- hero: silky ocean streaks ---------- */
+function OceanWaves() {
+    const colors = ['#ffffff', '#7dd3fc', '#0ea5e9', '#1d4ed8', '#bae6fd', '#0369a1'];
+    const streaks = Array.from({ length: 40 }, (_, i) => ({
+        d: `M -150 ${20 + i * 14} C 250 ${-80 + i * 12}, 650 ${240 - i * 3}, 1350 ${60 + i * 16}`,
+        c: colors[(i * 5) % colors.length],
+        w: 5 + ((i * 7) % 26),
+        o: 0.25 + ((i * 13) % 50) / 100,
+    }));
+    return (
+        <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" className="w-full h-full" fill="none">
             <defs>
-                {/* Glow Filter */}
-                <filter id="stem-glow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="4" result="blur" />
-                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
-
-                {/* Floor Caustic Glow */}
-                <radialGradient id="stem-floor-glow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.65" />
-                    <stop offset="50%" stopColor="#0284c7" stopOpacity="0.25" />
-                    <stop offset="100%" stopColor="#0284c7" stopOpacity="0" />
-                </radialGradient>
-
-                {/* Step 0 Gradients (Cyan Crystal) */}
-                <linearGradient id="stem-top-0" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#e0f2fe" />
-                    <stop offset="45%" stopColor="#7dd3fc" />
-                    <stop offset="100%" stopColor="#38bdf8" />
+                <linearGradient id="ocean-base" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stopColor="#eaf6ff" />
+                    <stop offset="0.45" stopColor="#4cb8f5" />
+                    <stop offset="1" stopColor="#1e40af" />
                 </linearGradient>
-                <linearGradient id="stem-left-0" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#38bdf8" />
-                    <stop offset="100%" stopColor="#06b6d4" />
-                </linearGradient>
-                <linearGradient id="stem-right-0" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#0ea5e9" />
-                    <stop offset="100%" stopColor="#0284c7" />
-                </linearGradient>
-
-                {/* Step 1 Gradients (Sky Blue) */}
-                <linearGradient id="stem-top-1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#bae6fd" />
-                    <stop offset="45%" stopColor="#60a5fa" />
-                    <stop offset="100%" stopColor="#3b82f6" />
-                </linearGradient>
-                <linearGradient id="stem-left-1" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#38bdf8" />
-                    <stop offset="100%" stopColor="#0284c7" />
-                </linearGradient>
-                <linearGradient id="stem-right-1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#0284c7" />
-                    <stop offset="100%" stopColor="#0369a1" />
-                </linearGradient>
-
-                {/* Step 2 Gradients (Azure Blue) */}
-                <linearGradient id="stem-top-2" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#93c5fd" />
-                    <stop offset="45%" stopColor="#3b82f6" />
-                    <stop offset="100%" stopColor="#2563eb" />
-                </linearGradient>
-                <linearGradient id="stem-left-2" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#60a5fa" />
-                    <stop offset="100%" stopColor="#2563eb" />
-                </linearGradient>
-                <linearGradient id="stem-right-2" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#2563eb" />
-                    <stop offset="100%" stopColor="#1d4ed8" />
-                </linearGradient>
-
-                {/* Step 3 Gradients (Electric Royal) */}
-                <linearGradient id="stem-top-3" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#a5b4fc" />
-                    <stop offset="45%" stopColor="#6366f1" />
-                    <stop offset="100%" stopColor="#4f46e5" />
-                </linearGradient>
-                <linearGradient id="stem-left-3" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#818cf8" />
-                    <stop offset="100%" stopColor="#4f46e5" />
-                </linearGradient>
-                <linearGradient id="stem-right-3" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#4f46e5" />
-                    <stop offset="100%" stopColor="#3730a3" />
-                </linearGradient>
-
-                {/* Step 4 Gradients (Deep Sapphire) */}
-                <linearGradient id="stem-top-4" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#c7d2fe" />
-                    <stop offset="45%" stopColor="#818cf8" />
-                    <stop offset="100%" stopColor="#4338ca" />
-                </linearGradient>
-                <linearGradient id="stem-left-4" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#6366f1" />
-                    <stop offset="100%" stopColor="#3730a3" />
-                </linearGradient>
-                <linearGradient id="stem-right-4" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#3730a3" />
-                    <stop offset="100%" stopColor="#1e1b4b" />
-                </linearGradient>
+                <filter id="ocean-blur"><feGaussianBlur stdDeviation="8" /></filter>
             </defs>
-
-            {/* Glowing Floor Reflection Ellipse */}
-            <ellipse cx="120" cy="188" rx="84" ry="22" fill="url(#stem-floor-glow)" filter="url(#stem-glow)" />
-
-            {/* Floor Perspective Grid Lines */}
-            <g stroke="#38bdf8" strokeOpacity="0.25" strokeWidth="0.8">
-                <line x1="40" y1="170" x2="120" y2="216" />
-                <line x1="62" y1="157" x2="142" y2="203" />
-                <line x1="84" y1="144" x2="164" y2="190" />
-                <line x1="120" y1="216" x2="200" y2="170" />
-                <line x1="98" y1="203" x2="178" y2="157" />
-                <line x1="76" y1="190" x2="156" y2="144" />
-            </g>
-
-            {/* Render 3D Isometric Cubes */}
-            {cubes.map((c) => {
-                const { cx, cy, topFill, leftFill, rightFill, isTop } = c;
-                return (
-                    <g key={c.key} className="transition-all duration-300">
-                        {/* Left Face */}
-                        <path
-                            d={`M ${cx - dx} ${cy - h} L ${cx} ${cy - h + dy} L ${cx} ${cy + dy} L ${cx - dx} ${cy} Z`}
-                            fill={leftFill}
-                            fillOpacity="0.92"
-                            stroke="rgba(255,255,255,0.4)"
-                            strokeWidth="0.8"
-                            strokeLinejoin="round"
-                        />
-
-                        {/* Right Face */}
-                        <path
-                            d={`M ${cx} ${cy - h + dy} L ${cx + dx} ${cy - h} L ${cx + dx} ${cy} L ${cx} ${cy + dy} Z`}
-                            fill={rightFill}
-                            fillOpacity="0.94"
-                            stroke="rgba(255,255,255,0.3)"
-                            strokeWidth="0.8"
-                            strokeLinejoin="round"
-                        />
-
-                        {/* Top Face */}
-                        <path
-                            d={`M ${cx} ${cy - h - dy} L ${cx + dx} ${cy - h} L ${cx} ${cy - h + dy} L ${cx - dx} ${cy - h} Z`}
-                            fill={topFill}
-                            fillOpacity={isTop ? "0.98" : "0.75"}
-                            stroke="rgba(255,255,255,0.75)"
-                            strokeWidth="0.9"
-                            strokeLinejoin="round"
-                        />
-
-                        {/* Top Specular Sheen (for top-most cubes) */}
-                        {isTop && (
-                            <path
-                                d={`M ${cx} ${cy - h - dy} L ${cx + dx * 0.6} ${cy - h - dy * 0.4} L ${cx} ${cy - h} L ${cx - dx * 0.6} ${cy - h - dy * 0.4} Z`}
-                                fill="white"
-                                fillOpacity="0.4"
-                            />
-                        )}
-                    </g>
-                );
-            })}
-
-            {/* Sparkle Stars on Top Corners */}
-            <g fill="white" filter="url(#stem-glow)">
-                {/* Star on highest step */}
-                <path d="M 173 17 L 175 25 L 183 27 L 175 29 L 173 37 L 171 29 L 163 27 L 171 25 Z" opacity="0.9" />
-                {/* Star on front step */}
-                <path d="M 53 92 L 54.5 97 L 59.5 98.5 L 54.5 100 L 53 105 L 51.5 100 L 46.5 98.5 L 51.5 97 Z" opacity="0.85" />
-                {/* Little floating energy dots */}
-                <circle cx="205" cy="65" r="2" fill="#38bdf8" opacity="0.8" />
-                <circle cx="35" cy="135" r="1.5" fill="#67e8f9" opacity="0.7" />
-                <circle cx="185" cy="115" r="2" fill="#818cf8" opacity="0.75" />
+            <rect width="1200" height="600" fill="url(#ocean-base)" />
+            <g filter="url(#ocean-blur)">
+                {streaks.map((s, i) => (
+                    <path key={i} d={s.d} stroke={s.c} strokeWidth={s.w} opacity={s.o} strokeLinecap="round" />
+                ))}
             </g>
         </svg>
     );
 }
 
-export default function AboutPage() {
-    const seed = 8;
-    const animate = false;
-
+function Hero() {
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-[#030712] text-slate-900 dark:text-slate-100 font-sans pb-28 selection:bg-[#38bdf8]/30 selection:text-white pt-28 sm:pt-36 relative overflow-hidden transition-colors duration-300">
-
-            {/* ============================================================ */}
-            {/* 0. HERO OCEAN WAVE BACKGROUND */}
-            {/* ============================================================ */}
-            <div className="absolute top-0 right-0 w-full lg:w-[68%] xl:w-[62%] h-[840px] sm:h-[920px] pointer-events-none z-0 overflow-hidden select-none">
-                {/* Ocean wave background */}
-                <svg
-                    viewBox="0 0 1600 660"
-                    preserveAspectRatio="xMidYMid slice"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        width: "100%",
-                        height: "100%",
-                        display: "block",
-                    }}
-                >
-                    <defs>
-                        {/* Blue and turquoise flowing water */}
-                        <filter
-                            id="wave-water"
-                            x="0"
-                            y="0"
-                            width="100%"
-                            height="100%"
-                            colorInterpolationFilters="sRGB"
-                        >
-                            <feTurbulence
-                                type="fractalNoise"
-                                baseFrequency="0.0022 0.013"
-                                numOctaves="4"
-                                seed={seed}
-                                result="noise"
-                            >
-                                {animate && (
-                                    <animate
-                                        attributeName="baseFrequency"
-                                        dur="40s"
-                                        repeatCount="indefinite"
-                                        values="0.0022 0.013; 0.0030 0.015; 0.0022 0.013"
-                                    />
-                                )}
-                            </feTurbulence>
-
-                            <feTurbulence
-                                type="fractalNoise"
-                                baseFrequency="0.0015 0.004"
-                                numOctaves="2"
-                                seed={seed + 3}
-                                result="warp"
-                            />
-
-                            <feDisplacementMap
-                                in="noise"
-                                in2="warp"
-                                scale="260"
-                                xChannelSelector="R"
-                                yChannelSelector="G"
-                                result="bent"
-                            />
-
-                            <feColorMatrix
-                                in="bent"
-                                type="matrix"
-                                values="1 0 0 0 0
-                      1 0 0 0 0
-                      1 0 0 0 0
-                      0 0 0 0 1"
-                                result="grey"
-                            />
-
-                            <feComponentTransfer in="grey" result="contrast">
-                                <feFuncR
-                                    type="linear"
-                                    slope="2.6"
-                                    intercept="-0.78"
-                                />
-                                <feFuncG
-                                    type="linear"
-                                    slope="2.6"
-                                    intercept="-0.78"
-                                />
-                                <feFuncB
-                                    type="linear"
-                                    slope="2.6"
-                                    intercept="-0.78"
-                                />
-                            </feComponentTransfer>
-
-                            <feComponentTransfer in="contrast" result="coloured">
-                                <feFuncR
-                                    type="table"
-                                    tableValues="0.03 0.04 0.04 0.16 0.49 0.81 0.96"
-                                />
-                                <feFuncG
-                                    type="table"
-                                    tableValues="0.23 0.37 0.53 0.68 0.81 0.92 0.98"
-                                />
-                                <feFuncB
-                                    type="table"
-                                    tableValues="0.43 0.61 0.75 0.84 0.89 0.95 0.98"
-                                />
-                            </feComponentTransfer>
-
-                            <feGaussianBlur
-                                in="coloured"
-                                stdDeviation="22 2.5"
-                            />
-                        </filter>
-
-                        {/* Soft white ocean foam */}
-                        <filter
-                            id="wave-foam"
-                            x="0"
-                            y="0"
-                            width="100%"
-                            height="100%"
-                            colorInterpolationFilters="sRGB"
-                        >
-                            <feTurbulence
-                                type="fractalNoise"
-                                baseFrequency="0.0028 0.022"
-                                numOctaves="4"
-                                seed={seed + 11}
-                                result="n"
-                            />
-
-                            <feColorMatrix
-                                in="n"
-                                type="matrix"
-                                values="0 0 0 0 1
-                      0 0 0 0 1
-                      0 0 0 0 1
-                      4.2 0 0 0 -1.75"
-                            />
-
-                            <feGaussianBlur stdDeviation="26 3" />
-                        </filter>
-
-                        {/* Foam positioning gradients */}
-                        <radialGradient
-                            id="foam-bottom"
-                            cx="0.8"
-                            cy="1.05"
-                            r="0.62"
-                            gradientTransform="translate(0.8 1.05) scale(1.25 0.8) translate(-0.8 -1.05)"
-                        >
-                            <stop offset="0" stopColor="#fff" />
-                            <stop
-                                offset="0.55"
-                                stopColor="#fff"
-                                stopOpacity="0.75"
-                            />
-                            <stop
-                                offset="1"
-                                stopColor="#fff"
-                                stopOpacity="0"
-                            />
-                        </radialGradient>
-
-                        <radialGradient
-                            id="foam-right"
-                            cx="1"
-                            cy="0.2"
-                            r="0.4"
-                        >
-                            <stop offset="0" stopColor="#fff" />
-                            <stop
-                                offset="1"
-                                stopColor="#fff"
-                                stopOpacity="0"
-                            />
-                        </radialGradient>
-
-                        <radialGradient
-                            id="foam-left"
-                            cx="0.05"
-                            cy="0.82"
-                            r="0.3"
-                        >
-                            <stop
-                                offset="0"
-                                stopColor="#fff"
-                                stopOpacity="0.85"
-                            />
-                            <stop
-                                offset="1"
-                                stopColor="#fff"
-                                stopOpacity="0"
-                            />
-                        </radialGradient>
-
-                        <mask id="foam-mask">
-                            <rect
-                                width="1600"
-                                height="660"
-                                fill="url(#foam-bottom)"
-                            />
-                            <rect
-                                width="1600"
-                                height="660"
-                                fill="url(#foam-right)"
-                            />
-                            <rect
-                                width="1600"
-                                height="660"
-                                fill="url(#foam-left)"
-                            />
-                        </mask>
-
-                        {/* Deep blue shading */}
-                        <linearGradient
-                            id="wave-shade"
-                            x1="0"
-                            y1="0"
-                            x2="0"
-                            y2="1"
-                        >
-                            <stop
-                                offset="0"
-                                stopColor="#06335f"
-                                stopOpacity="0.55"
-                            />
-                            <stop
-                                offset="0.45"
-                                stopColor="#06335f"
-                                stopOpacity="0"
-                            />
-                        </linearGradient>
-                    </defs>
-
-                    {/* Background base */}
-                    <rect
-                        width="1600"
-                        height="660"
-                        fill="#0a86bf"
-                    />
-
-                    {/* Flowing water streaks */}
-                    <g transform="rotate(-9 800 330)">
-                        <rect
-                            x="-400"
-                            y="-400"
-                            width="2400"
-                            height="1460"
-                            filter="url(#wave-water)"
-                        />
-                    </g>
-
-                    {/* Dark upper-water shading */}
-                    <rect
-                        width="1600"
-                        height="660"
-                        fill="url(#wave-shade)"
-                    />
-
-                    {/* Diagonal white foam */}
-                    <g mask="url(#foam-mask)">
-                        <g transform="rotate(-14 800 330)">
-                            <rect
-                                x="-400"
-                                y="-400"
-                                width="2400"
-                                height="1460"
-                                filter="url(#wave-foam)"
-                            />
-                        </g>
-                    </g>
-                </svg>
-
-                {/* Soft Organic Fade Masks into the Canvas */}
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-50 dark:from-[#030712] via-slate-50/80 dark:via-[#030712]/85 via-[18%] to-transparent to-[42%] w-full h-full pointer-events-none" />
-                <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-slate-50 dark:from-[#030712] via-slate-50/60 dark:via-[#030712]/60 to-transparent pointer-events-none" />
-                <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-slate-50 dark:from-[#030712] to-transparent pointer-events-none" />
+        <section className="relative overflow-hidden h-[640px] sm:h-[600px]">
+            <div className="absolute inset-y-0 right-0 w-full lg:w-[72%]">
+                <OceanWaves />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#f4f8ff] via-[#f4f8ff]/70 to-transparent" />
             </div>
+            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f4f8ff] via-[#f4f8ff]/80 to-transparent" />
+            {/* decorative ring + dots on the left edge */}
+            <div className="hidden lg:block absolute -left-[270px] top-[170px] w-[290px] h-[290px] rounded-full border border-sky-400/50" />
+            <div className="hidden lg:block absolute left-[76px] top-[480px] w-2 h-2 rounded-full bg-[#1a6dff]" />
+            <Dots rows={7} cols={5} className="hidden lg:grid absolute left-2 bottom-12" />
 
-            {/* Ambient liquid background glows */}
-            <div className="fixed inset-0 z-0 pointer-events-none opacity-100 dark:opacity-35 dark:mix-blend-screen transform-gpu overflow-hidden">
-                <div className="absolute top-[-10%] left-[-10%] w-[45%] h-[45%] rounded-full bg-sky-400/35 dark:bg-sky-300/30 blur-[120px] animate-liquid-float" />
-                <div className="absolute top-[25%] right-[-10%] w-[45%] h-[45%] rounded-full bg-blue-500/25 dark:bg-blue-400/20 blur-[120px] animate-liquid-float-rev" style={{ animationDelay: "2s" }} />
-                <div className="absolute bottom-[-10%] left-[10%] w-[55%] h-[55%] rounded-full bg-indigo-400/25 dark:bg-indigo-300/20 blur-[130px] animate-liquid-float" style={{ animationDelay: "4s" }} />
-                <div className="absolute bottom-[15%] right-[10%] w-[40%] h-[40%] rounded-full bg-cyan-400/35 dark:bg-cyan-300/25 blur-[100px] animate-liquid-float-rev" style={{ animationDelay: "1s" }} />
-            </div>
-
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-                {/* ============================================================ */}
-                {/* 1. HERO SECTION */}
-                {/* ============================================================ */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-4 items-center min-h-[480px] sm:min-h-[560px]">
-
-                    {/* Left: Text & CTA */}
-                    <div className="lg:col-span-6 space-y-6 lg:pr-2 z-10">
-                        <div className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
-                            <span className="text-[11px] font-bold tracking-[0.22em] text-blue-600 dark:text-sky-400 uppercase">
-                                ABOUT LEnSE
-                            </span>
-                        </div>
-
-                        <h1 className="text-5xl sm:text-6xl lg:text-[4.5rem] font-normal text-slate-900 dark:text-white leading-[1.05] tracking-tight font-serif">
+            <Wrap className="h-full pt-28 sm:pt-[84px]">
+                <div className="grid lg:grid-cols-12 items-start gap-8">
+                    <div className="lg:col-span-6 space-y-5">
+                        <span className={`flex items-center gap-2 text-[8px] font-bold tracking-[0.22em] uppercase ${BLUE}`}>
+                            <span className="w-1 h-1 rounded-full bg-[#1a6dff]" />ABOUT LENSE
+                        </span>
+                        <h1 style={SERIF} className="text-[44px] sm:text-[58px] leading-[1.05] tracking-tight text-slate-900 font-normal">
                             Learning today.<br />
-                            <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-500 dark:from-sky-300 dark:via-sky-400 dark:to-blue-400 font-serif font-normal">
-                                Sustaining tomorrow.
-                            </span>
+                            <em className={`${BLUE} font-normal`}>Sustaining<br />tomorrow.</em>
                         </h1>
-
-                        <p className="text-slate-600 dark:text-slate-300 text-[13px] sm:text-[13.5px] leading-[1.74] max-w-[430px] font-normal">
-                            The Centre for Learning, Engineering and Sustainability Education (LEnSE) at the University of Kerala was established in 2024 with the vision of promoting innovative, inclusive and sustainable approaches to education. We integrate various STEM domains, technology, engineering and mathematics education. The Centre serves as a platform for academic engagement, capacity building, knowledge sharing, and collaboration at national and international levels, strengthening learning processes through practice.
+                        <p className="text-slate-600 text-[11px] leading-[1.8] max-w-[400px]">
+                            The Centre for Learning Engineering and Sustainability Education (LEnSE) at the University of Kerala is established in 2024 with the vision of promoting innovative, inclusive, and sustainable approaches to education. Working at the intersection of technology, engineering and mathematics education, the Centre serves as a platform for academic engagement, capacity building, knowledge sharing, and collaboration for a better and more sustainable future.
                         </p>
-
-                        <div className="pt-2">
-                            <Link href="/academics" className="inline-flex">
-                                <button className="px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white text-[11px] font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-[0_12px_28px_rgba(2,132,199,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:scale-[1.03] group cursor-pointer border border-sky-400/30">
-                                    <span>OUR PROGRAMMES</span>
-                                    <div className="w-5 h-5 rounded-full border border-white/40 flex items-center justify-center">
-                                        <ArrowRight size={10} className="text-white group-hover:translate-x-0.5 transition-transform" />
-                                    </div>
-                                </button>
-                            </Link>
-                        </div>
-                    </div>
-
-                    {/* Right: Transparent Crystal Glass "Established in 2024" Card */}
-                    <div className="lg:col-span-6 relative flex items-center justify-start lg:justify-center min-h-[340px] sm:min-h-[420px]">
-
-                        {/* Real Transparent Glass Card */}
-                        <div className="relative lg:ml-[-40px] xl:ml-[-80px] bg-gradient-to-br from-white/70 via-white/45 to-white/20 dark:from-[#0a182e]/85 dark:via-[#071325]/80 dark:to-[#030914]/75 backdrop-blur-2xl p-6 sm:p-7 rounded-[2.2rem] border-[1.5px] border-white/95 dark:border-blue-900/40 shadow-[inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(255,255,255,0.3),inset_2px_0_4px_rgba(255,255,255,0.8),0_25px_50px_-10px_rgba(2,132,199,0.18)] dark:shadow-[0_25px_50px_-10px_rgba(0,0,0,0.6)] w-56 sm:w-64 z-20 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_30px_60px_-10px_rgba(2,132,199,0.25)]">
-
-                            {/* Top-Left Specular Corner Sheen */}
-                            <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-white/70 via-white/20 to-transparent dark:from-white/10 dark:via-transparent rounded-tl-[2.2rem] pointer-events-none" />
-
-                            {/* 3D Glass Crystal Lens Badge (Unclipped) */}
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-b from-white/95 via-white/65 to-white/30 dark:from-sky-950/90 dark:to-blue-950/90 backdrop-blur-2xl border-[1.5px] border-white dark:border-sky-500/40 shadow-[inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(0,0,0,0.06),0_10px_20px_rgba(2,132,199,0.15)] dark:shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex items-center justify-center absolute -top-5 -right-5 text-blue-600 dark:text-sky-400 z-30 transition-transform duration-500 hover:scale-110">
-                                <Sparkles size={20} strokeWidth={1.75} />
-                            </div>
-
-                            <p className="text-[10px] font-bold text-blue-800 dark:text-sky-400 uppercase tracking-[0.2em] mb-1.5 relative z-10 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-none">
-                                ESTABLISHED IN
-                            </p>
-
-                            <h3 className="text-4xl sm:text-5xl font-serif text-slate-900 dark:text-white mb-3 tracking-tight font-normal relative z-10 drop-shadow-[0_1px_1px_rgba(255,255,255,0.6)] dark:drop-shadow-none">
-                                2024
-                            </h3>
-
-                            <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium mb-3 relative z-10 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-none">
-                                Promoting innovative, inclusive and sustainable approaches to education.
-                            </p>
-
-                            <div className="w-6 h-[2px] bg-blue-600 dark:bg-sky-400 rounded-full mt-2 relative z-10" />
-                        </div>
-
-                        {/* Floating circular document / brochure badge at bottom right */}
-                        <div className="absolute right-4 sm:right-14 bottom-4 sm:bottom-6 w-11 h-11 rounded-full bg-white/95 dark:bg-[#0a182e]/90 backdrop-blur-xl border border-white/90 shadow-md flex items-center justify-center text-red-500 hover:scale-110 transition-transform cursor-pointer">
-                            <FileText size={18} />
-                        </div>
-
-                    </div>
-                </div>
-
-                {/* ============================================================ */}
-                {/* 2. FOUR FEATURE CARDS DOCK */}
-                {/* ============================================================ */}
-                <div className="mt-8 sm:mt-12 p-3 sm:p-5 rounded-[2.8rem] bg-white/75 dark:bg-[#0a182e]/85 backdrop-blur-2xl border-[1.5px] border-white/90 dark:border-blue-900/40 shadow-[0_20px_50px_rgba(2,132,199,0.06)] dark:shadow-[0_25px_60px_-10px_rgba(0,0,0,0.5)] relative z-20 transition-all duration-500">
-
-                    {/* Top Specular Edge Highlight Beam */}
-                    <div className="absolute top-0 left-8 right-8 h-[1.5px] bg-gradient-to-r from-transparent via-white dark:via-white/20 to-transparent opacity-95 pointer-events-none" />
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/70 dark:divide-blue-900/40 relative z-10">
-                        {[
-                            { icon: Users, title: 'Inclusive by\nPurpose', desc: 'Creating opportunities\nfor all learners.' },
-                            { icon: HeartHandshake, title: 'Sustainability\nat Core', desc: 'Advancing systemic and\nfuture-ready minds.' },
-                            { icon: GraduationCap, title: 'STEM\nFocused', desc: 'Interdisciplinary\nand industry-relevant.' },
-                            { icon: Globe, title: 'Global\nConnections', desc: 'Collaborating across\nborders for knowledge\nand growth.' }
-                        ].map((ft, i) => (
-                            <div key={i} className="flex flex-col items-center text-center p-6 sm:p-8 group hover:bg-white/40 dark:hover:bg-white/5 transition-all duration-300 rounded-[2.2rem] relative">
-
-                                {/* Soft Blue Circle Pod */}
-                                <div className="w-14 h-14 rounded-full bg-blue-50 dark:bg-sky-950/60 border border-blue-100 dark:border-sky-500/30 flex items-center justify-center text-blue-600 dark:text-sky-400 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                                    <ft.icon size={22} strokeWidth={1.5} />
-                                </div>
-
-                                <h4 className="text-[17px] font-serif font-semibold text-slate-900 dark:text-white mb-2 leading-snug whitespace-pre-line drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)] dark:drop-shadow-none">
-                                    {ft.title}
-                                </h4>
-
-                                <p className="text-[11.5px] text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line font-medium drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)] dark:drop-shadow-none">
-                                    {ft.desc}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* ============================================================ */}
-                {/* 3. ABOUT LEnSE CIRCULAR POD COMPOSITION (FROM MOCKUP) */}
-                {/* ============================================================ */}
-                <div className="mt-24 sm:mt-32 lg:mt-36 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center relative z-20">
-
-                    {/* Left Column: Text & CTA */}
-                    <div className="lg:col-span-5 space-y-6">
-                        <div className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
-                            <span className="text-[11px] font-bold tracking-[0.2em] text-blue-600 dark:text-sky-400 uppercase">
-                                ABOUT LEnSE
+                        <Link href="/academics" className="inline-flex pt-1">
+                            <span className="px-6 py-3 rounded-full bg-gradient-to-r from-[#0a6cff] to-[#1fa2ff] text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-3 shadow-[0_12px_26px_rgba(10,108,255,0.4)] hover:scale-[1.03] transition">
+                                OUR PROGRAMMES <ArrowRight size={12} />
                             </span>
-                        </div>
-
-                        <h2 className="text-4xl lg:text-5xl font-serif font-normal text-slate-900 dark:text-white leading-[1.12] tracking-tight">
-                            Empowering minds.<br />
-                            Building a <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-500 dark:from-sky-300 dark:via-sky-400 dark:to-blue-400 font-serif">sustainable future.</span>
-                        </h2>
-
-                        <p className="text-slate-600 dark:text-slate-300 text-[13.5px] leading-[1.7] font-normal max-w-md">
-                            LEnSE organises seminars, workshops, conferences, training programmes, and academic activities that engage a diverse audience, learning experiences for students, and professionals across STEM.
-                        </p>
-                        <p className="text-slate-600 dark:text-slate-300 text-[13.5px] leading-[1.7] font-normal max-w-md">
-                            Through collaborations with reputed institutions, including SIET (Govt. of Kerala), Child Development Centre Kazhakkoottam, REFORM, and Clarkson University (USA), we create meaningful opportunities for students, teachers, scholars, and communities.
-                        </p>
-
-                        <div className="pt-2">
-                            <Link href="/projects" className="inline-flex">
-                                <button className="px-7 py-3.5 rounded-full bg-white/80 hover:bg-white dark:bg-[#0a182e] dark:hover:bg-[#0f2444] backdrop-blur-xl border-[1.5px] border-slate-200 dark:border-blue-900/50 shadow-sm text-blue-950 dark:text-sky-300 text-[11px] font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-500 hover:scale-[1.03] group cursor-pointer hover:shadow-[0_8px_25px_rgba(2,132,199,0.18)]">
-                                    <span>Explore Research & Projects</span>
-                                    <div className="w-5 h-5 rounded-full border border-slate-300 dark:border-blue-700/50 flex items-center justify-center">
-                                        <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform" />
-                                    </div>
-                                </button>
-                            </Link>
-                        </div>
+                        </Link>
                     </div>
 
-                    {/* Right Column: Circular Campus Portal with 4 Floating Pods */}
-                    <div className="lg:col-span-7 relative w-full max-w-[480px] sm:max-w-[520px] h-[460px] sm:h-[500px] mx-auto flex items-center justify-center">
-
-                        {/* Thin Orbital Rings & Satellite Beacons */}
-                        <div className="absolute inset-2 sm:inset-4 rounded-full border border-blue-400/25 border-dashed pointer-events-none animate-spin" style={{ animationDuration: '60s' }} />
-                        <div className="absolute -inset-4 sm:-inset-6 rounded-full border border-sky-300/20 pointer-events-none" />
-
-                        {/* Glowing Satellite Dots on Orbits */}
-                        <div className="absolute top-8 left-14 w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
-                        <div className="absolute bottom-16 right-8 w-3 h-3 rounded-full bg-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.8)]" />
-                        <div className="absolute top-1/2 -right-3 w-2 h-2 rounded-full bg-indigo-500" />
-                        <div className="absolute bottom-8 left-16 w-2 h-2 rounded-full bg-cyan-400" />
-
-                        {/* Central Circular Campus Building Image */}
-                        <div className="relative w-64 h-64 sm:w-72 sm:h-72 md:w-[320px] md:h-[320px] rounded-full overflow-hidden border-[6px] border-white/95 dark:border-blue-900/60 shadow-[0_25px_60px_rgba(2,132,199,0.16)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.6)] z-10 group">
-                            <img
-                                src="/campus_building.jpg"
-                                alt="LEnSE Campus Building"
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                            />
+                    <div className="lg:col-span-6 relative h-[260px] hidden sm:block">
+                        <div className="absolute left-[40%] top-[8%] w-[250px] rounded-[1.4rem] p-5 bg-white/30 backdrop-blur-md border border-white/70 shadow-[0_20px_50px_rgba(2,60,140,0.25),inset_0_1px_0_rgba(255,255,255,0.9)]">
+                            <span className="absolute -top-3 -right-3 w-7 h-7 rounded-full bg-white/80 border border-white text-sky-500 flex items-center justify-center shadow">
+                                <Sparkles size={13} />
+                            </span>
+                            <p className="text-[7px] font-bold tracking-[0.2em] text-slate-600 uppercase">ESTABLISHED IN</p>
+                            <p style={SERIF} className="text-5xl text-slate-900 leading-tight my-1">2024</p>
+                            <p className="text-[9px] text-slate-600 leading-snug max-w-[150px]">Promoting innovative, inclusive and sustainable education.</p>
                         </div>
-
-                        {/* 1. Top Pill: People */}
-                        <div className="absolute top-0 sm:top-2 left-6 sm:left-10 z-20">
-                            <div className="flex items-center gap-3 bg-white/95 dark:bg-[#0a182e]/90 backdrop-blur-xl border border-white/90 dark:border-blue-800/40 shadow-[0_10px_30px_rgba(2,132,199,0.12)] rounded-full py-2 px-3.5 pr-5 hover:scale-105 transition-all">
-                                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center shrink-0 shadow-sm">
-                                    <Users size={15} />
-                                </div>
-                                <div className="text-left">
-                                    <h5 className="text-xs font-bold text-slate-900 dark:text-white leading-tight">People</h5>
-                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Learning for a better tomorrow</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* 2. Right Pill: Technology */}
-                        <div className="absolute top-[36%] -right-2 sm:-right-6 z-20">
-                            <div className="flex items-center gap-3 bg-white/95 dark:bg-[#0a182e]/90 backdrop-blur-xl border border-white/90 dark:border-blue-800/40 shadow-[0_10px_30px_rgba(2,132,199,0.12)] rounded-full py-2 px-3.5 pr-5 hover:scale-105 transition-all">
-                                <div className="w-8 h-8 rounded-full bg-sky-500 text-white flex items-center justify-center shrink-0 shadow-sm">
-                                    <Cpu size={15} />
-                                </div>
-                                <div className="text-left">
-                                    <h5 className="text-xs font-bold text-slate-900 dark:text-white leading-tight">Technology</h5>
-                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Innovation with purpose</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* 3. Bottom-Left Pill: Collaboration */}
-                        <div className="absolute bottom-6 -left-2 sm:-left-4 z-20">
-                            <div className="flex items-center gap-3 bg-white/95 dark:bg-[#0a182e]/90 backdrop-blur-xl border border-white/90 dark:border-blue-800/40 shadow-[0_10px_30px_rgba(2,132,199,0.12)] rounded-full py-2 px-3.5 pr-5 hover:scale-105 transition-all">
-                                <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
-                                    <HeartHandshake size={15} />
-                                </div>
-                                <div className="text-left">
-                                    <h5 className="text-xs font-bold text-slate-900 dark:text-white leading-tight">Collaboration</h5>
-                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Stronger together</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* 4. Bottom-Right Pill: Sustainability */}
-                        <div className="absolute -bottom-1 sm:bottom-1 right-2 sm:right-6 z-20">
-                            <div className="flex items-center gap-3 bg-white/95 dark:bg-[#0a182e]/90 backdrop-blur-xl border border-white/90 dark:border-blue-800/40 shadow-[0_10px_30px_rgba(2,132,199,0.12)] rounded-full py-2 px-3.5 pr-5 hover:scale-105 transition-all">
-                                <div className="w-8 h-8 rounded-full bg-cyan-500 text-white flex items-center justify-center shrink-0 shadow-sm">
-                                    <Leaf size={15} />
-                                </div>
-                                <div className="text-left">
-                                    <h5 className="text-xs font-bold text-slate-900 dark:text-white leading-tight">Sustainability</h5>
-                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Solutions for a resilient world</p>
-                                </div>
-                            </div>
-                        </div>
-
+                        <span className="absolute right-[10%] bottom-[-6%] w-6 h-6 rounded-full bg-white/90 text-rose-500 flex items-center justify-center shadow-[0_6px_14px_rgba(244,63,94,0.35)]">
+                            <FileText size={11} />
+                        </span>
                     </div>
                 </div>
+            </Wrap>
+        </section>
+    );
+}
 
-                {/* ============================================================ */}
-                {/* 4. OUR OBJECTIVES (FROM MOCKUP) */}
-                {/* ============================================================ */}
-                <div className="mt-24 sm:mt-32 lg:mt-36 relative z-20">
-                    <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-6 mb-10">
-                        <div>
-                            <div className="flex items-center gap-2 mb-3">
-                                <div className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
-                                <span className="text-[10.5px] font-bold tracking-[0.2em] text-blue-600 dark:text-sky-400 uppercase">
-                                    OUR OBJECTIVES
-                                </span>
-                            </div>
-                            <h2 className="text-4xl lg:text-5xl font-serif font-normal text-slate-900 dark:text-white leading-[1.12] tracking-tight">
-                                Guiding our vision.<br />
-                                <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-500 dark:from-sky-300 dark:via-sky-400 dark:to-blue-400 font-serif font-normal">
-                                    Driving meaningful change.
-                                </span>
+/* ---------- section 01 vision diagram ---------- */
+function VisionNode({ icon: Icon, title, desc, pos, tone = 'blue' }) {
+    return (
+        <div className={`absolute ${pos} w-[45%] ${GLASS} rounded-[2.4rem] p-5`}>
+            <span className={`w-9 h-9 rounded-full bg-white border ${tone === 'green' ? 'border-emerald-200 text-emerald-500' : 'border-blue-100 text-[#1a6dff]'} flex items-center justify-center shadow-sm mb-3`}>
+                <Icon size={17} strokeWidth={1.6} />
+            </span>
+            <h5 className="text-[13px] font-bold text-slate-900 leading-tight">{title}</h5>
+            <p className="text-[9.5px] text-slate-500 leading-snug mt-1.5">{desc}</p>
+        </div>
+    );
+}
+
+function VisionDiagram() {
+    return (
+        <div className="relative w-full max-w-[600px] h-[560px] mx-auto">
+            <div className="absolute inset-0 rounded-[4rem] bg-gradient-to-br from-white/70 via-sky-100/60 to-blue-100/50 blur-[2px]" />
+            <svg viewBox="0 0 600 560" className="absolute inset-0 w-full h-full" fill="none">
+                <circle cx="300" cy="280" r="170" stroke="#38bdf8" strokeOpacity="0.35" strokeDasharray="4 6" />
+                <circle cx="300" cy="280" r="135" stroke="#93c5fd" strokeOpacity="0.4" />
+                <path d="M150 140 Q230 200 255 235 M450 140 Q370 200 345 235 M150 420 Q230 360 255 325 M450 420 Q370 360 345 325" stroke="#38bdf8" strokeOpacity="0.55" strokeDasharray="3 4" />
+                {[[150, 140], [450, 140], [150, 420], [450, 420], [300, 95]].map(([x, y], i) => (
+                    <circle key={i} cx={x} cy={y} r="3.5" fill="#38bdf8" />
+                ))}
+            </svg>
+            <VisionNode icon={Tag} title="Innovative Education" desc="Creating new approaches to teaching and learning with technology." pos="top-3 left-2" />
+            <VisionNode icon={UsersRound} title="Inclusive Opportunities" desc="Equal learning opportunities for all learners, without barriers." pos="top-6 right-2" />
+            <VisionNode icon={Leaf} tone="green" title="Sustainable Practices" desc="Integrating sustainability into education and community engagement." pos="bottom-6 left-2" />
+            <VisionNode icon={Atom} title="STEM Excellence" desc="Advancing Science, Technology, Engineering and Mathematics education." pos="bottom-3 right-2" />
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 rounded-full bg-gradient-to-br from-white via-sky-50 to-sky-100 border-[3px] border-white shadow-[0_20px_60px_rgba(37,99,235,0.28),inset_0_2px_8px_#fff] flex flex-col items-center justify-center text-center p-6 z-10">
+                <span style={SERIF} className="text-sm text-slate-600">Our</span>
+                <span style={SERIF} className="text-4xl text-slate-900 leading-none">Vision</span>
+                <p className="text-[9px] text-slate-500 leading-snug mt-3 max-w-[110px]">Innovative education for a sustainable future.</p>
+            </div>
+        </div>
+    );
+}
+
+/* ---------- glass slabs for flagship card ---------- */
+function Slabs() {
+    const slabs = [
+        { x: 120, y: 30, h: 130, c: '#bae6fd', o: 0.55 },
+        { x: 95, y: 42, h: 130, c: '#60a5fa', o: 0.65 },
+        { x: 70, y: 56, h: 128, c: '#3b82f6', o: 0.75 },
+        { x: 45, y: 72, h: 120, c: '#1d4ed8', o: 0.85 },
+    ];
+    return (
+        <svg viewBox="0 0 240 220" className="w-full h-auto drop-shadow-[0_25px_35px_rgba(37,99,235,0.35)]" fill="none">
+            <ellipse cx="120" cy="196" rx="90" ry="14" fill="#38bdf8" opacity="0.35" />
+            {slabs.map((s, i) => (
+                <g key={i}>
+                    <path d={`M${s.x} ${s.y} L${s.x + 55} ${s.y + 23} L${s.x + 55} ${s.y + s.h + 23} L${s.x} ${s.y + s.h} Z`} fill={s.c} fillOpacity={s.o} stroke="#fff" strokeOpacity="0.8" />
+                    <path d={`M${s.x - 10} ${s.y - 5} L${s.x} ${s.y} L${s.x} ${s.y + s.h} L${s.x - 10} ${s.y + s.h - 5} Z`} fill="#fff" fillOpacity="0.5" stroke="#fff" strokeOpacity="0.8" />
+                </g>
+            ))}
+            <rect x="196" y="176" width="14" height="14" rx="3" fill="#1a6dff" transform="rotate(45 203 183)" />
+        </svg>
+    );
+}
+
+/* ---------- logo ---------- */
+function Logo() {
+    return (
+        <div className="flex items-end gap-1">
+            <svg width="44" height="44" viewBox="0 0 44 44">
+                <ellipse cx="22" cy="12" rx="6" ry="11" fill="#2563eb" />
+                <ellipse cx="12" cy="20" rx="6" ry="10" fill="#22c55e" transform="rotate(-50 12 20)" />
+                <ellipse cx="32" cy="20" rx="6" ry="10" fill="#f59e0b" transform="rotate(50 32 20)" />
+                <ellipse cx="15" cy="31" rx="5" ry="9" fill="#ef4444" transform="rotate(-20 15 31)" />
+                <ellipse cx="29" cy="31" rx="5" ry="9" fill="#8b5cf6" transform="rotate(20 29 31)" />
+            </svg>
+            <span style={SERIF} className="text-xl text-slate-800 mb-1">LEnSE</span>
+        </div>
+    );
+}
+
+const XIcon = () => (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.2 2h3.3l-7.2 8.3L22.8 22h-6.7l-5.2-6.8L4.9 22H1.6l7.7-8.8L1.2 2H8l4.7 6.2L18.2 2zm-1.2 18h1.8L7.1 3.9H5.2L17 20z" /></svg>
+);
+
+const Swirl = ({ className = '' }) => (
+    <div className={`absolute pointer-events-none rounded-full bg-gradient-to-br from-sky-300/50 to-blue-500/40 blur-2xl ${className}`} />
+);
+
+/* thin flowing line used behind sections 03 / 04 */
+const Flow = ({ className = '' }) => (
+    <svg className={`absolute pointer-events-none ${className}`} viewBox="0 0 800 160" fill="none" preserveAspectRatio="none">
+        <path d="M0 150 C200 20 420 10 800 60" stroke="#3b82f6" strokeOpacity="0.55" strokeWidth="1.2" />
+        <path d="M0 160 C220 50 440 40 800 90" stroke="#38bdf8" strokeOpacity="0.4" strokeWidth="1" />
+        <path d="M0 140 C180 0 400 -10 800 30" stroke="#93c5fd" strokeOpacity="0.5" strokeWidth="1" />
+    </svg>
+);
+
+/* =========================================================================
+   PAGE
+   ========================================================================= */
+export default function AboutPage() {
+    return (
+        <div className="min-h-screen bg-[#f4f8ff] text-slate-900 font-sans overflow-x-hidden relative" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+            <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Mrs+Saint+Delafield&display=swap');`}</style>
+
+            <Hero />
+
+            {/* ================= 01 ABOUT THE CENTRE ================= */}
+            <section className="relative pt-6 pb-24">
+                <Swirl className="-left-24 bottom-0 w-96 h-72 rotate-12" />
+                <Swirl className="-right-20 top-10 w-72 h-72 opacity-60" />
+                <Dots rows={9} cols={7} className="hidden lg:grid absolute left-10 top-8 opacity-60" />
+                <Wrap>
+                    <div className="grid lg:grid-cols-12 gap-10 items-center">
+                        <div className="lg:col-span-6 space-y-5">
+                            <SectionTag number="01" text="ABOUT THE CENTRE" />
+                            <h2 style={SERIF} className="text-[38px] sm:text-5xl leading-[1.12] tracking-tight font-normal text-slate-900">
+                                Centre for Learning<br />Engineering and<br />
+                                <Em>Sustainability Education</Em>
+                            </h2>
+                            <p className="text-slate-600 text-[11.5px] leading-[1.85] max-w-[600px]">
+                                The Centre for Learning Engineering and Sustainability Education (LEnSE) was established in 2024 at the University of Kerala with the vision of promoting innovative, inclusive, and sustainable approaches to education, with a special focus on STEM (Science, Technology, Engineering and Mathematics) education.
+                            </p>
+                            <p className="text-slate-600 text-[11.5px] leading-[1.85] max-w-[600px]">
+                                The Centre serves as a platform for academic engagement, capacity building, knowledge sharing, and collaborative initiatives aimed at strengthening learning and teaching practices. Through its diverse academic, training, research and outreach activities, LEnSE strives to build a strong ecosystem for innovative education and contribute to a scientifically literate, creative and sustainable society.
+                            </p>
+                            <PillBtn href="/initiatives">MORE ABOUT LENSE</PillBtn>
+                        </div>
+                        <div className="lg:col-span-6"><VisionDiagram /></div>
+                    </div>
+                </Wrap>
+            </section>
+
+            {/* ================= 02 FOCUS AREAS ================= */}
+            <section className="relative bg-gradient-to-br from-[#06265f] via-[#0b3a9a] to-[#3b78ee] text-white overflow-hidden pt-14 pb-14">
+                <svg className="absolute inset-0 w-full h-full opacity-40" viewBox="0 0 1200 400" preserveAspectRatio="none" fill="none">
+                    <path d="M0 60 C300 -60 500 220 800 80 C1000 0 1100 60 1200 20 L1200 0 L0 0Z" fill="#7dd3fc" opacity="0.5" />
+                    <path d="M0 300 C300 160 600 400 1200 220 L1200 400 L0 400Z" fill="#60a5fa" opacity="0.35" />
+                </svg>
+                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#dbeafe]/50 to-transparent pointer-events-none" />
+                <Wrap>
+                    <div className="grid lg:grid-cols-2 gap-6 items-end">
+                        <div className="space-y-4">
+                            <SectionTag number="02" text="OUR FOCUS AREAS" light circle />
+                            <h2 style={SERIF} className="text-4xl sm:text-[46px] leading-[1.12] font-normal">
+                                Building a stronger<br />ecosystem <Em light>for education.</Em>
                             </h2>
                         </div>
-
-                        <div className="flex flex-col sm:items-end gap-3 max-w-md">
-                            <p className="text-xs text-slate-500 dark:text-slate-400 font-normal sm:text-right leading-relaxed">
-                                LEnSE is committed to advancing education, research and outreach through a set of core objectives that create long-term impact.
+                        <div className="flex items-end gap-6 lg:justify-end">
+                            <p className="text-[10.5px] text-sky-100/85 leading-relaxed max-w-[310px]">
+                                We work at the intersection of learning, technology and sustainability to create meaningful opportunities for students, teachers and the wider community.
                             </p>
-                            <Link href="/projects" className="shrink-0">
-                                <button className="px-6 py-3 rounded-full bg-[#0a182e] hover:bg-[#13233c] text-white text-[11px] font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-sm hover:scale-[1.03] group cursor-pointer">
-                                    <span>VIEW ALL OBJECTIVES</span>
-                                    <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
-                                </button>
-                            </Link>
+                            <div className="flex gap-2 shrink-0">
+                                {[ChevronLeft, ChevronRight].map((Ic, i) => (
+                                    <button key={i} aria-label={i ? 'Next' : 'Previous'} className="w-7 h-7 rounded-full bg-white/90 text-[#1a6dff] flex items-center justify-center hover:bg-white">
+                                        <Ic size={14} />
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
                         {[
-                            {
-                                num: '01',
-                                icon: BookOpen,
-                                title: 'Accessible\nEducation',
-                                desc: 'Create inclusive and equitable learning opportunities for diverse communities.'
-                            },
-                            {
-                                num: '02',
-                                icon: Monitor,
-                                title: 'Innovative\nDigital Tools',
-                                desc: 'Develop and promote digital resources for enhanced teaching and learning.'
-                            },
-                            {
-                                num: '03',
-                                icon: Brain,
-                                title: 'Learning\nEngineering',
-                                desc: 'Combine evidence-based practices in education through research and experimentation.'
-                            },
-                            {
-                                num: '04',
-                                icon: Leaf,
-                                title: 'Sustainability\nEducation',
-                                desc: 'Integrate sustainability principles across STEM education.'
-                            },
-                            {
-                                num: '05',
-                                icon: Globe,
-                                title: 'Equity & Global\nAwareness',
-                                desc: 'Foster a globally conscious and socially responsible learning community.'
-                            }
-                        ].map((obj, i) => (
-                            <div
-                                key={i}
-                                className="bg-white/80 dark:bg-[#0a182e]/85 backdrop-blur-xl border border-white/90 dark:border-blue-900/40 rounded-[2rem] p-6 sm:p-7 flex flex-col justify-between shadow-[0_15px_35px_rgba(2,132,199,0.05)] dark:shadow-[0_15px_35px_rgba(0,0,0,0.4)] hover:-translate-y-1.5 transition-all duration-300 h-full group"
-                            >
-                                <div className="flex items-center justify-between mb-8">
-                                    <span className="text-2xl font-serif text-blue-500/80 dark:text-sky-400/80 font-normal">
-                                        {obj.num}
-                                    </span>
-                                    <div className="w-11 h-11 rounded-full bg-blue-50 dark:bg-sky-950/60 border border-blue-100 dark:border-sky-500/30 flex items-center justify-center text-blue-600 dark:text-sky-400 group-hover:scale-110 transition-transform">
-                                        <obj.icon size={19} />
-                                    </div>
-                                </div>
+                            { n: '01', icon: GraduationCap, t: 'Academic Engagement', d: 'Organising seminars, workshops, conferences and training programmes in emerging areas.' },
+                            { n: '02', icon: Users, t: 'Capacity Building', d: 'Strengthening the skills and competencies of teachers, students and academic communities.' },
+                            { n: '03', icon: BookOpen, t: 'Knowledge Sharing', d: 'Creating platforms for collaboration, research discussions and innovation.' },
+                            { n: '04', icon: Globe, t: 'Collaborative Initiatives', d: 'Partnering with reputed institutions and organizations for greater impact.' },
+                        ].map((c) => (
+                            <div key={c.n} className="rounded-[1.4rem] bg-white/90 backdrop-blur text-slate-900 p-5 min-h-[250px] flex flex-col justify-between shadow-[0_18px_40px_rgba(3,21,51,0.3)] hover:-translate-y-1 transition">
                                 <div>
-                                    <h4 className="text-[17px] font-serif font-semibold text-slate-900 dark:text-white mb-2 leading-snug whitespace-pre-line">
-                                        {obj.title}
-                                    </h4>
-                                    <p className="text-[12px] text-slate-600 dark:text-slate-300 leading-[1.65] font-normal">
-                                        {obj.desc}
-                                    </p>
+                                    <div className="flex items-center justify-between mb-7">
+                                        <span style={SERIF} className={`text-lg ${BLUE}`}>{c.n}</span>
+                                        <c.icon size={20} strokeWidth={1.6} className={BLUE} />
+                                    </div>
+                                    <h4 className="text-[12.5px] font-bold mb-2">{c.t}</h4>
+                                    <p className="text-[10px] text-slate-600 leading-relaxed max-w-[170px]">{c.d}</p>
                                 </div>
+                                <div className="flex justify-end pt-3"><ArrowBtn /></div>
                             </div>
                         ))}
                     </div>
-                </div>
+                </Wrap>
+            </section>
 
-                {/* ============================================================ */}
-                {/* 5. KEY INITIATIVES (FROM MOCKUP) */}
-                {/* ============================================================ */}
-                <div className="mt-24 sm:mt-32 lg:mt-36 relative z-20">
-                    <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-6 mb-10">
-                        <div>
-                            <div className="flex items-center gap-2 mb-3">
-                                <div className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
-                                <span className="text-[10.5px] font-bold tracking-[0.2em] text-blue-600 dark:text-sky-400 uppercase">
-                                    KEY INITIATIVES
-                                </span>
-                            </div>
-                            <h2 className="text-4xl lg:text-5xl font-serif font-normal text-slate-900 dark:text-white leading-[1.12] tracking-tight">
-                                Initiatives for<br />
-                                <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-500 dark:from-sky-300 dark:via-sky-400 dark:to-blue-400 font-serif font-normal">
-                                    a brighter tomorrow.
-                                </span>
-                            </h2>
-                        </div>
+            {/* ================= 03 KEY INITIATIVES ================= */}
+            <section className="relative pt-16 pb-16">
+                <Swirl className="-right-24 top-0 w-[480px] h-48 -rotate-6 opacity-50" />
+                <Flow className="right-0 top-0 w-[60%] h-40 hidden lg:block" />
+                <Dots rows={8} cols={14} className="absolute right-24 top-24 hidden lg:grid" />
+                <Wrap>
+                    <SectionTag number="03" text="KEY INITIATIVES" />
+                    <h2 style={SERIF} className="text-4xl sm:text-5xl leading-[1.12] font-normal mt-4 mb-8">
+                        Initiatives for<br /><Em>a brighter tomorrow.</Em>
+                    </h2>
 
-                        <div className="flex flex-col sm:items-end gap-3 max-w-md">
-                            <p className="text-xs text-slate-500 dark:text-slate-400 font-normal sm:text-right leading-relaxed">
-                                Our initiatives bring together education, research and community engagement to address real-world challenges and create lasting impact.
+                    <div className="grid lg:grid-cols-12 gap-5 items-stretch">
+                        <div className={`lg:col-span-5 ${GLASS} rounded-[1.8rem] p-7 relative overflow-hidden min-h-[340px]`}>
+                            <span className="inline-flex items-center gap-1.5 text-[8px] font-bold tracking-wider uppercase text-white bg-gradient-to-r from-[#1a6dff] to-sky-400 px-3 py-1 rounded-full mb-5">
+                                <Gem size={8} /> FLAGSHIP INITIATIVE
+                            </span>
+                            <h3 style={SERIF} className="text-3xl font-normal text-slate-900 mb-3">STEM Learning Lab</h3>
+                            <p className="text-[11px] text-slate-700 leading-relaxed max-w-[250px] mb-5">
+                                A dedicated facility to provide practical, activity-based STEM training for school students, fostering curiosity, creativity, problem-solving abilities and scientific thinking.
                             </p>
-                            <Link href="/projects" className="shrink-0">
-                                <button className="px-6 py-3 rounded-full bg-white/80 hover:bg-white dark:bg-[#0a182e] border border-slate-200 dark:border-blue-900/50 text-blue-950 dark:text-sky-300 text-[11px] font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-sm hover:scale-[1.03] group cursor-pointer">
-                                    <span>EXPLORE INITIATIVES</span>
-                                    <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
-                                </button>
+                            <Link href="/initiatives" className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-md text-[10px] font-semibold text-[#1a6dff]">
+                                Learn more <ArrowRight size={11} />
                             </Link>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-
-                        {/* Left Card: Flagship Initiative (STEM Learning Lab) */}
-                        <div className="lg:col-span-5 rounded-[2.2rem] bg-gradient-to-br from-white/90 via-sky-50/50 to-blue-50/40 dark:from-[#0a182e]/95 dark:via-[#071325]/90 dark:to-[#030914]/85 backdrop-blur-2xl border-[1.5px] border-white/95 dark:border-blue-900/40 shadow-[0_20px_45px_rgba(2,132,199,0.08)] p-7 sm:p-8 flex flex-col justify-between relative overflow-hidden min-h-[460px] group transition-all duration-500 hover:-translate-y-1">
-                            <div className="relative z-10">
-                                <span className="inline-block text-[10px] font-bold tracking-wider uppercase text-blue-700 dark:text-sky-300 bg-blue-100/70 dark:bg-blue-900/50 px-3 py-1 rounded-full mb-4">
-                                    FLAGSHIP INITIATIVE
-                                </span>
-                                <h3 className="text-3xl sm:text-4xl font-serif font-normal text-slate-900 dark:text-white tracking-tight mb-3">
-                                    STEM Learning Lab
-                                </h3>
-                                <p className="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed max-w-[260px] font-normal mb-4">
-                                    An interdisciplinary initiative to provide immersive and hands-on STEM experiences for students, teachers and the wider community.
-                                </p>
-                                <Link href="/projects" className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-sky-400 hover:gap-2.5 transition-all">
-                                    <span>Learn more</span>
-                                    <ArrowRight size={12} />
-                                </Link>
-                            </div>
-
-                            {/* Round Arrow Button Bottom Left */}
-                            <div className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 dark:bg-sky-500 text-white flex items-center justify-center hover:scale-110 transition-all duration-300 cursor-pointer z-10 mt-6 shadow-[0_4px_14px_rgba(2,132,199,0.35)] shrink-0">
-                                <ArrowRight size={14} />
-                            </div>
-
-                            {/* 3D Glowing Isometric Blue Cubes on Bottom Right (Pure Code) */}
-                            <div className="absolute -bottom-4 -right-4 w-[65%] max-w-[240px] pointer-events-none group-hover:scale-105 transition-transform duration-700 z-0">
-                                <StemIsometricCubes />
-                            </div>
+                            <div className="absolute bottom-0 right-0 w-[52%] max-w-[230px] pointer-events-none"><Slabs /></div>
                         </div>
 
-                        {/* Right 4 Grid Cards (2x2 Grid) */}
-                        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="lg:col-span-7 grid sm:grid-cols-2 gap-4">
                             {[
-                                {
-                                    icon: Users,
-                                    title: 'Scholar Connect',
-                                    desc: 'Bridging schools and higher education through outreach programmes.'
-                                },
-                                {
-                                    icon: Building2,
-                                    title: 'Institutional Collaborations',
-                                    desc: 'Partnerships with national and international institutions.'
-                                },
-                                {
-                                    icon: Sparkles,
-                                    title: 'STEM 4 Girls & Gifted Camps',
-                                    desc: 'Focused programmes to encourage young minds in STEM fields.'
-                                },
-                                {
-                                    icon: Globe,
-                                    title: 'Global Academic Partnerships',
-                                    desc: 'Collaborative research and exchange programmes for a wider impact.'
-                                }
-                            ].map((item, i) => (
-                                <div
-                                    key={i}
-                                    className="rounded-[2rem] bg-white/80 dark:bg-[#0a182e]/85 backdrop-blur-xl border border-white/90 dark:border-blue-900/40 p-6 flex flex-col justify-between shadow-[0_15px_35px_rgba(2,132,199,0.05)] hover:-translate-y-1 transition-all group min-h-[190px]"
-                                >
-                                    <div className="flex items-start gap-4">
-                                        <div className="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-sky-950/60 border border-blue-100 dark:border-sky-500/30 flex items-center justify-center text-blue-600 dark:text-sky-400 shrink-0 group-hover:scale-110 transition-transform">
-                                            <item.icon size={20} />
-                                        </div>
+                                { icon: BookOpen, t: 'Specialized Programmes', d: 'STEM programmes for prospective teachers to develop innovative classroom practices.' },
+                                { icon: Users, t: 'Scholar Connect', d: 'A platform for scholars to interact, share research ideas and explore collaborative opportunities.' },
+                                { icon: FileText, t: 'Educational Outreach', d: 'STEM training for gifted students from 44 schools across Kerala in collaboration with SIET.' },
+                                { icon: Globe, t: 'Global Collaboration', d: 'International collaboration with the STEM Centre at Clarkson University, USA.' },
+                            ].map((i) => (
+                                <div key={i.t} className={`${GLASS} rounded-[1.4rem] p-5 flex flex-col justify-between min-h-[158px] hover:-translate-y-1 transition`}>
+                                    <div className="flex gap-3">
+                                        <i.icon size={22} strokeWidth={1.5} className={`${BLUE} shrink-0 mt-0.5`} />
                                         <div>
-                                            <h4 className="text-[16px] font-serif font-semibold text-slate-900 dark:text-white mb-1.5 leading-snug">
-                                                {item.title}
-                                            </h4>
-                                            <p className="text-[12px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
-                                                {item.desc}
-                                            </p>
+                                            <h4 className="text-[12px] font-bold mb-1">{i.t}</h4>
+                                            <p className="text-[9.5px] text-slate-600 leading-relaxed">{i.d}</p>
                                         </div>
                                     </div>
-                                    <div className="flex justify-end pt-3">
-                                        <div className="w-8 h-8 rounded-full border border-blue-200 dark:border-blue-700/50 flex items-center justify-center text-blue-600 dark:text-sky-400 group-hover:bg-blue-600 group-hover:text-white transition-all cursor-pointer">
-                                            <ArrowRight size={12} />
-                                        </div>
-                                    </div>
+                                    <div className="flex justify-end pt-2"><ArrowBtn className="!w-5 !h-5" /></div>
                                 </div>
                             ))}
                         </div>
-
                     </div>
-                </div>
+                </Wrap>
+            </section>
 
-                {/* ============================================================ */}
-                {/* 6. SOCIAL IMPACT BANNER (FROM MOCKUP) */}
-                {/* ============================================================ */}
-                <div className="mt-16 sm:mt-24 mb-12 rounded-[2.4rem] bg-white/80 dark:bg-[#0a182e]/85 backdrop-blur-2xl border border-white/90 dark:border-blue-900/40 shadow-[0_20px_45px_rgba(2,132,199,0.06)] p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-20">
-
-                    {/* Left 100% Metric Pod */}
-                    <div className="lg:col-span-3 rounded-[2rem] bg-gradient-to-br from-blue-50/70 via-sky-50/50 to-white/60 dark:from-[#0d1f3b] dark:to-[#071325] border border-blue-100 dark:border-blue-800/40 p-6 sm:p-7 flex flex-col items-center justify-center text-center shadow-sm">
-                        <span className="text-[10px] font-bold tracking-wider uppercase text-blue-700 dark:text-sky-300 bg-white/80 dark:bg-white/10 px-3 py-1 rounded-full mb-3 border border-blue-200/50">
-                            INVESTED IN PEOPLE
-                        </span>
-                        <span className="text-5xl sm:text-6xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600 dark:from-sky-300 dark:to-blue-400 tracking-tight mb-2">
-                            100%
-                        </span>
-                        <p className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 max-w-[170px] leading-snug">
-                            Financial assistance to vulnerable learners under the SIET scheme.
-                        </p>
-                    </div>
-
-                    {/* Middle Content */}
-                    <div className="lg:col-span-5 space-y-3.5 px-1 sm:px-3">
-                        <div className="flex items-center gap-1.5">
-                            <HeartHandshake size={14} className="text-blue-600 dark:text-sky-400" />
-                            <span className="text-[10.5px] font-bold tracking-[0.2em] text-blue-700 dark:text-sky-400 uppercase">
-                                SOCIAL IMPACT
-                            </span>
+            {/* ================= 04 PARTNERSHIPS ================= */}
+            <section className="relative py-16">
+                <Swirl className="-left-24 top-24 w-48 h-64 bg-blue-600/60" />
+                <Dots rows={7} cols={18} className="absolute left-[48%] top-6 hidden lg:grid opacity-50" />
+                <Wrap>
+                    <div className="grid lg:grid-cols-12 gap-8 items-end">
+                        <div className="lg:col-span-5 space-y-4">
+                            <SectionTag number="04" text="OUR PARTNERSHIPS" />
+                            <h2 style={SERIF} className="text-4xl sm:text-5xl leading-[1.12] font-normal">
+                                Collaborating for<br /><Em>greater impact.</Em>
+                            </h2>
+                            <p className="text-[11px] text-slate-600 leading-relaxed max-w-sm">
+                                LEnSE has established collaborations with reputed institutions and organisations to facilitate joint academic programmes, training initiatives and educational outreach activities.
+                            </p>
+                            <PillBtn href="/initiatives">OUR PARTNERS</PillBtn>
                         </div>
-                        <h2 className="text-3xl sm:text-4xl font-serif font-normal text-slate-900 dark:text-white leading-tight tracking-tight">
-                            Education with<br />social responsibility.
-                        </h2>
-                        <p className="text-[12.5px] text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl">
-                            Programmes are designed to reach and support socio-economically disadvantaged students in rural schools in Kerala, ensuring that no deserving learner is left behind.
+
+                        <div className="lg:col-span-7 relative">
+                            <div className="hidden sm:flex absolute -top-24 right-4 items-start gap-1 select-none">
+                                <span style={{ fontFamily: "'Mrs Saint Delafield', cursive" }} className="text-4xl text-slate-400 leading-[0.85] -rotate-12 text-right">
+                                    Stronger<br />Together
+                                </span>
+                                <svg width="70" height="56" viewBox="0 0 70 56" fill="none" className="text-[#1a6dff] mt-3">
+                                    <path d="M4 40 C20 -4, 55 -2, 62 40" stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 3" strokeLinecap="round" />
+                                    <path d="M56 32 L62 42 L68 31" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                {[
+                                    { icon: Landmark, t: 'State Institute of Educational Technology (SIET)', s: 'Government of Kerala' },
+                                    { icon: BookOpen, t: 'REFORM', s: 'REFORM' },
+                                    { icon: Heart, t: 'Child Development Centre', s: 'Kazhakkoottam' },
+                                    { icon: Globe, t: 'STEM Centre Clarkson University', s: 'USA' },
+                                ].map((p) => (
+                                    <div key={p.t} className={`${GLASS} rounded-[1.2rem] p-4 flex flex-col items-center text-center min-h-[150px] hover:-translate-y-1 transition`}>
+                                        <p.icon size={24} strokeWidth={1.5} className={`${BLUE} mb-3`} />
+                                        <h4 className="text-[10px] font-bold leading-snug">{p.t}</h4>
+                                        <p className="text-[8px] text-slate-500 mt-1">{p.s}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </Wrap>
+            </section>
+
+            {/* ================= 05 SOCIAL IMPACT ================= */}
+            <section className="relative py-14">
+                <Wrap>
+                    <SectionTag number="05" text="SOCIAL IMPACT" />
+                    <div className="grid lg:grid-cols-12 gap-6 items-center mt-5">
+                        <div className={`lg:col-span-4 ${GLASS} rounded-[1.8rem] p-7 relative min-h-[290px]`}>
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-[8px] font-bold tracking-wider uppercase text-[#1a6dff] bg-blue-100/70 px-3 py-1 rounded-full">EDUCATION FOR ALL</span>
+                                <FileText size={22} strokeWidth={1.4} className={BLUE} />
+                            </div>
+                            <p style={SERIF} className={`text-[88px] leading-none my-3 ${BLUE}`}>100%</p>
+                            <p className="text-[12px] text-slate-700 leading-snug mt-2 max-w-[250px]">
+                                Programme fees are utilized to support STEM education for disadvantaged students in rural schools across Kerala.
+                            </p>
+                        </div>
+
+                        <div className="lg:col-span-4 space-y-3">
+                            <h2 style={SERIF} className="text-3xl leading-[1.15] font-normal">
+                                Education with<br /><Em>social responsibility.</Em>
+                            </h2>
+                            <p className="text-[10px] text-slate-700 leading-[1.75] font-medium">
+                                The Centre follows an inclusive and socially responsible model in promoting STEM education. Programme fees collected from its training activities are utilized to support STEM education for socially and economically disadvantaged students in rural schools across Kerala, creating opportunities for students who may have limited access to quality STEM learning resources.
+                            </p>
+                        </div>
+
+                        <div className={`lg:col-span-4 ${GLASS} rounded-[1.4rem] p-6 space-y-5`}>
+                            {[
+                                { icon: Landmark, t: 'Support for rural schools' },
+                                { icon: User, t: 'Opportunities for underprivileged students' },
+                                { icon: CheckCircle2, t: 'Equitable access to STEM education' },
+                                { icon: Gem, t: 'A brighter, more inclusive future' },
+                            ].map((r) => (
+                                <div key={r.t} className="flex items-center gap-3">
+                                    <r.icon size={16} strokeWidth={1.5} className={`${BLUE} shrink-0`} />
+                                    <span className="text-[10px] text-slate-800">{r.t}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </Wrap>
+            </section>
+
+            {/* ================= 06 OBJECTIVES ================= */}
+            <section className="relative pt-14 pb-10">
+                <Swirl className="-left-24 top-10 w-64 h-64 opacity-40" />
+                <Wrap>
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
+                        <div>
+                            <SectionTag number="06" text="OUR OBJECTIVES" />
+                            <h2 style={SERIF} className="text-4xl sm:text-[44px] font-normal mt-3">Guiding our mission.</h2>
+                        </div>
+                        <p className="text-[9.5px] text-slate-500 sm:text-right max-w-[270px] leading-relaxed sm:mt-2">
+                            Our objectives reflect our commitment to innovative education, equitable access and a sustainable future.
                         </p>
-                        <div className="pt-1">
-                            <Link href="/projects" className="inline-flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-sky-400 hover:gap-3 transition-all">
-                                <span>Learn more about our outreach</span>
-                                <ArrowRight size={13} />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                        {[
+                            { n: '01', icon: GraduationCap, t: 'Career Guidance\n& Employability', d: 'Create educational environments for career guidance at secondary level and employability at higher education level, for all without barriers.' },
+                            { n: '02', icon: Monitor, t: 'Innovative\nDigital Tools', d: 'Build new digital tools to improve student learning and outcomes.' },
+                            { n: '03', icon: Settings, t: 'AI & Learning\nResearch', d: 'Integrate psychological principles of human learning and AI with computational methods for aptitude development and employability skills.' },
+                            { n: '04', icon: Leaf, t: 'Sustainability\nEducation', d: 'Create and support opportunities for learning about sustainability through coursework, research, co-curricular activities and civic engagement.' },
+                            { n: '05', icon: Globe, t: 'Global Awareness\n& Equity', d: 'Connect sustainability, global interdependence, equity and civic action, and provide research-informed professional development for teachers and school leaders.' },
+                        ].map((o) => (
+                            <div key={o.n} className={`${GLASS} rounded-[1.4rem] p-5 min-h-[320px] flex flex-col justify-between hover:-translate-y-1 transition`}>
+                                <div>
+                                    <div className="flex items-center justify-between mb-6">
+                                        <span style={SERIF} className={`text-base ${BLUE}`}>{o.n}</span>
+                                        <o.icon size={18} strokeWidth={1.5} className={BLUE} />
+                                    </div>
+                                    <h4 className="text-[11.5px] font-bold leading-snug mb-2 whitespace-pre-line">{o.t}</h4>
+                                    <p className="text-[9px] text-slate-600 leading-[1.65]">{o.d}</p>
+                                </div>
+                                <div className="flex justify-end pt-3"><ArrowBtn className="!w-5 !h-5" /></div>
+                            </div>
+                        ))}
+                    </div>
+                </Wrap>
+            </section>
+
+            {/* ================= CTA BANNER ================= */}
+            <Wrap className="py-8">
+                <div className="relative overflow-hidden rounded-[1.6rem] bg-gradient-to-r from-[#041a45] via-[#0a3a9c] to-[#1d5be0] text-white px-8 sm:px-12 py-10 shadow-[0_25px_60px_rgba(3,21,51,0.35)]">
+                    <svg className="absolute inset-0 w-full h-full opacity-40" viewBox="0 0 1200 300" preserveAspectRatio="none" fill="none">
+                        <path d="M0 220 C250 80 450 300 750 150 C950 50 1100 120 1200 40 L1200 300 L0 300Z" fill="#38bdf8" opacity="0.5" />
+                        <path d="M0 120 C200 40 400 160 600 90" stroke="#bae6fd" strokeWidth="2" />
+                    </svg>
+                    <div className="relative grid md:grid-cols-12 items-center gap-6">
+                        <div className="md:col-span-5 space-y-2">
+                            <span className="flex items-center gap-2 text-[8px] font-bold tracking-[0.22em] text-sky-200 uppercase">
+                                <span className="w-1 h-1 rounded-full bg-sky-300" />BE PART OF LENSE
+                            </span>
+                            <h2 style={SERIF} className="text-3xl sm:text-4xl leading-[1.1] font-normal">Be part of<br />a meaningful change.</h2>
+                        </div>
+                        <p className="md:col-span-4 text-[10.5px] text-sky-100/90 leading-relaxed">
+                            Collaborate, contribute, or participate in our programmes to help build a more inclusive, innovative, and sustainable future.
+                        </p>
+                        <div className="md:col-span-3 md:text-right">
+                            <Link href="/contact" className="inline-flex">
+                                <span className="px-6 py-3 rounded-full bg-white text-[#0a2a6b] font-bold text-[9px] uppercase tracking-wider flex items-center gap-3 shadow-xl hover:scale-105 transition">
+                                    GET INVOLVED <ArrowRight size={12} />
+                                </span>
                             </Link>
                         </div>
                     </div>
-
-                    {/* Right Card with Wind Turbine Mountain Landscape */}
-                    <div className="lg:col-span-4 h-56 sm:h-64 rounded-[2rem] overflow-hidden border border-white/90 shadow-md relative group">
-                        <img
-                            src="/about/wind_turbine_landscape.jpg"
-                            alt="Sustainable Future"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/65 via-slate-900/20 to-transparent flex items-end p-6">
-                            <p className="text-white text-xs sm:text-[13px] font-semibold leading-relaxed drop-shadow-md">
-                                Empowering learners.<br />
-                                Enriching communities.<br />
-                                Sustaining the future.
-                            </p>
-                        </div>
-                    </div>
-
                 </div>
+            </Wrap>
 
-                {/* ============================================================ */}
-                {/* 7. LEADERSHIP & UNIVERSITY AFFILIATION (FROM MOCKUP) */}
-                {/* ============================================================ */}
-                <div className="mt-8 mb-8 rounded-[2.4rem] bg-white/80 dark:bg-[#0a182e]/85 backdrop-blur-2xl border border-white/90 dark:border-blue-900/40 shadow-[0_20px_45px_rgba(2,132,199,0.06)] p-8 sm:p-10 relative z-20">
-                    <div className="flex items-center gap-2 mb-6">
-                        <div className="w-1.5 h-1.5 rounded-full bg-blue-600 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
-                        <span className="text-[10px] font-bold tracking-[0.2em] text-blue-700 dark:text-sky-400 uppercase">
-                            OUR LEADERSHIP
-                        </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                        {/* Left Circular Frame */}
-                        <div className="lg:col-span-3 flex justify-center lg:justify-start">
-                            <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full p-1.5 border-[3px] border-blue-500/40 shadow-lg">
-                                <img
-                                    src="/campus_building.jpg"
-                                    alt="LEnSE Campus"
-                                    className="w-full h-full object-cover rounded-full"
-                                />
-                                <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center absolute bottom-1 right-1 shadow-md hover:scale-110 transition-transform cursor-pointer">
-                                    <ArrowRight size={14} />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Middle Details */}
-                        <div className="lg:col-span-5 space-y-2">
-                            <h3 className="text-2xl sm:text-3xl font-serif font-normal text-slate-900 dark:text-white">
-                                Dr. Divya C Senan
-                            </h3>
-                            <p className="text-xs sm:text-sm font-semibold text-blue-600 dark:text-sky-400">
-                                Director, Centre for Learning, Engineering and Sustainability Education (LEnSE)
-                            </p>
-                            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl pt-1">
-                                Leading academic engagement, research initiatives, and collaborative programmes to advance inclusive and sustainable education in STEM.
-                            </p>
-                        </div>
-
-                        {/* Right Contact Card */}
-                        <div className="lg:col-span-4 space-y-3.5 p-5 sm:p-6 rounded-[1.8rem] bg-white/70 dark:bg-[#071325]/85 backdrop-blur-xl border border-white/90 dark:border-blue-900/40 shadow-sm">
-                            <div className="flex items-start gap-3 text-xs text-slate-700 dark:text-slate-300">
-                                <MapPin size={16} className="text-blue-600 dark:text-sky-400 shrink-0 mt-0.5" />
-                                <span>
-                                    University of Kerala, Kariavattom Campus,<br />
-                                    Thiruvananthapuram - 695581, Kerala, India
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300 pt-1">
-                                <Mail size={16} className="text-blue-600 dark:text-sky-400 shrink-0" />
-                                <a href="mailto:lenseedu24@gmail.com" className="text-blue-600 dark:text-sky-400 font-semibold hover:underline">
-                                    lenseedu24@gmail.com
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* ============================================================ */}
-                {/* 8. CALL TO ACTION BANNER (FROM MOCKUP) */}
-                {/* ============================================================ */}
-                <div className="mt-12 mb-6 rounded-[2.5rem] bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600 text-white p-8 sm:p-12 relative overflow-hidden shadow-[0_25px_60px_rgba(2,132,199,0.35)] z-20">
-                    {/* Flowing Wave Lines in Background */}
-                    <div className="absolute inset-0 pointer-events-none opacity-25">
-                        <svg className="w-full h-full" viewBox="0 0 1200 300" fill="none" preserveAspectRatio="none">
-                            <path d="M0,100 C300,200 600,0 900,150 C1050,220 1150,100 1200,80 L1200,300 L0,300 Z" fill="white" fillOpacity="0.15" />
-                            <path d="M0,180 C400,80 700,250 1200,140 L1200,300 L0,300 Z" fill="white" fillOpacity="0.2" />
-                        </svg>
-                    </div>
-
-                    <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-                        <div className="space-y-3 max-w-xl">
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-normal leading-[1.12] tracking-tight">
-                                Be part of<br />a meaningful change.
-                            </h2>
-                            <p className="text-xs sm:text-sm text-sky-100 font-normal leading-relaxed max-w-lg">
-                                Collaborate, contribute, or participate in our programmes to help build a more inclusive, innovative, and sustainable future.
-                            </p>
-                        </div>
-
-                        <Link href="/contact" className="shrink-0">
-                            <button className="px-8 py-4 rounded-full bg-white hover:bg-sky-50 text-blue-900 font-bold text-xs uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-xl hover:scale-105 cursor-pointer">
-                                <span>Get Involved</span>
-                                <ArrowRight size={14} className="text-blue-900" />
-                            </button>
-                        </Link>
-                    </div>
-                </div>
-
-            </div>
         </div>
     );
 }
