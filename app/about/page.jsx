@@ -12,7 +12,7 @@ import {
 const SERIF = { fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif" };
 const BLUE = 'text-[#1a6dff]';
 const GLASS =
-    'bg-white/65 backdrop-blur-xl border border-white/90 shadow-[0_18px_45px_rgba(37,99,235,0.10),inset_0_1px_0_rgba(255,255,255,1)]';
+    'bg-gradient-to-br from-white/80 via-sky-50/60 to-blue-100/40 backdrop-blur-xl border border-white/90 shadow-[0_18px_45px_rgba(37,99,235,0.10),inset_0_1px_0_rgba(255,255,255,1)]';
 
 const Wrap = ({ children, className = '' }) => (
     <div className={`relative max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10 ${className}`}>{children}</div>
@@ -28,11 +28,11 @@ function SectionTag({ number, text, light = false, circle = false }) {
             {number && (circle ? (
                 <span style={SERIF} className="w-10 h-10 rounded-full bg-white/15 border border-white/40 backdrop-blur text-white flex items-center justify-center text-xl">{number}</span>
             ) : (
-                <span style={SERIF} className="text-2xl italic text-slate-400/90 -ml-1 font-light">{number}</span>
+                <span style={SERIF} className="text-[26px] italic text-slate-400/90 -ml-1 font-light">{number}</span>
             ))}
             <span className="flex items-center gap-2">
-                <span className={`w-1 h-1 rounded-full ${light ? 'bg-sky-300' : 'bg-[#1a6dff]'}`} />
-                <span className={`text-[9px] font-bold tracking-[0.22em] uppercase ${light ? 'text-sky-200' : BLUE}`}>{text}</span>
+                <span className={`w-1.5 h-1.5 rounded-full ${light ? 'bg-sky-300' : 'bg-[#1a6dff]'}`} />
+                <span className={`text-[11px] font-bold tracking-[0.22em] uppercase ${light ? 'text-sky-200' : BLUE}`}>{text}</span>
             </span>
         </div>
     );
@@ -56,8 +56,8 @@ const ArrowBtn = ({ className = '' }) => (
 
 const PillBtn = ({ href, children }) => (
     <Link href={href} className="inline-flex">
-        <span className="px-6 py-3 rounded-full bg-white/90 border border-white shadow-[0_10px_24px_rgba(37,99,235,0.14)] text-[#1a6dff] text-[10px] font-bold uppercase tracking-wider flex items-center gap-3 hover:scale-[1.03] transition">
-            {children}<ArrowRight size={12} />
+        <span className="px-6 py-3 rounded-full bg-white/90 border border-white shadow-[0_10px_24px_rgba(37,99,235,0.14)] text-[#1a6dff] text-xs font-bold uppercase tracking-wider flex items-center gap-3 hover:scale-[1.03] transition">
+            {children}<ArrowRight size={13} />
         </span>
     </Link>
 );
@@ -93,49 +93,48 @@ function OceanWaves() {
 
 function Hero() {
     return (
-        <section className="relative overflow-hidden h-[640px] sm:h-[600px]">
-            <div className="absolute inset-y-0 right-0 w-full lg:w-[72%]">
+        <section className="relative overflow-hidden min-h-[calc(100vh-70px)] sm:min-h-screen flex flex-col justify-center py-20 sm:py-24">
+            <div className="absolute inset-y-0 right-0 w-full lg:w-[75%]">
                 <OceanWaves />
                 <div className="absolute inset-0 bg-gradient-to-r from-[#f4f8ff] via-[#f4f8ff]/70 to-transparent" />
             </div>
-            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f4f8ff] via-[#f4f8ff]/80 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#f4f8ff] via-[#f4f8ff]/85 to-transparent pointer-events-none" />
             {/* decorative ring + dots on the left edge */}
-            <div className="hidden lg:block absolute -left-[270px] top-[170px] w-[290px] h-[290px] rounded-full border border-sky-400/50" />
-            <div className="hidden lg:block absolute left-[76px] top-[480px] w-2 h-2 rounded-full bg-[#1a6dff]" />
-            <Dots rows={7} cols={5} className="hidden lg:grid absolute left-2 bottom-12" />
+            <div className="hidden lg:block absolute -left-[270px] top-[22%] w-[320px] h-[320px] rounded-full border border-sky-400/50" />
+            <div className="hidden lg:block absolute left-[80px] top-[60%] w-2.5 h-2.5 rounded-full bg-[#1a6dff]" />
+            <Dots rows={8} cols={5} className="hidden lg:grid absolute left-3 bottom-16" />
 
-            <Wrap className="h-full pt-28 sm:pt-[84px]">
-                <div className="grid lg:grid-cols-12 items-start gap-8">
-                    <div className="lg:col-span-6 space-y-5">
-                        <span className={`flex items-center gap-2 text-[8px] font-bold tracking-[0.22em] uppercase ${BLUE}`}>
-                            <span className="w-1 h-1 rounded-full bg-[#1a6dff]" />ABOUT LENSE
+            <Wrap className="w-full relative z-10 my-auto">
+                <div className="grid lg:grid-cols-12 items-center gap-10 lg:gap-8">
+                    <div className="lg:col-span-7 space-y-6">
+                        <span className={`flex items-center gap-2 text-[11px] font-bold tracking-[0.24em] uppercase ${BLUE}`}>
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#1a6dff]" />ABOUT LENSE
                         </span>
-                        <h1 style={SERIF} className="text-[44px] sm:text-[58px] leading-[1.05] tracking-tight text-slate-900 font-normal">
+                        <h1 style={SERIF} className="text-[52px] sm:text-[66px] lg:text-[74px] leading-[1.03] tracking-tight text-slate-900 font-normal">
                             Learning today.<br />
                             <em className={`${BLUE} font-normal`}>Sustaining<br />tomorrow.</em>
                         </h1>
-                        <p className="text-slate-600 text-[11px] leading-[1.8] max-w-[400px]">
+                        <p className="text-slate-600 text-[15px] sm:text-[16px] leading-[1.8] max-w-[500px]">
                             The Centre for Learning Engineering and Sustainability Education (LEnSE) at the University of Kerala is established in 2024 with the vision of promoting innovative, inclusive, and sustainable approaches to education. Working at the intersection of technology, engineering and mathematics education, the Centre serves as a platform for academic engagement, capacity building, knowledge sharing, and collaboration for a better and more sustainable future.
                         </p>
-                        <Link href="/academics" className="inline-flex pt-1">
-                            <span className="px-6 py-3 rounded-full bg-gradient-to-r from-[#0a6cff] to-[#1fa2ff] text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-3 shadow-[0_12px_26px_rgba(10,108,255,0.4)] hover:scale-[1.03] transition">
-                                OUR PROGRAMMES <ArrowRight size={12} />
-                            </span>
-                        </Link>
+                        <div className="pt-2">
+                            <Link href="/academics" className="inline-flex">
+                                <span className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#0a6cff] to-[#1fa2ff] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3 shadow-[0_12px_26px_rgba(10,108,255,0.4)] hover:scale-[1.03] transition">
+                                    OUR PROGRAMMES <ArrowRight size={13} />
+                                </span>
+                            </Link>
+                        </div>
                     </div>
 
-                    <div className="lg:col-span-6 relative h-[260px] hidden sm:block">
-                        <div className="absolute left-[40%] top-[8%] w-[250px] rounded-[1.4rem] p-5 bg-white/30 backdrop-blur-md border border-white/70 shadow-[0_20px_50px_rgba(2,60,140,0.25),inset_0_1px_0_rgba(255,255,255,0.9)]">
-                            <span className="absolute -top-3 -right-3 w-7 h-7 rounded-full bg-white/80 border border-white text-sky-500 flex items-center justify-center shadow">
-                                <Sparkles size={13} />
+                    <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end hidden sm:flex">
+                        <div className="relative w-[300px] sm:w-[320px] rounded-[1.8rem] p-7 sm:p-8 bg-gradient-to-br from-white/55 via-sky-50/40 to-blue-100/30 backdrop-blur-xl border border-white/80 shadow-[0_25px_60px_rgba(2,60,140,0.22),inset_0_1px_0_rgba(255,255,255,0.95)] hover:-translate-y-1 transition duration-300">
+                            <span className="absolute -top-3.5 -right-3.5 w-9 h-9 rounded-full bg-white/90 border border-white text-sky-500 flex items-center justify-center shadow-md">
+                                <Sparkles size={17} />
                             </span>
-                            <p className="text-[7px] font-bold tracking-[0.2em] text-slate-600 uppercase">ESTABLISHED IN</p>
-                            <p style={SERIF} className="text-5xl text-slate-900 leading-tight my-1">2024</p>
-                            <p className="text-[9px] text-slate-600 leading-snug max-w-[150px]">Promoting innovative, inclusive and sustainable education.</p>
+                            <p className="text-[10px] font-bold tracking-[0.22em] text-slate-600 uppercase mb-1">ESTABLISHED IN</p>
+                            <p style={SERIF} className="text-6xl sm:text-[68px] text-slate-900 leading-none my-2 font-normal">2024</p>
+                            <p className="text-[13.5px] text-slate-600 leading-relaxed max-w-[210px] mt-2">Promoting innovative, inclusive and sustainable education.</p>
                         </div>
-                        <span className="absolute right-[10%] bottom-[-6%] w-6 h-6 rounded-full bg-white/90 text-rose-500 flex items-center justify-center shadow-[0_6px_14px_rgba(244,63,94,0.35)]">
-                            <FileText size={11} />
-                        </span>
                     </div>
                 </div>
             </Wrap>
@@ -147,11 +146,11 @@ function Hero() {
 function VisionNode({ icon: Icon, title, desc, pos, tone = 'blue' }) {
     return (
         <div className={`absolute ${pos} w-[45%] ${GLASS} rounded-[2.4rem] p-5`}>
-            <span className={`w-9 h-9 rounded-full bg-white border ${tone === 'green' ? 'border-emerald-200 text-emerald-500' : 'border-blue-100 text-[#1a6dff]'} flex items-center justify-center shadow-sm mb-3`}>
-                <Icon size={17} strokeWidth={1.6} />
+            <span className={`w-10 h-10 rounded-full bg-white border ${tone === 'green' ? 'border-emerald-200 text-emerald-500' : 'border-blue-100 text-[#1a6dff]'} flex items-center justify-center shadow-sm mb-3`}>
+                <Icon size={19} strokeWidth={1.6} />
             </span>
-            <h5 className="text-[13px] font-bold text-slate-900 leading-tight">{title}</h5>
-            <p className="text-[9.5px] text-slate-500 leading-snug mt-1.5">{desc}</p>
+            <h5 className="text-[15px] font-bold text-slate-900 leading-tight">{title}</h5>
+            <p className="text-[11.5px] text-slate-500 leading-snug mt-1.5">{desc}</p>
         </div>
     );
 }
@@ -173,9 +172,9 @@ function VisionDiagram() {
             <VisionNode icon={Leaf} tone="green" title="Sustainable Practices" desc="Integrating sustainability into education and community engagement." pos="bottom-6 left-2" />
             <VisionNode icon={Atom} title="STEM Excellence" desc="Advancing Science, Technology, Engineering and Mathematics education." pos="bottom-3 right-2" />
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 rounded-full bg-gradient-to-br from-white via-sky-50 to-sky-100 border-[3px] border-white shadow-[0_20px_60px_rgba(37,99,235,0.28),inset_0_2px_8px_#fff] flex flex-col items-center justify-center text-center p-6 z-10">
-                <span style={SERIF} className="text-sm text-slate-600">Our</span>
-                <span style={SERIF} className="text-4xl text-slate-900 leading-none">Vision</span>
-                <p className="text-[9px] text-slate-500 leading-snug mt-3 max-w-[110px]">Innovative education for a sustainable future.</p>
+                <span style={SERIF} className="text-base text-slate-600">Our</span>
+                <span style={SERIF} className="text-[42px] text-slate-900 leading-none">Vision</span>
+                <p className="text-[11px] text-slate-500 leading-snug mt-2.5 max-w-[125px]">Innovative education for a sustainable future.</p>
             </div>
         </div>
     );
@@ -255,14 +254,14 @@ export default function AboutPage() {
                     <div className="grid lg:grid-cols-12 gap-10 items-center">
                         <div className="lg:col-span-6 space-y-5">
                             <SectionTag number="01" text="ABOUT THE CENTRE" />
-                            <h2 style={SERIF} className="text-[38px] sm:text-5xl leading-[1.12] tracking-tight font-normal text-slate-900">
+                            <h2 style={SERIF} className="text-[40px] sm:text-5xl leading-[1.12] tracking-tight font-normal text-slate-900">
                                 Centre for Learning<br />Engineering and<br />
                                 <Em>Sustainability Education</Em>
                             </h2>
-                            <p className="text-slate-600 text-[11.5px] leading-[1.85] max-w-[600px]">
+                            <p className="text-slate-600 text-[13.5px] leading-[1.85] max-w-[600px]">
                                 The Centre for Learning Engineering and Sustainability Education (LEnSE) was established in 2024 at the University of Kerala with the vision of promoting innovative, inclusive, and sustainable approaches to education, with a special focus on STEM (Science, Technology, Engineering and Mathematics) education.
                             </p>
-                            <p className="text-slate-600 text-[11.5px] leading-[1.85] max-w-[600px]">
+                            <p className="text-slate-600 text-[13.5px] leading-[1.85] max-w-[600px]">
                                 The Centre serves as a platform for academic engagement, capacity building, knowledge sharing, and collaborative initiatives aimed at strengthening learning and teaching practices. Through its diverse academic, training, research and outreach activities, LEnSE strives to build a strong ecosystem for innovative education and contribute to a scientifically literate, creative and sustainable society.
                             </p>
                             <PillBtn href="/initiatives">MORE ABOUT LENSE</PillBtn>
@@ -288,7 +287,7 @@ export default function AboutPage() {
                             </h2>
                         </div>
                         <div className="flex items-end gap-6 lg:justify-end">
-                            <p className="text-[10.5px] text-sky-100/85 leading-relaxed max-w-[310px]">
+                            <p className="text-[13px] text-sky-100/90 leading-relaxed max-w-[340px]">
                                 We work at the intersection of learning, technology and sustainability to create meaningful opportunities for students, teachers and the wider community.
                             </p>
                             <div className="flex gap-2 shrink-0">
@@ -308,14 +307,14 @@ export default function AboutPage() {
                             { n: '03', icon: BookOpen, t: 'Knowledge Sharing', d: 'Creating platforms for collaboration, research discussions and innovation.' },
                             { n: '04', icon: Globe, t: 'Collaborative Initiatives', d: 'Partnering with reputed institutions and organizations for greater impact.' },
                         ].map((c) => (
-                            <div key={c.n} className="rounded-[1.4rem] bg-white/90 backdrop-blur text-slate-900 p-5 min-h-[250px] flex flex-col justify-between shadow-[0_18px_40px_rgba(3,21,51,0.3)] hover:-translate-y-1 transition">
+                            <div key={c.n} className="rounded-[1.4rem] bg-gradient-to-br from-white/90 via-sky-50/75 to-blue-100/60 backdrop-blur-xl border border-white/85 text-slate-900 p-5 min-h-[250px] flex flex-col justify-between shadow-[0_18px_40px_rgba(3,21,51,0.3),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-1 transition">
                                 <div>
                                     <div className="flex items-center justify-between mb-7">
-                                        <span style={SERIF} className={`text-lg ${BLUE}`}>{c.n}</span>
-                                        <c.icon size={20} strokeWidth={1.6} className={BLUE} />
+                                        <span style={SERIF} className={`text-xl ${BLUE}`}>{c.n}</span>
+                                        <c.icon size={22} strokeWidth={1.6} className={BLUE} />
                                     </div>
-                                    <h4 className="text-[12.5px] font-bold mb-2">{c.t}</h4>
-                                    <p className="text-[10px] text-slate-600 leading-relaxed max-w-[170px]">{c.d}</p>
+                                    <h4 className="text-[15px] font-bold mb-2">{c.t}</h4>
+                                    <p className="text-[12px] text-slate-600 leading-relaxed max-w-[190px]">{c.d}</p>
                                 </div>
                                 <div className="flex justify-end pt-3"><ArrowBtn /></div>
                             </div>
@@ -337,15 +336,15 @@ export default function AboutPage() {
 
                     <div className="grid lg:grid-cols-12 gap-5 items-stretch">
                         <div className={`lg:col-span-5 ${GLASS} rounded-[1.8rem] p-7 relative overflow-hidden min-h-[340px]`}>
-                            <span className="inline-flex items-center gap-1.5 text-[8px] font-bold tracking-wider uppercase text-white bg-gradient-to-r from-[#1a6dff] to-sky-400 px-3 py-1 rounded-full mb-5">
-                                <Gem size={8} /> FLAGSHIP INITIATIVE
+                            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-wider uppercase text-white bg-gradient-to-r from-[#1a6dff] to-sky-400 px-3 py-1 rounded-full mb-5">
+                                <Gem size={9} /> FLAGSHIP INITIATIVE
                             </span>
-                            <h3 style={SERIF} className="text-3xl font-normal text-slate-900 mb-3">STEM Learning Lab</h3>
-                            <p className="text-[11px] text-slate-700 leading-relaxed max-w-[250px] mb-5">
+                            <h3 style={SERIF} className="text-3xl sm:text-[34px] font-normal text-slate-900 mb-3">STEM Learning Lab</h3>
+                            <p className="text-[13px] text-slate-700 leading-relaxed max-w-[270px] mb-5">
                                 A dedicated facility to provide practical, activity-based STEM training for school students, fostering curiosity, creativity, problem-solving abilities and scientific thinking.
                             </p>
-                            <Link href="/initiatives" className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-md text-[10px] font-semibold text-[#1a6dff]">
-                                Learn more <ArrowRight size={11} />
+                            <Link href="/initiatives" className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-md text-xs font-semibold text-[#1a6dff]">
+                                Learn more <ArrowRight size={12} />
                             </Link>
                             <div className="absolute bottom-0 right-0 w-[52%] max-w-[230px] pointer-events-none"><Slabs /></div>
                         </div>
@@ -361,8 +360,8 @@ export default function AboutPage() {
                                     <div className="flex gap-3">
                                         <i.icon size={22} strokeWidth={1.5} className={`${BLUE} shrink-0 mt-0.5`} />
                                         <div>
-                                            <h4 className="text-[12px] font-bold mb-1">{i.t}</h4>
-                                            <p className="text-[9.5px] text-slate-600 leading-relaxed">{i.d}</p>
+                                            <h4 className="text-[14.5px] font-bold mb-1.5">{i.t}</h4>
+                                            <p className="text-[12px] text-slate-600 leading-relaxed">{i.d}</p>
                                         </div>
                                     </div>
                                     <div className="flex justify-end pt-2"><ArrowBtn className="!w-5 !h-5" /></div>
@@ -384,7 +383,7 @@ export default function AboutPage() {
                             <h2 style={SERIF} className="text-4xl sm:text-5xl leading-[1.12] font-normal">
                                 Collaborating for<br /><Em>greater impact.</Em>
                             </h2>
-                            <p className="text-[11px] text-slate-600 leading-relaxed max-w-sm">
+                            <p className="text-[13.5px] text-slate-600 leading-relaxed max-w-sm">
                                 LEnSE has established collaborations with reputed institutions and organisations to facilitate joint academic programmes, training initiatives and educational outreach activities.
                             </p>
                             <PillBtn href="/initiatives">OUR PARTNERS</PillBtn>
@@ -392,7 +391,7 @@ export default function AboutPage() {
 
                         <div className="lg:col-span-7 relative">
                             <div className="hidden sm:flex absolute -top-24 right-4 items-start gap-1 select-none">
-                                <span style={{ fontFamily: "'Mrs Saint Delafield', cursive" }} className="text-4xl text-slate-400 leading-[0.85] -rotate-12 text-right">
+                                <span style={{ fontFamily: "'Mrs Saint Delafield', cursive" }} className="text-[44px] text-slate-400 leading-[0.85] -rotate-12 text-right">
                                     Stronger<br />Together
                                 </span>
                                 <svg width="70" height="56" viewBox="0 0 70 56" fill="none" className="text-[#1a6dff] mt-3">
@@ -409,8 +408,8 @@ export default function AboutPage() {
                                 ].map((p) => (
                                     <div key={p.t} className={`${GLASS} rounded-[1.2rem] p-4 flex flex-col items-center text-center min-h-[150px] hover:-translate-y-1 transition`}>
                                         <p.icon size={24} strokeWidth={1.5} className={`${BLUE} mb-3`} />
-                                        <h4 className="text-[10px] font-bold leading-snug">{p.t}</h4>
-                                        <p className="text-[8px] text-slate-500 mt-1">{p.s}</p>
+                                        <h4 className="text-[12px] font-bold leading-snug">{p.t}</h4>
+                                        <p className="text-[10px] text-slate-500 mt-1">{p.s}</p>
                                     </div>
                                 ))}
                             </div>
@@ -426,20 +425,20 @@ export default function AboutPage() {
                     <div className="grid lg:grid-cols-12 gap-6 items-center mt-5">
                         <div className={`lg:col-span-4 ${GLASS} rounded-[1.8rem] p-7 relative min-h-[290px]`}>
                             <div className="flex items-center justify-between mb-3">
-                                <span className="text-[8px] font-bold tracking-wider uppercase text-[#1a6dff] bg-blue-100/70 px-3 py-1 rounded-full">EDUCATION FOR ALL</span>
+                                <span className="text-[10px] font-bold tracking-wider uppercase text-[#1a6dff] bg-blue-100/70 px-3 py-1 rounded-full">EDUCATION FOR ALL</span>
                                 <FileText size={22} strokeWidth={1.4} className={BLUE} />
                             </div>
-                            <p style={SERIF} className={`text-[88px] leading-none my-3 ${BLUE}`}>100%</p>
-                            <p className="text-[12px] text-slate-700 leading-snug mt-2 max-w-[250px]">
+                            <p style={SERIF} className={`text-[88px] sm:text-[96px] leading-none my-3 ${BLUE}`}>100%</p>
+                            <p className="text-[13.5px] text-slate-700 leading-snug mt-2 max-w-[270px]">
                                 Programme fees are utilized to support STEM education for disadvantaged students in rural schools across Kerala.
                             </p>
                         </div>
 
                         <div className="lg:col-span-4 space-y-3">
-                            <h2 style={SERIF} className="text-3xl leading-[1.15] font-normal">
+                            <h2 style={SERIF} className="text-3xl sm:text-4xl leading-[1.15] font-normal">
                                 Education with<br /><Em>social responsibility.</Em>
                             </h2>
-                            <p className="text-[10px] text-slate-700 leading-[1.75] font-medium">
+                            <p className="text-[13px] text-slate-700 leading-[1.78] font-normal">
                                 The Centre follows an inclusive and socially responsible model in promoting STEM education. Programme fees collected from its training activities are utilized to support STEM education for socially and economically disadvantaged students in rural schools across Kerala, creating opportunities for students who may have limited access to quality STEM learning resources.
                             </p>
                         </div>
@@ -452,8 +451,8 @@ export default function AboutPage() {
                                 { icon: Gem, t: 'A brighter, more inclusive future' },
                             ].map((r) => (
                                 <div key={r.t} className="flex items-center gap-3">
-                                    <r.icon size={16} strokeWidth={1.5} className={`${BLUE} shrink-0`} />
-                                    <span className="text-[10px] text-slate-800">{r.t}</span>
+                                    <r.icon size={17} strokeWidth={1.5} className={`${BLUE} shrink-0`} />
+                                    <span className="text-[12.5px] font-medium text-slate-800">{r.t}</span>
                                 </div>
                             ))}
                         </div>
@@ -470,7 +469,7 @@ export default function AboutPage() {
                             <SectionTag number="06" text="OUR OBJECTIVES" />
                             <h2 style={SERIF} className="text-4xl sm:text-[44px] font-normal mt-3">Guiding our mission.</h2>
                         </div>
-                        <p className="text-[9.5px] text-slate-500 sm:text-right max-w-[270px] leading-relaxed sm:mt-2">
+                        <p className="text-[12.5px] text-slate-500 sm:text-right max-w-[320px] leading-relaxed sm:mt-2">
                             Our objectives reflect our commitment to innovative education, equitable access and a sustainable future.
                         </p>
                     </div>
@@ -485,11 +484,11 @@ export default function AboutPage() {
                             <div key={o.n} className={`${GLASS} rounded-[1.4rem] p-5 min-h-[320px] flex flex-col justify-between hover:-translate-y-1 transition`}>
                                 <div>
                                     <div className="flex items-center justify-between mb-6">
-                                        <span style={SERIF} className={`text-base ${BLUE}`}>{o.n}</span>
-                                        <o.icon size={18} strokeWidth={1.5} className={BLUE} />
+                                        <span style={SERIF} className={`text-xl ${BLUE}`}>{o.n}</span>
+                                        <o.icon size={20} strokeWidth={1.5} className={BLUE} />
                                     </div>
-                                    <h4 className="text-[11.5px] font-bold leading-snug mb-2 whitespace-pre-line">{o.t}</h4>
-                                    <p className="text-[9px] text-slate-600 leading-[1.65]">{o.d}</p>
+                                    <h4 className="text-[14px] font-bold leading-snug mb-2 whitespace-pre-line">{o.t}</h4>
+                                    <p className="text-[11.5px] text-slate-600 leading-[1.65]">{o.d}</p>
                                 </div>
                                 <div className="flex justify-end pt-3"><ArrowBtn className="!w-5 !h-5" /></div>
                             </div>
@@ -507,18 +506,18 @@ export default function AboutPage() {
                     </svg>
                     <div className="relative grid md:grid-cols-12 items-center gap-6">
                         <div className="md:col-span-5 space-y-2">
-                            <span className="flex items-center gap-2 text-[8px] font-bold tracking-[0.22em] text-sky-200 uppercase">
-                                <span className="w-1 h-1 rounded-full bg-sky-300" />BE PART OF LENSE
+                            <span className="flex items-center gap-2 text-[10px] font-bold tracking-[0.22em] text-sky-200 uppercase">
+                                <span className="w-1.5 h-1.5 rounded-full bg-sky-300" />BE PART OF LENSE
                             </span>
                             <h2 style={SERIF} className="text-3xl sm:text-4xl leading-[1.1] font-normal">Be part of<br />a meaningful change.</h2>
                         </div>
-                        <p className="md:col-span-4 text-[10.5px] text-sky-100/90 leading-relaxed">
+                        <p className="md:col-span-4 text-[13px] text-sky-100/90 leading-relaxed">
                             Collaborate, contribute, or participate in our programmes to help build a more inclusive, innovative, and sustainable future.
                         </p>
                         <div className="md:col-span-3 md:text-right">
                             <Link href="/contact" className="inline-flex">
-                                <span className="px-6 py-3 rounded-full bg-white text-[#0a2a6b] font-bold text-[9px] uppercase tracking-wider flex items-center gap-3 shadow-xl hover:scale-105 transition">
-                                    GET INVOLVED <ArrowRight size={12} />
+                                <span className="px-6 py-3 rounded-full bg-white text-[#0a2a6b] font-bold text-[11px] uppercase tracking-wider flex items-center gap-3 shadow-xl hover:scale-105 transition">
+                                    GET INVOLVED <ArrowRight size={13} />
                                 </span>
                             </Link>
                         </div>
