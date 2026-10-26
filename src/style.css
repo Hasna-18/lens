@@ -2691,10 +2691,16 @@ button {
 }
 
 .animate-liquid-float {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
   animation: liquid-float-slow 18s ease-in-out infinite;
 }
 
 .animate-liquid-float-rev {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
   animation: liquid-float-reverse 22s ease-in-out infinite;
 }
 

@@ -4,9 +4,9 @@ import React, { useRef, useEffect } from 'react';
 import { Renderer, Program, Mesh, Triangle } from 'ogl';
 
 export const LiquidChrome = ({
-  baseColor = [0.1, 0.1, 0.1],
-  speed = 0.2,
-  amplitude = 0.3,
+  baseColor = [0.1, 0.42, 0.86],
+  speed = 0.3,
+  amplitude = 0.4,
   frequencyX = 3,
   frequencyY = 3,
   interactive = true,
@@ -15,18 +15,28 @@ export const LiquidChrome = ({
   ...props
 }) => {
   const containerRef = useRef(null);
+  const speedRef = useRef(speed);
+  speedRef.current = speed;
 
   useEffect(() => {
     if (!containerRef.current) return;
-
     const container = containerRef.current;
+
     let renderer;
     try {
-      renderer = new Renderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      // Clamp DPR to max 1.25 for buttery smooth 60-120 FPS without GPU fill-rate throttling
+      const clampedDpr = Math.min(typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1, 1.25);
+      renderer = new Renderer({
+        antialias: false,
+        alpha: true,
+        dpr: clampedDpr,
+        powerPreference: 'high-performance'
+      });
     } catch (e) {
       console.warn('WebGL not supported for LiquidChrome:', e);
       return;
     }
+
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
 
@@ -41,7 +51,7 @@ export const LiquidChrome = ({
     `;
 
     const fragmentShader = `
-      precision highp float;
+      precision mediump float;
       uniform float uTime;
       uniform vec3 uResolution;
       uniform vec3 uBaseColor;
@@ -55,32 +65,24 @@ export const LiquidChrome = ({
           vec2 fragCoord = uvCoord * uResolution.xy;
           vec2 uv = (2.0 * fragCoord - uResolution.xy) / min(uResolution.x, uResolution.y);
 
-          for (float i = 1.0; i < 10.0; i++){
+          #pragma unroll
+          for (float i = 1.0; i < 7.0; i++){
               uv.x += uAmplitude / i * cos(i * uFrequencyX * uv.y + uTime + uMouse.x * 3.14159);
               uv.y += uAmplitude / i * cos(i * uFrequencyY * uv.x + uTime + uMouse.y * 3.14159);
           }
 
           vec2 diff = (uvCoord - uMouse);
           float dist = length(diff);
-          float falloff = exp(-dist * 20.0);
+          float falloff = exp(-dist * 18.0);
           float ripple = sin(10.0 * dist - uTime * 2.0) * 0.03;
           uv += (diff / (dist + 0.0001)) * ripple * falloff;
 
-          vec3 color = uBaseColor / abs(sin(uTime - uv.y - uv.x));
+          vec3 color = uBaseColor / max(abs(sin(uTime - uv.y - uv.x)), 0.08);
           return vec4(color, 1.0);
       }
 
       void main() {
-          vec4 col = vec4(0.0);
-          int samples = 0;
-          for (int i = -1; i <= 1; i++){
-              for (int j = -1; j <= 1; j++){
-                  vec2 offset = vec2(float(i), float(j)) * (1.0 / min(uResolution.x, uResolution.y));
-                  col += renderImage(vUv + offset);
-                  samples++;
-              }
-          }
-          gl_FragColor = col / float(samples);
+          gl_FragColor = renderImage(vUv);
       }
     `;
 
@@ -121,41 +123,71 @@ export const LiquidChrome = ({
       resizeObserver.observe(container);
     }
 
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', resize, { passive: true });
     resize();
+
+    // Mouse movement with smooth interpolation
+    let targetMouseX = 0.5;
+    let targetMouseY = 0.5;
+    let currentMouseX = 0.5;
+    let currentMouseY = 0.5;
 
     function handleMouseMove(event) {
       const rect = container.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width;
-      const y = 1 - (event.clientY - rect.top) / rect.height;
-      const mouseUniform = program.uniforms.uMouse.value;
-      mouseUniform[0] = x;
-      mouseUniform[1] = y;
+      targetMouseX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+      targetMouseY = Math.max(0, Math.min(1, 1 - (event.clientY - rect.top) / rect.height));
     }
 
     function handleTouchMove(event) {
       if (event.touches.length > 0) {
         const touch = event.touches[0];
         const rect = container.getBoundingClientRect();
-        const x = (touch.clientX - rect.left) / rect.width;
-        const y = 1 - (touch.clientY - rect.top) / rect.height;
-        const mouseUniform = program.uniforms.uMouse.value;
-        mouseUniform[0] = x;
-        mouseUniform[1] = y;
+        targetMouseX = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+        targetMouseY = Math.max(0, Math.min(1, 1 - (touch.clientY - rect.top) / rect.height));
       }
     }
 
     if (interactive) {
-      container.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener('mousemove', handleMouseMove, { passive: true });
       container.addEventListener('touchmove', handleTouchMove, { passive: true });
     }
 
-    let animationId;
+    let animationId = null;
+    let isVisible = true;
+
+    // Viewport Visibility: pause RAF when scrolled out of view to save 100% GPU
+    let visibilityObserver = null;
+    if (typeof IntersectionObserver !== 'undefined') {
+      visibilityObserver = new IntersectionObserver(
+        ([entry]) => {
+          isVisible = entry.isIntersecting;
+          if (isVisible && !animationId) {
+            animationId = requestAnimationFrame(update);
+          }
+        },
+        { threshold: 0.02 }
+      );
+      visibilityObserver.observe(container);
+    }
+
     function update(t) {
+      if (!isVisible) {
+        animationId = null;
+        return;
+      }
       animationId = requestAnimationFrame(update);
-      program.uniforms.uTime.value = t * 0.001 * speed;
+
+      // Smooth mouse lerp
+      currentMouseX += (targetMouseX - currentMouseX) * 0.08;
+      currentMouseY += (targetMouseY - currentMouseY) * 0.08;
+      const mouseUniform = program.uniforms.uMouse.value;
+      mouseUniform[0] = currentMouseX;
+      mouseUniform[1] = currentMouseY;
+
+      program.uniforms.uTime.value = t * 0.001 * speedRef.current;
       renderer.render({ scene: mesh });
     }
+
     animationId = requestAnimationFrame(update);
 
     gl.canvas.style.display = 'block';
@@ -169,7 +201,8 @@ export const LiquidChrome = ({
     container.appendChild(gl.canvas);
 
     return () => {
-      cancelAnimationFrame(animationId);
+      if (animationId) cancelAnimationFrame(animationId);
+      if (visibilityObserver) visibilityObserver.disconnect();
       if (resizeObserver) resizeObserver.disconnect();
       window.removeEventListener('resize', resize);
       if (interactive) {
@@ -180,12 +213,12 @@ export const LiquidChrome = ({
         gl.canvas.parentElement.removeChild(gl.canvas);
       }
     };
-  }, [JSON.stringify(baseColor), speed, amplitude, frequencyX, frequencyY, interactive]);
+  }, []);
 
   return (
     <div
       ref={containerRef}
-      className={`liquidChrome-container relative overflow-hidden ${className}`}
+      className={`liquidChrome-container relative overflow-hidden will-change-transform ${className}`}
       style={{ width: '100%', height: '100%', ...style }}
       {...props}
     />

@@ -1,6 +1,7 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import {
   ArrowRight,
   Leaf,
@@ -25,7 +26,12 @@ import {
 
 import { getFromCache, fetchWithCache, prefetchEndpoint } from '../lib/clientCache';
 import { sortEventsLatestFirst } from '../lib/eventUtils';
-import LiquidChrome from '../components/LiquidChrome';
+
+// Defer WebGL loading so first paint & hydration happen immediately with zero blocking
+const LiquidChrome = dynamic(() => import('../components/LiquidChrome'), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 bg-[#030a16] pointer-events-none" />
+});
 
 const defaultFallbackEvents = [
   {
@@ -100,17 +106,127 @@ function formatEvents(data) {
   }));
 }
 
+// Static definition outside component to prevent re-creation and memory thrash
+const PARTNER_COLLABORATORS = [
+  {
+    name: 'Clarkson',
+    sub: 'University',
+    isSerif: true,
+    icon: (
+      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="20" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 2" className="opacity-60" />
+        <circle cx="22" cy="22" r="16" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M17 15H27C27 21 22 25 22 25C22 25 17 21 17 15Z" stroke="currentColor" strokeWidth="1.5" fill="currentColor" fillOpacity="0.15" />
+        <circle cx="22" cy="19" r="2" fill="currentColor" />
+        <path d="M20 22L24 22" stroke="currentColor" strokeWidth="1.2" />
+      </svg>
+    )
+  },
+  {
+    name: 'University of Kerala',
+    sub: 'Estd. 1937',
+    isSerif: true,
+    icon: (
+      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="19" stroke="currentColor" strokeWidth="1.6" />
+        <circle cx="22" cy="22" r="15" stroke="currentColor" strokeWidth="1" strokeDasharray="1.5 1.5" className="opacity-70" />
+        <path d="M22 12L24.5 17H19.5L22 12Z" fill="currentColor" />
+        <circle cx="22" cy="20" r="2.5" stroke="currentColor" strokeWidth="1.2" />
+        <path d="M16 29C17.5 25 26.5 25 28 29" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M15 24C15 27 29 27 29 24" stroke="currentColor" strokeWidth="1.2" />
+      </svg>
+    )
+  },
+  {
+    name: 'SPARC',
+    sub: 'MHRD / SPARC II Initiative',
+    isSerif: false,
+    icon: (
+      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M28 14C23 11 16 14 16 20C16 26 28 24 28 30C28 34 23 36 18 34" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" />
+        <circle cx="25" cy="19" r="6" stroke="currentColor" strokeWidth="1.6" className="opacity-50" />
+        <ellipse cx="25" cy="19" rx="6" ry="2" stroke="currentColor" strokeWidth="1.2" className="opacity-75" />
+      </svg>
+    )
+  },
+  {
+    name: 'University of Southampton',
+    sub: 'United Kingdom',
+    isSerif: true,
+    icon: (
+      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 13H30V26C30 31 22 35 22 35C22 35 14 31 14 26V13Z" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
+        <path d="M22 17V28M17 22H27" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        <circle cx="22" cy="22" r="2" fill="currentColor" />
+      </svg>
+    )
+  },
+  {
+    name: 'SIET',
+    sub: 'Govt. of Kerala',
+    isSerif: false,
+    icon: (
+      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="13" y="13" width="18" height="18" rx="4" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
+        <path d="M17 26V18L22 22L27 18V26" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    )
+  },
+  {
+    name: 'REFORM',
+    sub: 'Advancing Education',
+    isSerif: false,
+    icon: (
+      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 12C15 15 14 24 22 32C30 24 29 15 22 12Z" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.12" />
+        <path d="M22 17V28" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        <path d="M22 21C25 20 26 19 26 19" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      </svg>
+    )
+  },
+  {
+    name: 'Child Development Centre',
+    sub: 'Kazhakkoottam',
+    isSerif: false,
+    icon: (
+      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="16" stroke="currentColor" strokeWidth="1.6" />
+        <ellipse cx="22" cy="22" rx="13" ry="5" stroke="currentColor" strokeWidth="1.2" transform="rotate(30 22 22)" className="opacity-70" />
+        <ellipse cx="22" cy="22" rx="13" ry="5" stroke="currentColor" strokeWidth="1.2" transform="rotate(-30 22 22)" className="opacity-70" />
+        <circle cx="22" cy="22" r="3" fill="currentColor" />
+      </svg>
+    )
+  },
+  {
+    name: 'CREATE Initiative',
+    sub: 'SPARC II Project',
+    isSerif: false,
+    icon: (
+      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="17" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 2" className="opacity-60" />
+        <circle cx="22" cy="22" r="9" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.15" />
+        <path d="M22 5V13M22 31V39M5 22H13M31 22H39" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+    )
+  }
+];
+
 export default function HomePage() {
-  const [upcomingEvents, setUpcomingEvents] = useState(defaultFallbackEvents);
+  // Read instant cache synchronously to prevent layout shifts & flash of empty content
+  const [upcomingEvents, setUpcomingEvents] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const cached = getFromCache('clese_events_cache');
+      if (cached && Array.isArray(cached) && cached.length > 0) {
+        return formatEvents(cached);
+      }
+    }
+    return defaultFallbackEvents;
+  });
 
   useEffect(() => {
     let isMounted = true;
 
-    const cached = getFromCache('clese_events_cache');
-    if (cached && Array.isArray(cached) && cached.length > 0) {
-      setUpcomingEvents(formatEvents(cached));
-    }
-
+    // Fetch fresh events smoothly in background
     fetchWithCache('/api/events', 'clese_events_cache', formatEvents)
       .then((formatted) => {
         if (isMounted && Array.isArray(formatted) && formatted.length > 0) {
@@ -118,23 +234,44 @@ export default function HomePage() {
         }
       })
       .catch((err) => {
-        console.warn('Home events fetch notice:', err.message);
+        // Silently fallback without disrupting UI
       });
 
-    prefetchEndpoint('/api/initiatives', 'clese_initiatives_cache');
-    prefetchEndpoint('/api/news', 'clese_news_cache');
-    prefetchEndpoint('/api/resources', 'clese_resources_cache');
+    // Defer prefetching secondary endpoints until the browser is idle to avoid network contention
+    let timeoutId;
+    if (typeof window !== 'undefined') {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(() => {
+          if (isMounted) {
+            prefetchEndpoint('/api/initiatives', 'clese_initiatives_cache');
+            prefetchEndpoint('/api/news', 'clese_news_cache');
+            prefetchEndpoint('/api/resources', 'clese_resources_cache');
+          }
+        });
+      } else {
+        timeoutId = setTimeout(() => {
+          if (isMounted) {
+            prefetchEndpoint('/api/initiatives', 'clese_initiatives_cache');
+            prefetchEndpoint('/api/news', 'clese_news_cache');
+            prefetchEndpoint('/api/resources', 'clese_resources_cache');
+          }
+        }, 2500);
+      }
+    }
 
     return () => {
       isMounted = false;
+      if (timeoutId) clearTimeout(timeoutId);
     };
   }, []);
+
+  const marqueeList = useMemo(() => [...PARTNER_COLLABORATORS, ...PARTNER_COLLABORATORS], []);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#030712] text-slate-900 dark:text-slate-100 font-sans selection:bg-[#38bdf8]/30 selection:text-white transition-colors duration-300 relative overflow-x-hidden">
 
-      {/* GLOBAL AMBIENT MESH BACKGROUND FOR GLASS REFRACTION */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-100 dark:opacity-30 dark:mix-blend-screen">
+      {/* GLOBAL AMBIENT MESH BACKGROUND FOR GLASS REFRACTION - GPU COMPOSITED */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-100 dark:opacity-30 dark:mix-blend-screen transform-gpu overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[45%] h-[45%] rounded-full bg-sky-400/40 dark:bg-sky-300/40 blur-[120px] animate-liquid-float"></div>
         <div className="absolute top-[20%] right-[-10%] w-[45%] h-[45%] rounded-full bg-blue-500/30 dark:bg-blue-400/30 blur-[120px] animate-liquid-float-rev" style={{ animationDelay: "2s" }}></div>
         <div className="absolute bottom-[-10%] left-[10%] w-[55%] h-[55%] rounded-full bg-indigo-400/30 dark:bg-indigo-300/30 blur-[130px] animate-liquid-float" style={{ animationDelay: "4s" }}></div>
@@ -150,16 +287,16 @@ export default function HomePage() {
       >
 
         {/* Immersive Interactive Liquid Chrome Background */}
-        <div className="absolute inset-0 z-0 pointer-events-auto overflow-hidden w-full h-full opacity-90 transition-opacity duration-1000">
+        <div className="absolute inset-0 z-0 pointer-events-auto overflow-hidden w-full h-full opacity-90 transition-opacity duration-1000 transform-gpu">
           <LiquidChrome
             baseColor={[0.1, 0.42, 0.86]} // Royal Electric Blue / Sapphire Base
             speed={0.3}
             amplitude={0.4}
             interactive={true}
           />
-          {/* Subtle dark overlay for better contrast */}
+          {/* Subtle dark overlay for contrast */}
           <div className="absolute inset-0 bg-[#030a16]/30 dark:bg-[#020610]/40 pointer-events-none"></div>
-          {/* Subtle vignette overlay to ensure content readability */}
+          {/* Subtle vignette overlay to ensure text readability */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)] mix-blend-multiply pointer-events-none"></div>
         </div>
 
@@ -171,7 +308,7 @@ export default function HomePage() {
             <div className="lg:col-span-7 space-y-6 sm:space-y-8 max-w-[720px]">
 
               {/* Top Badge */}
-              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 dark:bg-black/30 backdrop-blur-xl border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.2)] hover:bg-white/20 transition-all duration-500 cursor-default group">
+              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 dark:bg-black/30 backdrop-blur-xl border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.2)] hover:bg-white/20 transition-all duration-300 cursor-default group">
                 <span className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#38bdf8] opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-[#38bdf8] shadow-[0_0_10px_#38bdf8]"></span>
@@ -229,12 +366,12 @@ export default function HomePage() {
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="relative overflow-hidden p-5 sm:p-6 rounded-[1.8rem] liquid-glass-card shadow-[0_8px_32px_rgba(0,0,0,0.25)] group cursor-default"
+                  className="relative overflow-hidden p-5 sm:p-6 rounded-[1.8rem] liquid-glass-card shadow-[0_8px_32px_rgba(0,0,0,0.25)] group cursor-default transform-gpu"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-sky-400/15 via-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-sky-400/15 via-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
                   <div className="relative z-10">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-[0_0_15px_rgba(56,189,248,0.4)] text-white flex items-center justify-center shrink-0 mb-4 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(56,189,248,0.6)] transition-all duration-500">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-[0_0_15px_rgba(56,189,248,0.4)] text-white flex items-center justify-center shrink-0 mb-4 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(56,189,248,0.6)] transition-all duration-300">
                       <item.icon size={22} strokeWidth={2} />
                     </div>
                     <h4 className="text-[15px] sm:text-[16px] font-bold text-white leading-tight mb-1.5 group-hover:text-sky-300 transition-colors duration-300">
@@ -269,7 +406,7 @@ export default function HomePage() {
           {/* ========================================================================= */}
           {/* 2. STATS DOCK */}
           {/* ========================================================================= */}
-          <div className="w-full relative mx-auto liquid-glass-dock rounded-[2rem] md:rounded-full py-4 sm:py-5 px-5 sm:px-8 md:px-12 -mt-8 sm:-mt-10 lg:-mt-18">
+          <div className="w-full relative mx-auto liquid-glass-dock rounded-[2rem] md:rounded-full py-4 sm:py-5 px-5 sm:px-8 md:px-12 -mt-8 sm:-mt-10 lg:-mt-18 transform-gpu">
             <div className="grid grid-cols-2 lg:grid-cols-4 divide-y-0 sm:divide-x divide-slate-200/60 dark:divide-white/10 gap-4 sm:gap-5 md:gap-0">
               {[
                 { titleTop: 'Hands-on STEM', titleBottom: 'Learning', desc: 'For students & teachers', icon: GraduationCap },
@@ -299,7 +436,6 @@ export default function HomePage() {
           {/* 3. OUR TRUSTED COLLABORATORS - TRANSPARENT MARQUEE (MOVING RIGHT) */}
           {/* ========================================================================= */}
           <div className="w-full relative mx-auto py-2">
-            {/* Header Matching Reference Design */}
             <div className="text-center space-y-1.5 mb-8 sm:mb-10">
               <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base md:text-[17px] font-normal tracking-tight">
                 Backed by global partnerships.
@@ -309,214 +445,9 @@ export default function HomePage() {
               </h3>
             </div>
 
-            {/* Seamless Transparent Rightward Moving Marquee */}
-            <div className="relative w-full overflow-hidden marquee-mask py-3">
-              <div className="animate-marquee-right flex items-center gap-8 sm:gap-12 md:gap-16">
-                {[
-                  {
-                    name: 'Clarkson',
-                    sub: 'University',
-                    isSerif: true,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="22" cy="22" r="20" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 2" className="opacity-60" />
-                        <circle cx="22" cy="22" r="16" stroke="currentColor" strokeWidth="1.5" />
-                        <path d="M17 15H27C27 21 22 25 22 25C22 25 17 21 17 15Z" stroke="currentColor" strokeWidth="1.5" fill="currentColor" fillOpacity="0.15" />
-                        <circle cx="22" cy="19" r="2" fill="currentColor" />
-                        <path d="M20 22L24 22" stroke="currentColor" strokeWidth="1.2" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'University of Kerala',
-                    sub: 'Estd. 1937',
-                    isSerif: true,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="22" cy="22" r="19" stroke="currentColor" strokeWidth="1.6" />
-                        <circle cx="22" cy="22" r="15" stroke="currentColor" strokeWidth="1" strokeDasharray="1.5 1.5" className="opacity-70" />
-                        <path d="M22 12L24.5 17H19.5L22 12Z" fill="currentColor" />
-                        <circle cx="22" cy="20" r="2.5" stroke="currentColor" strokeWidth="1.2" />
-                        <path d="M16 29C17.5 25 26.5 25 28 29" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                        <path d="M15 24C15 27 29 27 29 24" stroke="currentColor" strokeWidth="1.2" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'SPARC',
-                    sub: 'MHRD / SPARC II Initiative',
-                    isSerif: false,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M28 14C23 11 16 14 16 20C16 26 28 24 28 30C28 34 23 36 18 34" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" />
-                        <circle cx="25" cy="19" r="6" stroke="currentColor" strokeWidth="1.6" className="opacity-50" />
-                        <ellipse cx="25" cy="19" rx="6" ry="2" stroke="currentColor" strokeWidth="1.2" className="opacity-75" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'University of Southampton',
-                    sub: 'United Kingdom',
-                    isSerif: true,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14 13H30V26C30 31 22 35 22 35C22 35 14 31 14 26V13Z" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
-                        <path d="M22 17V28M17 22H27" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                        <circle cx="22" cy="22" r="2" fill="currentColor" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'SIET',
-                    sub: 'Govt. of Kerala',
-                    isSerif: false,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="13" y="13" width="18" height="18" rx="4" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
-                        <path d="M17 26V18L22 22L27 18V26" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'REFORM',
-                    sub: 'Advancing Education',
-                    isSerif: false,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M22 12C15 15 14 24 22 32C30 24 29 15 22 12Z" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.12" />
-                        <path d="M22 17V28" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                        <path d="M22 21C25 20 26 19 26 19" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'Child Development Centre',
-                    sub: 'Kazhakkoottam',
-                    isSerif: false,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="22" cy="22" r="16" stroke="currentColor" strokeWidth="1.6" />
-                        <ellipse cx="22" cy="22" rx="13" ry="5" stroke="currentColor" strokeWidth="1.2" transform="rotate(30 22 22)" className="opacity-70" />
-                        <ellipse cx="22" cy="22" rx="13" ry="5" stroke="currentColor" strokeWidth="1.2" transform="rotate(-30 22 22)" className="opacity-70" />
-                        <circle cx="22" cy="22" r="3" fill="currentColor" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'CREATE Initiative',
-                    sub: 'SPARC II Project',
-                    isSerif: false,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="22" cy="22" r="17" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 2" className="opacity-60" />
-                        <circle cx="22" cy="22" r="9" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.15" />
-                        <path d="M22 5V13M22 31V39M5 22H13M31 22H39" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                      </svg>
-                    )
-                  }
-                ].concat([
-                  {
-                    name: 'Clarkson',
-                    sub: 'University',
-                    isSerif: true,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="22" cy="22" r="20" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 2" className="opacity-60" />
-                        <circle cx="22" cy="22" r="16" stroke="currentColor" strokeWidth="1.5" />
-                        <path d="M17 15H27C27 21 22 25 22 25C22 25 17 21 17 15Z" stroke="currentColor" strokeWidth="1.5" fill="currentColor" fillOpacity="0.15" />
-                        <circle cx="22" cy="19" r="2" fill="currentColor" />
-                        <path d="M20 22L24 22" stroke="currentColor" strokeWidth="1.2" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'University of Kerala',
-                    sub: 'Estd. 1937',
-                    isSerif: true,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="22" cy="22" r="19" stroke="currentColor" strokeWidth="1.6" />
-                        <circle cx="22" cy="22" r="15" stroke="currentColor" strokeWidth="1" strokeDasharray="1.5 1.5" className="opacity-70" />
-                        <path d="M22 12L24.5 17H19.5L22 12Z" fill="currentColor" />
-                        <circle cx="22" cy="20" r="2.5" stroke="currentColor" strokeWidth="1.2" />
-                        <path d="M16 29C17.5 25 26.5 25 28 29" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                        <path d="M15 24C15 27 29 27 29 24" stroke="currentColor" strokeWidth="1.2" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'SPARC',
-                    sub: 'MHRD / SPARC II Initiative',
-                    isSerif: false,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M28 14C23 11 16 14 16 20C16 26 28 24 28 30C28 34 23 36 18 34" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" />
-                        <circle cx="25" cy="19" r="6" stroke="currentColor" strokeWidth="1.6" className="opacity-50" />
-                        <ellipse cx="25" cy="19" rx="6" ry="2" stroke="currentColor" strokeWidth="1.2" className="opacity-75" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'University of Southampton',
-                    sub: 'United Kingdom',
-                    isSerif: true,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14 13H30V26C30 31 22 35 22 35C22 35 14 31 14 26V13Z" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
-                        <path d="M22 17V28M17 22H27" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                        <circle cx="22" cy="22" r="2" fill="currentColor" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'SIET',
-                    sub: 'Govt. of Kerala',
-                    isSerif: false,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="13" y="13" width="18" height="18" rx="4" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
-                        <path d="M17 26V18L22 22L27 18V26" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'REFORM',
-                    sub: 'Advancing Education',
-                    isSerif: false,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M22 12C15 15 14 24 22 32C30 24 29 15 22 12Z" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.12" />
-                        <path d="M22 17V28" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                        <path d="M22 21C25 20 26 19 26 19" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'Child Development Centre',
-                    sub: 'Kazhakkoottam',
-                    isSerif: false,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="22" cy="22" r="16" stroke="currentColor" strokeWidth="1.6" />
-                        <ellipse cx="22" cy="22" rx="13" ry="5" stroke="currentColor" strokeWidth="1.2" transform="rotate(30 22 22)" className="opacity-70" />
-                        <ellipse cx="22" cy="22" rx="13" ry="5" stroke="currentColor" strokeWidth="1.2" transform="rotate(-30 22 22)" className="opacity-70" />
-                        <circle cx="22" cy="22" r="3" fill="currentColor" />
-                      </svg>
-                    )
-                  },
-                  {
-                    name: 'CREATE Initiative',
-                    sub: 'SPARC II Project',
-                    isSerif: false,
-                    icon: (
-                      <svg viewBox="0 0 44 44" className="w-10 h-10 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="22" cy="22" r="17" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 2" className="opacity-60" />
-                        <circle cx="22" cy="22" r="9" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.15" />
-                        <path d="M22 5V13M22 31V39M5 22H13M31 22H39" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                      </svg>
-                    )
-                  }
-                ]).map((collab, idx) => (
+            <div className="relative w-full overflow-hidden marquee-mask py-3 transform-gpu">
+              <div className="animate-marquee-right flex items-center gap-8 sm:gap-12 md:gap-16 will-change-transform">
+                {marqueeList.map((collab, idx) => (
                   <div
                     key={idx}
                     className="flex items-center gap-3.5 px-4 sm:px-6 py-2.5 rounded-2xl bg-transparent hover:bg-white/40 dark:hover:bg-white/[0.06] backdrop-blur-md transition-all duration-300 group cursor-default shrink-0"
@@ -587,13 +518,13 @@ export default function HomePage() {
                   { label: 'Collaborations with', value: '10+', sub: 'Institutions', icon: Landmark },
                   { label: 'Impacting', value: '1000+', sub: 'Learners', icon: Globe }
                 ].map((card, i) => (
-                  <div key={i} className="p-4 sm:p-5 rounded-2xl sm:rounded-[1.75rem] liquid-glass-card flex flex-col justify-between group cursor-default">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl liquid-glass-icon text-blue-600 dark:text-sky-400 flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white dark:group-hover:bg-sky-500 dark:group-hover:text-slate-950 transition-all duration-400">
+                  <div key={i} className="p-4 sm:p-5 rounded-2xl sm:rounded-[1.75rem] liquid-glass-card flex flex-col justify-between group cursor-default transform-gpu">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl liquid-glass-icon text-blue-600 dark:text-sky-400 flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white dark:group-hover:bg-sky-500 dark:group-hover:text-slate-950 transition-all duration-300">
                       <card.icon size={20} strokeWidth={1.5} />
                     </div>
-                    <div className="group-hover:translate-x-1 transition-transform duration-400">
+                    <div className="group-hover:translate-x-1 transition-transform duration-300">
                       <span className="block text-[10.5px] sm:text-[11.5px] text-slate-500 dark:text-slate-400 font-semibold leading-tight mb-1">{card.label}</span>
-                      <span className="block text-2xl sm:text-3xl font-serif font-bold text-slate-900 dark:text-white leading-none group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors duration-400">{card.value}</span>
+                      <span className="block text-2xl sm:text-3xl font-serif font-bold text-slate-900 dark:text-white leading-none group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors duration-300">{card.value}</span>
                       {card.sub && <span className="block text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-1.5">{card.sub}</span>}
                     </div>
                   </div>
@@ -605,9 +536,11 @@ export default function HomePage() {
                 <img
                   src="/campus_building.jpg"
                   alt="LEnSE Modern Campus Architecture"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 group-hover:rotate-1 transition-transform duration-1000 ease-out"
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 group-hover:rotate-1 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050e1f]/95 via-[#050e1f]/40 to-transparent group-hover:via-[#050e1f]/30 transition-all duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#050e1f]/95 via-[#050e1f]/40 to-transparent group-hover:via-[#050e1f]/30 transition-all duration-300" />
 
                 <div className="relative z-10 p-5 sm:p-8 text-white flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                   <div>
@@ -667,15 +600,17 @@ export default function HomePage() {
                   link: '/events'
                 }
               ].map((item, idx) => (
-                <div key={idx} className="p-4 sm:p-5 rounded-[2rem] liquid-glass-card flex flex-col justify-between group">
+                <div key={idx} className="p-4 sm:p-5 rounded-[2rem] liquid-glass-card flex flex-col justify-between group transform-gpu">
                   <div className="space-y-4">
                     <div className="w-full h-36 sm:h-44 rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#050b16] shadow-inner relative border border-white/40 dark:border-white/5">
                       <img
                         src={item.img}
                         alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-in-out"
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
                       />
-                      <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors duration-500"></div>
+                      <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors duration-300"></div>
                     </div>
                     <div>
                       <h3 className="text-[15px] sm:text-[17px] font-serif font-semibold text-slate-900 dark:text-white leading-tight mb-1.5 group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors duration-300">
@@ -717,11 +652,11 @@ export default function HomePage() {
                 { title: 'Research &\nInnovation', icon: Lightbulb },
                 { title: 'Equity & Inclusive\nEducation', icon: HeartHandshake }
               ].map((area, idx) => (
-                <div key={idx} className="p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] liquid-glass-card text-center flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] group cursor-default">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl liquid-glass-icon text-blue-600 dark:text-sky-400 flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white dark:group-hover:bg-sky-500 dark:group-hover:text-slate-950 transition-all duration-400">
+                <div key={idx} className="p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] liquid-glass-card text-center flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] group cursor-default transform-gpu">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl liquid-glass-icon text-blue-600 dark:text-sky-400 flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white dark:group-hover:bg-sky-500 dark:group-hover:text-slate-950 transition-all duration-300">
                     <area.icon size={22} strokeWidth={1.5} />
                   </div>
-                  <span className="text-[12px] sm:text-[13px] font-bold text-slate-800 dark:text-slate-100 whitespace-pre-line leading-snug group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors duration-400">
+                  <span className="text-[12px] sm:text-[13px] font-bold text-slate-800 dark:text-slate-100 whitespace-pre-line leading-snug group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors duration-300">
                     {area.title}
                   </span>
                 </div>
@@ -732,7 +667,7 @@ export default function HomePage() {
           {/* ========================================================================= */}
           {/* 7. CREATE PROJECT SHOWCASE BANNER */}
           {/* ========================================================================= */}
-          <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[3rem] liquid-glass-dock p-8 sm:p-12 lg:p-14 group transition-all duration-500 mt-2">
+          <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[3rem] liquid-glass-dock p-8 sm:p-12 lg:p-14 group transition-all duration-500 mt-2 transform-gpu">
 
             {/* Decorative fluid wave lines in background */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(56,189,248,0.25),transparent_70%)] pointer-events-none" />
@@ -741,10 +676,12 @@ export default function HomePage() {
 
               {/* Left CREATE Brand Logo */}
               <div className="lg:col-span-3 flex items-center justify-center lg:justify-start">
-                <div className="p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] liquid-glass-card shadow-md group-hover:scale-105 group-hover:-rotate-2 transition-transform duration-700">
+                <div className="p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] liquid-glass-card shadow-md group-hover:scale-105 group-hover:-rotate-2 transition-transform duration-500">
                   <img
                     src="/create.png"
                     alt="CREATE Project Logo"
+                    loading="lazy"
+                    decoding="async"
                     className="w-40 sm:w-48 lg:w-56 h-auto object-contain"
                   />
                 </div>
@@ -787,7 +724,9 @@ export default function HomePage() {
                 <img
                   src="/home3.png"
                   alt="CREATE Global Collaboration Architecture & Sphere"
-                  className="w-full max-w-[360px] sm:max-w-[420px] lg:max-w-[480px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(56,189,248,0.25)] group-hover:scale-105 group-hover:translate-y-[-8px] transition-all duration-700 ease-out"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full max-w-[360px] sm:max-w-[420px] lg:max-w-[480px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(56,189,248,0.25)] group-hover:scale-105 group-hover:translate-y-[-8px] transition-all duration-500 ease-out"
                 />
               </div>
 
@@ -816,7 +755,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {upcomingEvents.slice(0, 4).map((evt, idx) => (
                 <Link key={evt.id} href={evt.link} className="block group">
-                  <div className="rounded-[1.8rem] sm:rounded-[2rem] liquid-glass-card p-3.5 sm:p-4 space-y-3.5">
+                  <div className="rounded-[1.8rem] sm:rounded-[2rem] liquid-glass-card p-3.5 sm:p-4 space-y-3.5 transform-gpu">
 
                     {/* Image Thumbnail with Date Tag overlay */}
                     <div className="h-40 sm:h-48 rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#050b16] relative shadow-inner border border-white/40 dark:border-white/5">
@@ -825,7 +764,7 @@ export default function HomePage() {
                         alt={evt.title}
                         loading="lazy"
                         decoding="async"
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-in-out"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
                         onError={(e) => {
                           e.currentTarget.src = defaultFallbackEvents[idx % defaultFallbackEvents.length].img;
                         }}
@@ -839,8 +778,6 @@ export default function HomePage() {
 
                     {/* Event Details */}
                     <div className="space-y-2.5 px-1.5 pb-1.5">
-                  
-
                       <h4 className="text-[14px] sm:text-[16px] font-bold text-slate-900 dark:text-white leading-tight line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors duration-300">
                         {evt.title}
                       </h4>
@@ -879,7 +816,7 @@ export default function HomePage() {
               <div className="h-[1px] flex-1 bg-gradient-to-r from-slate-200 dark:from-white/10 to-transparent"></div>
             </div>
 
-            <div className="w-full liquid-glass-dock rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-8 lg:p-10">
+            <div className="w-full liquid-glass-dock rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-8 lg:p-10 transform-gpu">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 divide-y-0 sm:divide-x divide-slate-200/60 dark:divide-white/10">
                 {[
                   { count: '44', label: 'Schools Reached', sub: '(Gifted Students Programme)', icon: School },
@@ -911,14 +848,16 @@ export default function HomePage() {
           {/* ========================================================================= */}
           {/* 11. BUILDING PARTNERSHIPS. DRIVING CHANGE. SHOWCASE */}
           {/* ========================================================================= */}
-          <div className="rounded-[2.5rem] sm:rounded-[3rem] liquid-glass-dock p-6 sm:p-10 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center mt-2">
+          <div className="rounded-[2.5rem] sm:rounded-[3rem] liquid-glass-dock p-6 sm:p-10 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center mt-2 transform-gpu">
 
             {/* Left Showcase Visual */}
             <div className="lg:col-span-4 h-48 sm:h-56 rounded-[2rem] overflow-hidden bg-slate-100 dark:bg-[#050b16] shadow-md relative group cursor-pointer border border-white/50 dark:border-white/5">
               <img
                 src="/events/partnerships_showcase.jpg"
                 alt="Building Global Educational Partnerships and Driving Change"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-in-out"
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
               />
             </div>
 
@@ -944,22 +883,22 @@ export default function HomePage() {
 
             {/* Right 2 Feature Cards */}
             <div className="lg:col-span-4 space-y-3 sm:space-y-4">
-              <div className="p-4 sm:p-5 rounded-[1.5rem] liquid-glass-card flex items-center gap-4 group cursor-default">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl liquid-glass-icon text-blue-600 dark:text-sky-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white dark:group-hover:bg-sky-500 dark:group-hover:text-slate-950 transition-all duration-400">
+              <div className="p-4 sm:p-5 rounded-[1.5rem] liquid-glass-card flex items-center gap-4 group cursor-default transform-gpu">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl liquid-glass-icon text-blue-600 dark:text-sky-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white dark:group-hover:bg-sky-500 dark:group-hover:text-slate-950 transition-all duration-300">
                   <GraduationCap size={20} strokeWidth={1.5} />
                 </div>
-                <div className="group-hover:translate-x-1 transition-transform duration-400">
-                  <h4 className="text-[14px] sm:text-[15px] font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors duration-400">STEM Learning Lab</h4>
+                <div className="group-hover:translate-x-1 transition-transform duration-300">
+                  <h4 className="text-[14px] sm:text-[15px] font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors duration-300">STEM Learning Lab</h4>
                   <p className="text-[11.5px] sm:text-[12.5px] text-slate-500 dark:text-slate-400 leading-snug mt-0.5">Hands-on, activity-based STEM learning.</p>
                 </div>
               </div>
 
-              <div className="p-4 sm:p-5 rounded-[1.5rem] liquid-glass-card flex items-center gap-4 group cursor-default">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl liquid-glass-icon text-blue-600 dark:text-sky-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white dark:group-hover:bg-sky-500 dark:group-hover:text-slate-950 transition-all duration-400">
+              <div className="p-4 sm:p-5 rounded-[1.5rem] liquid-glass-card flex items-center gap-4 group cursor-default transform-gpu">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl liquid-glass-icon text-blue-600 dark:text-sky-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white dark:group-hover:bg-sky-500 dark:group-hover:text-slate-950 transition-all duration-300">
                   <Users size={20} strokeWidth={1.5} />
                 </div>
-                <div className="group-hover:translate-x-1 transition-transform duration-400">
-                  <h4 className="text-[14px] sm:text-[15px] font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors duration-400">Scholar Connect</h4>
+                <div className="group-hover:translate-x-1 transition-transform duration-300">
+                  <h4 className="text-[14px] sm:text-[15px] font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors duration-300">Scholar Connect</h4>
                   <p className="text-[11.5px] sm:text-[12.5px] text-slate-500 dark:text-slate-400 leading-snug mt-0.5">A platform for research exchange and collaboration.</p>
                 </div>
               </div>
