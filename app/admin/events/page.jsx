@@ -806,7 +806,7 @@ export default function AdminEventsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
                       <span>URL Slug (Unique Page Link) *</span>
                       <span className="text-[10px] text-slate-400 font-normal lowercase font-mono">auto-generated from title</span>
                     </label>
@@ -838,7 +838,7 @@ export default function AdminEventsPage() {
 
                   {/* Event Date Picker (DD/MM/YYYY) */}
                   <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
                       <span className="flex items-center gap-1.5"><Calendar size={13} className="text-[#2d5a3c]" /> Event Date (DD/MM/YYYY)</span>
                       <span className="font-mono text-[#2d5a3c] text-xs font-bold bg-white px-2 py-0.5 rounded border border-slate-200">
                         {formatDateDDMMYYYY(eventForm.dateDay, eventForm.dateMonth, eventForm.dateYear)}

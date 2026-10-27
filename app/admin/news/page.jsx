@@ -579,7 +579,7 @@ export default function AdminNewsResourcesPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                    <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
                       <span>URL Slug (Unique Link) *</span>
                       <span className="text-[10px] text-slate-400 font-mono lowercase">auto-generated from title</span>
                     </label>

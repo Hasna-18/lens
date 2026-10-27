@@ -8,8 +8,13 @@ if (fs.existsSync('.env.local')) {
   dotenv.config();
 }
 
+let connStr = process.env.DATABASE_URL ? process.env.DATABASE_URL.trim() : '';
+if (connStr.includes('sslmode=require') && !connStr.includes('uselibpqcompat')) {
+  connStr += connStr.includes('?') ? '&uselibpqcompat=true' : '?uselibpqcompat=true';
+}
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL ? process.env.DATABASE_URL.trim() : '',
+  connectionString: connStr,
   ssl: { rejectUnauthorized: false },
   connectionTimeoutMillis: 15000
 });

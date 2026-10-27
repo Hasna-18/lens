@@ -38,7 +38,7 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/about', label: 'About Us' },
+    { href: '/about', label: 'About' },
     { href: '/events', label: 'Events' },
     { href: '/initiatives', label: 'Initiatives' },
     { href: '/resources', label: 'Resources' },
@@ -82,6 +82,7 @@ export default function Navbar() {
                 <Link
                   key={link.label}
                   href={link.href}
+                  prefetch={true}
                   onMouseEnter={handlePrefetch}
                   onTouchStart={handlePrefetch}
                   className={`relative px-3.5 py-1.5 lg:px-4 lg:py-2 text-xs font-medium rounded-full transition-all duration-300 ${

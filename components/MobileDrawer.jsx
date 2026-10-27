@@ -90,6 +90,7 @@ export default function MobileDrawer({ isOpen, onClose, onOpenSearch }) {
                   <li key={item.href}>
                     <Link
                       href={item.href}
+                      prefetch={true}
                       onClick={onClose}
                       className={`flex items-center justify-between p-2.5 sm:p-3 rounded-2xl transition-all duration-200 group ${
                         isActive

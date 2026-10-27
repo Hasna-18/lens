@@ -5,6 +5,7 @@ import '../src/style.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { ToastProvider } from '../components/Toast';
+import PageTransitionProvider from '../components/PageTransitionProvider';
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
@@ -49,18 +50,20 @@ export default function RootLayout({ children }) {
       </head>
       <body suppressHydrationWarning className={isAdminRoute ? "bg-[#f1f5f9] text-slate-900 min-h-screen antialiased selection:bg-blue-500/20 selection:text-blue-900 transition-colors duration-300" : "bg-[#f8fafc] dark:bg-[#030712] text-slate-900 dark:text-slate-100 min-h-screen antialiased selection:bg-[#38bdf8]/30 selection:text-white transition-colors duration-300"}>
         <ToastProvider>
-          <div id="app" className={isAdminRoute ? "relative min-h-screen flex flex-col justify-between bg-[#f1f5f9] text-slate-900" : "relative min-h-screen flex flex-col justify-between bg-[#f8fafc] dark:bg-[#030712] text-slate-900 dark:text-slate-100 transition-colors duration-300"}>
-            {/* Top Navigation - Suppressed on admin routes */}
-            {!isAdminRoute && <Navbar />}
+          <PageTransitionProvider>
+            <div id="app" className={isAdminRoute ? "relative min-h-screen flex flex-col justify-between bg-[#f1f5f9] text-slate-900" : "relative min-h-screen flex flex-col justify-between bg-[#f8fafc] dark:bg-[#030712] text-slate-900 dark:text-slate-100 transition-colors duration-300"}>
+              {/* Top Navigation - Suppressed on admin routes */}
+              {!isAdminRoute && <Navbar />}
 
-            {/* Page Content */}
-            <main className="main-content-wrapper flex-grow">
-              {children}
-            </main>
+              {/* Page Content */}
+              <main className="main-content-wrapper flex-grow">
+                {children}
+              </main>
 
-            {/* Global Footer - Suppressed on admin routes */}
-            {!isAdminRoute && <Footer />}
-          </div>
+              {/* Global Footer - Suppressed on admin routes */}
+              {!isAdminRoute && <Footer />}
+            </div>
+          </PageTransitionProvider>
         </ToastProvider>
       </body>
     </html>

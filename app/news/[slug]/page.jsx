@@ -1,28 +1,28 @@
 'use client';
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
-import { 
-  Leaf, 
-  Calendar, 
-  User, 
-  Clock, 
-  Share2, 
-  ArrowRight, 
-  MapPin, 
-  Users, 
-  Building2, 
-  FlaskConical, 
-  Quote, 
-  Info, 
-  GraduationCap, 
-  Sparkles, 
-  Lightbulb, 
-  HeartHandshake, 
-  Layers, 
-  CheckCircle2, 
-  Facebook, 
-  Twitter, 
-  Linkedin, 
+import {
+  Leaf,
+  Calendar,
+  User,
+  Clock,
+  Share2,
+  ArrowRight,
+  MapPin,
+  Users,
+  Building2,
+  FlaskConical,
+  Quote,
+  Info,
+  GraduationCap,
+  Sparkles,
+  Lightbulb,
+  HeartHandshake,
+  Layers,
+  CheckCircle2,
+  Facebook,
+  Twitter,
+  Linkedin,
   Mail,
   ChevronLeft,
   ChevronRight,
@@ -167,7 +167,7 @@ export default function NewsDetailPage({ params }) {
 
   return (
     <div className="min-h-screen bg-[#fcfdfa] dark:bg-[#031008] text-[#19241c] dark:text-slate-100 font-sans pb-28 pt-28 sm:pt-36 relative overflow-hidden selection:bg-[#a2d45e]/30 transition-colors duration-300">
-      
+
       {/* Ambient Background Glows */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#f7f5e1]/60 via-[#ebf2e1]/30 to-transparent blur-[100px] rounded-full" />
@@ -179,7 +179,7 @@ export default function NewsDetailPage({ params }) {
       {/* 1. HERO SECTION WITH BLENDED IMAGE */}
       {/* ============================================================ */}
       <div className="relative w-full overflow-hidden">
-        
+
         {/* Natural Environment Blend Container (Full Bleed Right) */}
         <div className="absolute top-0 right-0 h-full min-h-[520px] lg:h-[620px] xl:h-[670px] w-full lg:w-[55%] pointer-events-none z-0 overflow-hidden select-none hidden lg:block rounded-l-[3rem] transition-all duration-300">
           <img
@@ -195,7 +195,7 @@ export default function NewsDetailPage({ params }) {
 
         {/* Mobile Background Fallback */}
         <div className="absolute inset-0 w-full h-full pointer-events-none z-0 block lg:hidden opacity-20">
-           <img
+          <img
             src={news.imageUrl || "/events/events_book_plant.jpg"}
             alt={news.title || "News Story"}
             className="w-full h-full object-cover"
@@ -206,78 +206,78 @@ export default function NewsDetailPage({ params }) {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 items-center min-h-[480px] sm:min-h-[560px] pb-6 lg:pb-0">
-            
+
             <div className="lg:col-span-6 xl:col-span-5 space-y-6 sm:space-y-7 lg:pr-8 z-10 pt-10 lg:pt-0">
-            
-            {/* Breadcrumb Navigation */}
-            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#485b4d] dark:text-slate-400">
-              <Leaf size={14} className="text-[#2d5a3c] dark:text-[#a2d45e] fill-[#2d5a3c] dark:fill-[#a2d45e]" />
-              <Link href="/" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">Home</Link>
-              <span className="text-[#879b8c] dark:text-slate-500">&gt;</span>
-              <Link href="/news" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">News</Link>
-              <span className="text-[#879b8c] dark:text-slate-500">&gt;</span>
-              <span className="text-[#1b3726] dark:text-[#a2d45e] font-bold line-clamp-1 max-w-[240px] sm:max-w-md">
+
+              {/* Breadcrumb Navigation */}
+              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#485b4d] dark:text-slate-400">
+                <Leaf size={14} className="text-[#2d5a3c] dark:text-[#a2d45e] fill-[#2d5a3c] dark:fill-[#a2d45e]" />
+                <Link href="/" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">Home</Link>
+                <span className="text-[#879b8c] dark:text-slate-500">&gt;</span>
+                <Link href="/news" className="hover:text-[#1b3726] dark:hover:text-white transition-colors">News</Link>
+                <span className="text-[#879b8c] dark:text-slate-500">&gt;</span>
+                <span className="text-[#1b3726] dark:text-[#a2d45e] font-bold line-clamp-1 max-w-[240px] sm:max-w-md">
+                  {news.title}
+                </span>
+              </div>
+
+              {/* Category Pill Tag */}
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 dark:bg-[#0c1f15]/80 backdrop-blur-md border border-[#e8efe9] dark:border-[#1e422c] shadow-sm hover:border-[#1a5e35]/40 transition-colors duration-300">
+                <span className="text-[11px] font-bold tracking-[0.22em] text-[#4e6252] dark:text-[#a2d45e] uppercase">
+                  {news.tag || news.category || 'LEnSE NEWS'}
+                </span>
+              </div>
+
+              <h1 className="text-4xl sm:text-5xl lg:text-[4.2rem] font-serif font-normal text-[#122016] dark:text-white leading-[1.08] tracking-tight">
                 {news.title}
-              </span>
-            </div>
+              </h1>
 
-            {/* Category Pill Tag */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 dark:bg-[#0c1f15]/80 backdrop-blur-md border border-[#e8efe9] dark:border-[#1e422c] shadow-sm hover:border-[#1a5e35]/40 transition-colors duration-300">
-              <span className="text-[11px] font-bold tracking-[0.22em] text-[#4e6252] dark:text-[#a2d45e] uppercase">
-                {news.tag || news.category || 'LEnSE NEWS'}
-              </span>
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl lg:text-[4.2rem] font-serif font-normal text-[#122016] dark:text-white leading-[1.08] tracking-tight">
-              {news.title}
-            </h1>
-
-            {news.desc && (
-              <p className="text-[#405245] dark:text-slate-300 text-sm sm:text-[14.5px] leading-[1.72] max-w-2xl font-normal">
-                {news.desc}
-              </p>
-            )}
-
-            {/* Clean Inline Meta Info Bar */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-3 text-xs text-[#526656] dark:text-slate-300 font-medium border-t border-[#d8e4d9]/70 dark:border-[#183a27] max-w-2xl">
-              {news.date && (
-                <div className="flex items-center gap-2">
-                  <Calendar size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                  <span className="font-bold text-[#19241c] dark:text-white">{news.date}</span>
-                </div>
+              {news.desc && (
+                <p className="text-[#405245] dark:text-slate-300 text-sm sm:text-[14.5px] leading-[1.72] max-w-2xl font-normal">
+                  {news.desc}
+                </p>
               )}
-              {news.author && (
-                <>
-                  <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
+
+              {/* Clean Inline Meta Info Bar */}
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-3 text-xs text-[#526656] dark:text-slate-300 font-medium border-t border-[#d8e4d9]/70 dark:border-[#183a27] max-w-2xl">
+                {news.date && (
                   <div className="flex items-center gap-2">
-                    <User size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                    <span>{news.author}</span>
+                    <Calendar size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
+                    <span className="font-bold text-[#19241c] dark:text-white">{news.date}</span>
                   </div>
-                </>
-              )}
-              {news.readTime && (
-                <>
-                  <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
-                  <div className="flex items-center gap-2">
-                    <Clock size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
-                    <span>{news.readTime}</span>
-                  </div>
-                </>
-              )}
-              <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
-              <button 
-                onClick={handleShare}
-                className="flex items-center gap-2 text-[#1b3726] dark:text-[#a2d45e] hover:text-[#2d5a3c] font-bold transition-colors cursor-pointer group"
-              >
-                <Share2 size={14} className="group-hover:scale-110 transition-transform" />
-                <span>{copied ? 'Link Copied!' : 'Share Story'}</span>
-              </button>
-            </div>
+                )}
+                {news.author && (
+                  <>
+                    <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
+                    <div className="flex items-center gap-2">
+                      <User size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
+                      <span>{news.author}</span>
+                    </div>
+                  </>
+                )}
+                {news.readTime && (
+                  <>
+                    <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
+                    <div className="flex items-center gap-2">
+                      <Clock size={15} className="text-[#2d5a3c] dark:text-[#a2d45e]" />
+                      <span>{news.readTime}</span>
+                    </div>
+                  </>
+                )}
+                <span className="text-[#c2d3c5] dark:text-slate-600">•</span>
+                <button
+                  onClick={handleShare}
+                  className="flex items-center gap-2 text-[#1b3726] dark:text-[#a2d45e] hover:text-[#2d5a3c] font-bold transition-colors cursor-pointer group"
+                >
+                  <Share2 size={14} className="group-hover:scale-110 transition-transform" />
+                  <span>{copied ? 'Link Copied!' : 'Share Story'}</span>
+                </button>
+              </div>
 
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
       {/* Hero Bottom Divider */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4">
@@ -289,10 +289,10 @@ export default function NewsDetailPage({ params }) {
       {/* ============================================================ */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
-          
+
           {/* Left Column (8 cols): Overview, About, Highlights, Voices, Gallery */}
           <div className="lg:col-span-8 space-y-12">
-            
+
             {/* Overview / Story Section */}
             <section className="space-y-4">
               <h2 className="text-2xl sm:text-[26px] font-serif text-[#122016] dark:text-white">
@@ -365,10 +365,10 @@ export default function NewsDetailPage({ params }) {
 
                   {quote.image && (
                     <div className="w-full md:w-48 h-36 rounded-2xl overflow-hidden shrink-0 bg-slate-100 dark:bg-[#05110a] shadow-inner">
-                      <img 
-                        src={quote.image} 
-                        alt={quote.author || "Quote"} 
-                        className="w-full h-full object-cover" 
+                      <img
+                        src={quote.image}
+                        alt={quote.author || "Quote"}
+                        className="w-full h-full object-cover"
                       />
                     </div>
                   )}
@@ -386,10 +386,10 @@ export default function NewsDetailPage({ params }) {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
                   {gallery.map((item, idx) => (
                     <div key={idx} className="h-28 sm:h-32 rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#05110a] border border-[#e2ece4] dark:border-[#183a27] shadow-xs group cursor-pointer">
-                      <img 
-                        src={item.img || item} 
-                        alt={item.alt || 'Gallery'} 
-                        className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500" 
+                      <img
+                        src={item.img || item}
+                        alt={item.alt || 'Gallery'}
+                        className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
                       />
                     </div>
                   ))}
@@ -401,7 +401,7 @@ export default function NewsDetailPage({ params }) {
 
           {/* Right Sidebar (4 cols): News Details, Key Takeaways, Related News */}
           <div className="lg:col-span-4 space-y-6">
-            
+
             {/* CARD 1: NEWS DETAILS */}
             <div className="rounded-[2rem] bg-white dark:bg-[#0b1c14] border border-[#e4ede5] dark:border-[#183a27] p-6 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.03)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)] space-y-5">
               <h3 className="text-lg font-serif text-[#122016] dark:text-white pb-2 border-b border-[#f0f4ef] dark:border-[#183a27]">
@@ -436,9 +436,9 @@ export default function NewsDetailPage({ params }) {
                       { icon: Linkedin, href: '#' },
                       { icon: Mail, href: '#' }
                     ].map((s, i) => (
-                      <a 
-                        key={i} 
-                        href={s.href} 
+                      <a
+                        key={i}
+                        href={s.href}
                         className="w-8 h-8 rounded-full bg-[#1b3726] dark:bg-[#11261a] hover:bg-[#254d35] dark:hover:bg-[#1e422c] text-white dark:text-[#a2d45e] flex items-center justify-center transition-colors shadow-xs"
                       >
                         <s.icon size={13} />
@@ -480,16 +480,16 @@ export default function NewsDetailPage({ params }) {
 
                 <div className="space-y-3.5">
                   {relatedNews.map((article, idx) => (
-                    <Link 
-                      key={idx} 
-                      href={`/news/${article.slug || article.id}`} 
+                    <Link
+                      key={idx}
+                      href={`/news/${article.slug || article.id}`}
                       className="flex items-center gap-3 group/art hover:bg-[#f6f9f4] dark:hover:bg-[#11261a] p-1.5 rounded-xl transition-colors"
                     >
                       <div className="w-14 h-12 rounded-xl overflow-hidden bg-slate-100 dark:bg-[#05110a] shrink-0">
-                        <img 
-                          src={article.imageUrl || '/events/workshop.jpg'} 
-                          alt={article.title} 
-                          className="w-full h-full object-cover group-hover/art:scale-108 transition-transform" 
+                        <img
+                          src={article.imageUrl || '/events/workshop.jpg'}
+                          alt={article.title}
+                          className="w-full h-full object-cover group-hover/art:scale-108 transition-transform"
                           onError={(e) => { e.currentTarget.src = "/events/events_book_plant.jpg"; }}
                         />
                       </div>
@@ -506,8 +506,8 @@ export default function NewsDetailPage({ params }) {
                 </div>
 
                 <div className="pt-2 border-t border-[#f0f4ef] dark:border-[#183a27]">
-                  <Link 
-                    href="/news" 
+                  <Link
+                    href="/news"
                     className="w-full text-[11.5px] font-bold text-[#1b3726] dark:text-[#a2d45e] hover:text-[#2d5a3c] flex items-center justify-center gap-1.5 transition-colors py-1 group"
                   >
                     <span>View All News</span>
@@ -570,7 +570,7 @@ export default function NewsDetailPage({ params }) {
       {/* ============================================================ */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
         <div className="rounded-[2rem] bg-[#eaf0e6] dark:bg-[#0b1c14] border border-[#dce8d8] dark:border-[#183a27] flex flex-col sm:flex-row items-center justify-between p-6 sm:p-8 md:p-10 gap-8 relative overflow-hidden shadow-xs transition-all duration-300">
-          
+
           <div className="flex items-center gap-4 relative z-10">
             <div className="w-12 h-12 rounded-2xl bg-[#2d5a3c] dark:bg-[#11261a] border border-white/20 dark:border-[#1e422c] text-white dark:text-[#a2d45e] flex items-center justify-center shrink-0 shadow-sm">
               <Mail size={22} />
@@ -593,16 +593,16 @@ export default function NewsDetailPage({ params }) {
               </div>
             ) : (
               <form onSubmit={handleSubscribe} className="bg-white dark:bg-[#05110a] rounded-full p-1.5 pl-5 pr-1.5 flex items-center shadow-sm w-full sm:w-[340px] border border-[#d2dfd2] dark:border-[#183a27]">
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="Your email address" 
+                  placeholder="Your email address"
                   className="text-xs text-slate-800 dark:text-white placeholder:text-[#8a9d90] dark:placeholder-slate-500 bg-transparent outline-none flex-1 font-medium min-w-0"
                 />
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="px-5 py-2.5 rounded-full bg-[#1b3726] dark:bg-[#a2d45e] hover:bg-[#254d35] dark:hover:bg-[#b8e874] text-white dark:text-[#031008] text-[11px] font-bold flex items-center gap-2 transition-colors cursor-pointer shrink-0 shadow-xs"
                 >
                   <span>Subscribe</span>

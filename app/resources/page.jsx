@@ -275,7 +275,7 @@ export default function AcademicResourcesPage() {
             </div>
 
             {/* Right: Floating Glass Card (Matching About Page Estd Card) */}
-            <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end hidden sm:flex">
+            <div className="lg:col-span-5 relative hidden sm:flex items-center justify-center lg:justify-end">
               <div className="relative w-[300px] sm:w-[320px] rounded-[1.8rem] p-7 sm:p-8 bg-gradient-to-br from-white/55 via-sky-50/40 to-blue-100/30 backdrop-blur-xl border border-white/80 shadow-[0_25px_60px_rgba(2,60,140,0.22),inset_0_1px_0_rgba(255,255,255,0.95)] hover:-translate-y-1 transition duration-300">
                 <span className="absolute -top-3.5 -right-3.5 w-9 h-9 rounded-full bg-white/90 border border-white text-sky-500 flex items-center justify-center shadow-md">
                   <Sparkles size={17} />
