@@ -500,7 +500,7 @@ export default function LenseLoader({
       {/* Bottom Citation Tagline */}
       <div className="text-center pb-3 sm:pb-5">
         <p className="text-[10px] sm:text-[11px] font-semibold tracking-[0.24em] uppercase text-slate-400 dark:text-slate-500">
-          LEARNING TODAY <span className="opacity-40 mx-2">|</span> SUSTAINING TOMORROW
+          LEARNING ENGINEERING TODAY <span className="opacity-40 mx-2">|</span> SUSTAINING TOMORROW
         </p>
       </div>
 

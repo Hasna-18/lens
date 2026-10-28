@@ -30,7 +30,18 @@ export default function Navbar() {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+
+    // Support open event or ?nav=1 param
+    if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('nav')) {
+      setMobileOpen(true);
+    }
+    const handleOpen = () => setMobileOpen(true);
+    window.addEventListener('open-mobile-nav', handleOpen);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('open-mobile-nav', handleOpen);
+    };
   }, []);
 
   const toggleTheme = () => {
@@ -141,6 +152,7 @@ export default function Navbar() {
 
             {/* Mobile Hamburger Button (visible on screens < lg) */}
             <button
+              id="mobile-menu-button"
               onClick={() => setMobileOpen(!mobileOpen)}
               className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#080f1e]/90 backdrop-blur-xl border border-white/80 dark:border-white/15 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-white hover:border-blue-300 dark:hover:border-sky-400 hover:bg-blue-50 dark:hover:bg-sky-950/60 flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
               aria-label="Toggle navigation menu"

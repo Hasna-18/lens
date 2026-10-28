@@ -956,7 +956,7 @@ export default function HomePage() {
             {/* Left Hero Content */}
             <div className="lg:col-span-7 space-y-6">
               <span className={`flex items-center gap-2 text-[11px] font-bold tracking-[0.24em] uppercase ${BLUE}`}>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#1a6dff]" />LEARNING TODAY, SUSTAINING TOMORROW
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />LEARNING ENGINEERING TODAY, SUSTAINING TOMORROW
               </span>
 
               <h1 style={SERIF} className="text-[52px] sm:text-[66px] lg:text-[74px] leading-[1.03] tracking-tight font-normal text-slate-900">
