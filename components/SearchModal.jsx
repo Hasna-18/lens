@@ -52,7 +52,7 @@ export default function SearchModal({ isOpen, onClose }) {
       >
         {/* Search Input Bar */}
         <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
-          <Search size={22} className="text-[#1a6dff] shrink-0" />
+          <Search size={22} className="text-[#009ab1] shrink-0" />
           <input
             type="text"
             placeholder="Search LEnSE pages, programs, events, resources, news..."
@@ -85,21 +85,21 @@ export default function SearchModal({ isOpen, onClose }) {
                   onClick={() => handleSelect(item.href)}
                   className="group flex items-start gap-3.5 p-3 sm:p-3.5 rounded-2xl hover:bg-blue-50/70 dark:hover:bg-slate-800/80 cursor-pointer transition-all border border-transparent hover:border-blue-200/60 dark:hover:border-blue-500/30"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#1a6dff] dark:text-sky-400 flex items-center justify-center shrink-0 group-hover:bg-gradient-to-r group-hover:from-[#0a6cff] group-hover:to-[#1fa2ff] group-hover:text-white transition-all shadow-2xs">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#009ab1] dark:text-sky-400 flex items-center justify-center shrink-0 group-hover:bg-gradient-to-r group-hover:from-[#009ab1] group-hover:to-[#1fa2ff] group-hover:text-white transition-all shadow-2xs">
                     <Icon size={20} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-[#1a6dff] dark:group-hover:text-sky-400 transition-colors">
+                      <span className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-[#009ab1] dark:group-hover:text-sky-400 transition-colors">
                         {item.title}
                       </span>
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-blue-50 dark:bg-white/10 text-[#1a6dff] dark:text-sky-300">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-blue-50 dark:bg-white/10 text-[#009ab1] dark:text-sky-300">
                         {item.category}
                       </span>
                     </div>
                     <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">{item.desc}</p>
                   </div>
-                  <ArrowRight size={16} className="text-[#1a6dff] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0 mt-2" />
+                  <ArrowRight size={16} className="text-[#009ab1] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all shrink-0 mt-2" />
                 </div>
               );
             })
@@ -115,7 +115,7 @@ export default function SearchModal({ isOpen, onClose }) {
         {/* Modal Footer */}
         <div className="p-3 bg-slate-50 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500 px-5">
           <span>LEnSE • University of Kerala</span>
-          <span className="flex items-center gap-1 font-semibold text-[#1a6dff] dark:text-sky-400">
+          <span className="flex items-center gap-1 font-semibold text-[#009ab1] dark:text-sky-400">
             Click to navigate
           </span>
         </div>

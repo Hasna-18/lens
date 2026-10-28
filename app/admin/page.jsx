@@ -255,7 +255,7 @@ export default function AdminDashboardPage() {
     return (
       <div className="py-28 flex items-center justify-center">
         <div className="text-center space-y-4 bg-white p-9 rounded-[2rem] shadow-[0_12px_40px_rgba(26,109,255,0.08)] border border-slate-200/80 max-w-sm w-full mx-4">
-          <Loader2 className="animate-spin text-[#1a6dff] mx-auto" size={36} />
+          <Loader2 className="animate-spin text-[#009ab1] mx-auto" size={36} />
           <div>
             <h3 style={SERIF} className="text-xl font-normal text-[#0f1a3a]">
               Loading Workspace
@@ -324,7 +324,7 @@ export default function AdminDashboardPage() {
             {isSuperAdmin && (
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="px-5 py-3 rounded-full bg-[#1a6dff]/40 hover:bg-[#1a6dff]/60 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 border border-sky-400/50 backdrop-blur-md transition-all hover:scale-[1.02] cursor-pointer"
+                className="px-5 py-3 rounded-full bg-[#009ab1]/40 hover:bg-[#009ab1]/60 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 border border-sky-400/50 backdrop-blur-md transition-all hover:scale-[1.02] cursor-pointer"
               >
                 <UserPlus size={14} className="text-sky-300" />
                 <span>Generate Administrator</span>
@@ -351,9 +351,9 @@ export default function AdminDashboardPage() {
 
         <Link
           href="/admin/events"
-          className="p-5 rounded-[2rem] bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(26,109,255,0.03)] flex items-center gap-3.5 group hover:-translate-y-1 hover:border-[#1a6dff]/40 transition-all duration-300"
+          className="p-5 rounded-[2rem] bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(26,109,255,0.03)] flex items-center gap-3.5 group hover:-translate-y-1 hover:border-[#009ab1]/40 transition-all duration-300"
         >
-          <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1a6dff] shrink-0 group-hover:scale-105 transition-transform">
+          <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#009ab1] shrink-0 group-hover:scale-105 transition-transform">
             <Calendar size={22} strokeWidth={1.75} />
           </div>
           <div>
@@ -366,7 +366,7 @@ export default function AdminDashboardPage() {
 
         <Link
           href="/admin/news"
-          className="p-5 rounded-[2rem] bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(26,109,255,0.03)] flex items-center gap-3.5 group hover:-translate-y-1 hover:border-[#1a6dff]/40 transition-all duration-300"
+          className="p-5 rounded-[2rem] bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(26,109,255,0.03)] flex items-center gap-3.5 group hover:-translate-y-1 hover:border-[#009ab1]/40 transition-all duration-300"
         >
           <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-[#0284c7] shrink-0 group-hover:scale-105 transition-transform">
             <FileText size={22} strokeWidth={1.75} />
@@ -381,7 +381,7 @@ export default function AdminDashboardPage() {
 
         <Link
           href="/admin/resources"
-          className="p-5 rounded-[2rem] bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(26,109,255,0.03)] flex items-center gap-3.5 group hover:-translate-y-1 hover:border-[#1a6dff]/40 transition-all duration-300"
+          className="p-5 rounded-[2rem] bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(26,109,255,0.03)] flex items-center gap-3.5 group hover:-translate-y-1 hover:border-[#009ab1]/40 transition-all duration-300"
         >
           <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-[#4f46e5] shrink-0 group-hover:scale-105 transition-transform">
             <BookOpen size={22} strokeWidth={1.75} />
@@ -396,7 +396,7 @@ export default function AdminDashboardPage() {
 
         <Link
           href="/admin/initiatives"
-          className="p-5 rounded-[2rem] bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(26,109,255,0.03)] flex items-center gap-3.5 group hover:-translate-y-1 hover:border-[#1a6dff]/40 transition-all duration-300"
+          className="p-5 rounded-[2rem] bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(26,109,255,0.03)] flex items-center gap-3.5 group hover:-translate-y-1 hover:border-[#009ab1]/40 transition-all duration-300"
         >
           <div className="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-[#0d9488] shrink-0 group-hover:scale-105 transition-transform">
             <Sparkles size={22} strokeWidth={1.75} />
@@ -411,7 +411,7 @@ export default function AdminDashboardPage() {
 
         <Link
           href="/admin/enquiries"
-          className="p-5 rounded-[2rem] bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(26,109,255,0.03)] flex items-center gap-3.5 group hover:-translate-y-1 hover:border-[#1a6dff]/40 transition-all duration-300"
+          className="p-5 rounded-[2rem] bg-white border border-slate-200/80 shadow-[0_4px_20px_rgba(26,109,255,0.03)] flex items-center gap-3.5 group hover:-translate-y-1 hover:border-[#009ab1]/40 transition-all duration-300"
         >
           <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-[#d97706] shrink-0 group-hover:scale-105 transition-transform">
             <Mail size={22} strokeWidth={1.75} />
@@ -434,8 +434,8 @@ export default function AdminDashboardPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#1a6dff] animate-pulse" />
-              <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-[#1a6dff]">
+              <span className="w-2 h-2 rounded-full bg-[#009ab1] animate-pulse" />
+              <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-[#009ab1]">
                 Security &amp; User Directory
               </span>
               {isSuperAdmin && (
@@ -445,7 +445,7 @@ export default function AdminDashboardPage() {
               )}
             </div>
             <h2 style={SERIF} className="text-2xl sm:text-3xl font-normal text-[#0f1a3a]">
-              Registered <em style={SERIF} className="italic text-[#1a6dff] font-normal">Administrators</em>
+              Registered <em style={SERIF} className="italic text-[#009ab1] font-normal">Administrators</em>
             </h2>
             <p className="text-xs text-slate-500 font-medium">
               {isSuperAdmin 
@@ -463,7 +463,7 @@ export default function AdminDashboardPage() {
             {isSuperAdmin && (
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="px-4 py-2 rounded-xl bg-[#1a6dff] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all hover:scale-[1.01] cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[#009ab1] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all hover:scale-[1.01] cursor-pointer"
               >
                 <UserPlus size={14} />
                 <span>Generate Administrator</span>
@@ -492,7 +492,7 @@ export default function AdminDashboardPage() {
                   <tr key={user.id} className="hover:bg-slate-50/70 transition-colors">
                     <td className="py-3.5 pl-2">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#1a6dff] to-[#38bdf8] text-white flex items-center justify-center text-xs font-bold shrink-0">
+                        <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#009ab1] to-[#38bdf8] text-white flex items-center justify-center text-xs font-bold shrink-0">
                           {(user.name || user.username || 'A').charAt(0).toUpperCase()}
                         </div>
                         <span className="font-bold text-[#0f1a3a] text-xs">
@@ -510,7 +510,7 @@ export default function AdminDashboardPage() {
                       <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                         user.role === 'superadmin'
                           ? 'bg-purple-50 text-purple-700 border-purple-200'
-                          : 'bg-blue-50 text-[#1a6dff] border-blue-200'
+                          : 'bg-blue-50 text-[#009ab1] border-blue-200'
                       }`}>
                         {user.role || 'admin'}
                       </span>
@@ -533,7 +533,7 @@ export default function AdminDashboardPage() {
                             setResetError('');
                             setResetSuccess('');
                           }}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-sky-200 bg-sky-50/60 hover:bg-sky-100 text-[#1a6dff] hover:text-[#0052e0] text-[11px] font-bold transition-all shadow-2xs active:scale-95 cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-sky-200 bg-sky-50/60 hover:bg-sky-100 text-[#009ab1] hover:text-[#008296] text-[11px] font-bold transition-all shadow-2xs active:scale-95 cursor-pointer"
                           title={`Reset password for @${user.username}`}
                         >
                           <Key size={12} />
@@ -563,7 +563,7 @@ export default function AdminDashboardPage() {
 
         <div className="flex items-center justify-between border-b border-slate-200 pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-2 h-2 rounded-full bg-[#1a6dff]" />
+            <div className="w-2 h-2 rounded-full bg-[#009ab1]" />
             <h2 className="text-xs font-bold tracking-[0.2em] text-[#0f1a3a] uppercase">
               Management Modules
             </h2>
@@ -573,18 +573,18 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
           {/* Card 1: Events & Conferences */}
-          <div className="rounded-[2.2rem] bg-white border border-slate-200/80 p-6 sm:p-7 flex flex-col justify-between hover:border-[#1a6dff]/60 shadow-[0_4px_20px_rgba(26,109,255,0.03)] hover:shadow-[0_12px_32px_rgba(26,109,255,0.08)] hover:-translate-y-1.5 transition-all duration-300 group">
+          <div className="rounded-[2.2rem] bg-white border border-slate-200/80 p-6 sm:p-7 flex flex-col justify-between hover:border-[#009ab1]/60 shadow-[0_4px_20px_rgba(26,109,255,0.03)] hover:shadow-[0_12px_32px_rgba(26,109,255,0.08)] hover:-translate-y-1.5 transition-all duration-300 group">
             <div className="space-y-3.5">
               <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1a6dff] group-hover:scale-105 transition-transform">
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#009ab1] group-hover:scale-105 transition-transform">
                   <Calendar size={22} strokeWidth={1.5} />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-50 text-[#1a6dff] border border-blue-100">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-50 text-[#009ab1] border border-blue-100">
                   Schedule
                 </span>
               </div>
 
-              <h3 style={SERIF} className="text-2xl font-normal text-[#0f1a3a] group-hover:text-[#1a6dff] transition-colors leading-tight">
+              <h3 style={SERIF} className="text-2xl font-normal text-[#0f1a3a] group-hover:text-[#009ab1] transition-colors leading-tight">
                 Events &amp; Conferences
               </h3>
 
@@ -596,7 +596,7 @@ export default function AdminDashboardPage() {
             <div className="pt-5 border-t border-slate-100 mt-5 flex items-center gap-2">
               <Link
                 href="/admin/events"
-                className="flex-1 py-2.5 rounded-xl bg-[#1a6dff] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-98"
+                className="flex-1 py-2.5 rounded-xl bg-[#009ab1] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-98"
               >
                 <span>Manage</span>
                 <ArrowRight size={13} />
@@ -614,7 +614,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Card 2: Academic Resources */}
-          <div className="rounded-[2.2rem] bg-white border border-slate-200/80 p-6 sm:p-7 flex flex-col justify-between hover:border-[#1a6dff]/60 shadow-[0_4px_20px_rgba(26,109,255,0.03)] hover:shadow-[0_12px_32px_rgba(26,109,255,0.08)] hover:-translate-y-1.5 transition-all duration-300 group">
+          <div className="rounded-[2.2rem] bg-white border border-slate-200/80 p-6 sm:p-7 flex flex-col justify-between hover:border-[#009ab1]/60 shadow-[0_4px_20px_rgba(26,109,255,0.03)] hover:shadow-[0_12px_32px_rgba(26,109,255,0.08)] hover:-translate-y-1.5 transition-all duration-300 group">
             <div className="space-y-3.5">
               <div className="flex items-center justify-between">
                 <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-[#4f46e5] group-hover:scale-105 transition-transform">
@@ -625,7 +625,7 @@ export default function AdminDashboardPage() {
                 </span>
               </div>
 
-              <h3 style={SERIF} className="text-2xl font-normal text-[#0f1a3a] group-hover:text-[#1a6dff] transition-colors leading-tight">
+              <h3 style={SERIF} className="text-2xl font-normal text-[#0f1a3a] group-hover:text-[#009ab1] transition-colors leading-tight">
                 Academic Resources
               </h3>
 
@@ -637,7 +637,7 @@ export default function AdminDashboardPage() {
             <div className="pt-5 border-t border-slate-100 mt-5 flex items-center gap-2">
               <Link
                 href="/admin/resources"
-                className="flex-1 py-2.5 rounded-xl bg-[#1a6dff] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-98"
+                className="flex-1 py-2.5 rounded-xl bg-[#009ab1] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-98"
               >
                 <span>Edit Files</span>
                 <ArrowRight size={13} />
@@ -655,7 +655,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Card 3: News & Media */}
-          <div className="rounded-[2.2rem] bg-white border border-slate-200/80 p-6 sm:p-7 flex flex-col justify-between hover:border-[#1a6dff]/60 shadow-[0_4px_20px_rgba(26,109,255,0.03)] hover:shadow-[0_12px_32px_rgba(26,109,255,0.08)] hover:-translate-y-1.5 transition-all duration-300 group">
+          <div className="rounded-[2.2rem] bg-white border border-slate-200/80 p-6 sm:p-7 flex flex-col justify-between hover:border-[#009ab1]/60 shadow-[0_4px_20px_rgba(26,109,255,0.03)] hover:shadow-[0_12px_32px_rgba(26,109,255,0.08)] hover:-translate-y-1.5 transition-all duration-300 group">
             <div className="space-y-3.5">
               <div className="flex items-center justify-between">
                 <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-[#0284c7] group-hover:scale-105 transition-transform">
@@ -666,7 +666,7 @@ export default function AdminDashboardPage() {
                 </span>
               </div>
 
-              <h3 style={SERIF} className="text-2xl font-normal text-[#0f1a3a] group-hover:text-[#1a6dff] transition-colors leading-tight">
+              <h3 style={SERIF} className="text-2xl font-normal text-[#0f1a3a] group-hover:text-[#009ab1] transition-colors leading-tight">
                 News &amp; Media
               </h3>
 
@@ -678,7 +678,7 @@ export default function AdminDashboardPage() {
             <div className="pt-5 border-t border-slate-100 mt-5 flex items-center gap-2">
               <Link
                 href="/admin/news"
-                className="flex-1 py-2.5 rounded-xl bg-[#1a6dff] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-98"
+                className="flex-1 py-2.5 rounded-xl bg-[#009ab1] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-98"
               >
                 <span>Manage</span>
                 <ArrowRight size={13} />
@@ -696,7 +696,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Card 4: Key STEM Initiatives */}
-          <div className="rounded-[2.2rem] bg-white border border-slate-200/80 p-6 sm:p-7 flex flex-col justify-between hover:border-[#1a6dff]/60 shadow-[0_4px_20px_rgba(26,109,255,0.03)] hover:shadow-[0_12px_32px_rgba(26,109,255,0.08)] hover:-translate-y-1.5 transition-all duration-300 group">
+          <div className="rounded-[2.2rem] bg-white border border-slate-200/80 p-6 sm:p-7 flex flex-col justify-between hover:border-[#009ab1]/60 shadow-[0_4px_20px_rgba(26,109,255,0.03)] hover:shadow-[0_12px_32px_rgba(26,109,255,0.08)] hover:-translate-y-1.5 transition-all duration-300 group">
             <div className="space-y-3.5">
               <div className="flex items-center justify-between">
                 <div className="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-[#0d9488] group-hover:scale-105 transition-transform">
@@ -707,7 +707,7 @@ export default function AdminDashboardPage() {
                 </span>
               </div>
 
-              <h3 style={SERIF} className="text-2xl font-normal text-[#0f1a3a] group-hover:text-[#1a6dff] transition-colors leading-tight">
+              <h3 style={SERIF} className="text-2xl font-normal text-[#0f1a3a] group-hover:text-[#009ab1] transition-colors leading-tight">
                 Key Initiatives
               </h3>
 
@@ -719,7 +719,7 @@ export default function AdminDashboardPage() {
             <div className="pt-5 border-t border-slate-100 mt-5 flex items-center gap-2">
               <Link
                 href="/admin/initiatives"
-                className="flex-1 py-2.5 rounded-xl bg-[#1a6dff] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-98"
+                className="flex-1 py-2.5 rounded-xl bg-[#009ab1] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-98"
               >
                 <span>Edit Initiatives</span>
                 <ArrowRight size={13} />
@@ -748,13 +748,13 @@ export default function AdminDashboardPage() {
           <div className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl border border-slate-200/90 overflow-hidden relative">
 
             {/* Top Bar Accent */}
-            <div className="h-1.5 bg-gradient-to-r from-[#1466f6] via-[#38bdf8] to-[#0052e0]" />
+            <div className="h-1.5 bg-gradient-to-r from-[#009ab1] via-[#38bdf8] to-[#008296]" />
 
             <div className="p-6 sm:p-7 space-y-5">
 
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-[#1a6dff]">
+                  <div className="w-10 h-10 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-[#009ab1]">
                     <Key size={18} />
                   </div>
                   <div>
@@ -788,7 +788,7 @@ export default function AdminDashboardPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Role:</span>
-                  <span className="uppercase text-[10px] font-bold text-[#1a6dff]">{resetModalUser.role}</span>
+                  <span className="uppercase text-[10px] font-bold text-[#009ab1]">{resetModalUser.role}</span>
                 </div>
               </div>
 
@@ -811,7 +811,7 @@ export default function AdminDashboardPage() {
                   <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-700 mb-1">
                     New Secure Password
                   </label>
-                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white">
+                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       required
@@ -834,7 +834,7 @@ export default function AdminDashboardPage() {
                   <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-700 mb-1">
                     Confirm New Password
                   </label>
-                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white">
+                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       required
@@ -858,7 +858,7 @@ export default function AdminDashboardPage() {
                   <button
                     type="submit"
                     disabled={resetLoading}
-                    className="px-5 py-2.5 rounded-xl bg-[#1a6dff] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider shadow-sm transition-all hover:scale-[1.01] active:scale-98 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-[#009ab1] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider shadow-sm transition-all hover:scale-[1.01] active:scale-98 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
                   >
                     {resetLoading ? (
                       <>
@@ -888,13 +888,13 @@ export default function AdminDashboardPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-xs p-4 animate-in fade-in duration-200">
           <div className="w-full max-w-lg bg-white rounded-[2rem] shadow-2xl border border-slate-200/90 overflow-hidden relative">
 
-            <div className="h-1.5 bg-gradient-to-r from-[#1466f6] via-[#38bdf8] to-[#0052e0]" />
+            <div className="h-1.5 bg-gradient-to-r from-[#009ab1] via-[#38bdf8] to-[#008296]" />
 
             <div className="p-6 sm:p-7 space-y-4">
 
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-[#1a6dff]">
+                  <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-[#009ab1]">
                     <UserPlus size={18} />
                   </div>
                   <div>
@@ -941,7 +941,7 @@ export default function AdminDashboardPage() {
                     value={newAdminData.name}
                     onChange={(e) => setNewAdminData({ ...newAdminData, name: e.target.value })}
                     placeholder="e.g. Dr. Jane Cooper"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#1a6dff] focus:ring-3 focus:ring-blue-100 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#009ab1] focus:ring-3 focus:ring-blue-100 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none"
                   />
                 </div>
 
@@ -956,7 +956,7 @@ export default function AdminDashboardPage() {
                       value={newAdminData.email}
                       onChange={(e) => setNewAdminData({ ...newAdminData, email: e.target.value })}
                       placeholder="name@keralauniv.ac.in"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#1a6dff] focus:ring-3 focus:ring-blue-100 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#009ab1] focus:ring-3 focus:ring-blue-100 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none"
                     />
                   </div>
 
@@ -970,7 +970,7 @@ export default function AdminDashboardPage() {
                       value={newAdminData.username}
                       onChange={(e) => setNewAdminData({ ...newAdminData, username: e.target.value })}
                       placeholder="jane_cooper"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#1a6dff] focus:ring-3 focus:ring-blue-100 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#009ab1] focus:ring-3 focus:ring-blue-100 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none"
                     />
                   </div>
                 </div>
@@ -986,7 +986,7 @@ export default function AdminDashboardPage() {
                       value={newAdminData.password}
                       onChange={(e) => setNewAdminData({ ...newAdminData, password: e.target.value })}
                       placeholder="Min 6 characters"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#1a6dff] focus:ring-3 focus:ring-blue-100 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none font-mono"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#009ab1] focus:ring-3 focus:ring-blue-100 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none font-mono"
                     />
                   </div>
 
@@ -997,7 +997,7 @@ export default function AdminDashboardPage() {
                     <select
                       value={newAdminData.role}
                       onChange={(e) => setNewAdminData({ ...newAdminData, role: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-[#1a6dff] focus:ring-3 focus:ring-blue-100 text-xs sm:text-sm font-semibold text-slate-900 outline-none bg-white"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-[#009ab1] focus:ring-3 focus:ring-blue-100 text-xs sm:text-sm font-semibold text-slate-900 outline-none bg-white"
                     >
                       <option value="admin">Standard Administrator</option>
                       <option value="superadmin">Super Administrator</option>
@@ -1017,7 +1017,7 @@ export default function AdminDashboardPage() {
                   <button
                     type="submit"
                     disabled={createLoading}
-                    className="px-5 py-2.5 rounded-xl bg-[#1a6dff] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider shadow-sm transition-all hover:scale-[1.01] active:scale-98 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-[#009ab1] hover:bg-[#1255cc] text-white text-xs font-bold uppercase tracking-wider shadow-sm transition-all hover:scale-[1.01] active:scale-98 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
                   >
                     {createLoading ? (
                       <>

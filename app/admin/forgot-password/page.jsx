@@ -28,18 +28,28 @@ export default function AdminForgotPasswordPage() {
 
   const [identifier, setIdentifier] = useState('');
   const [resetCode, setResetCode] = useState('');
-  const [resetToken, setResetToken] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const [errorMsg, setErrorMsg] = useState('');
   const [successInfo, setSuccessInfo] = useState(null);
 
-  // Step 1: Submit identifier to generate reset code
+  // Timer effect for resend cooldown
+  React.useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
+
+  // Step 1: Submit identifier to dispatch reset code via email
   const handleRequestCode = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     setErrorMsg('');
 
     if (!identifier.trim()) {
@@ -63,13 +73,13 @@ export default function AdminForgotPasswordPage() {
       }
 
       setSuccessInfo({
-        email: data.email,
-        code: data.code,
-        token: data.token
+        maskedEmail: data.maskedEmail,
+        username: data.username
       });
 
-      setResetCode(data.code || '');
-      setResetToken(data.token || '');
+      // Secure: Clear code so it MUST be retrieved from user's email inbox
+      setResetCode('');
+      setResendCooldown(60);
       setStep(2);
 
     } catch (err) {
@@ -79,13 +89,44 @@ export default function AdminForgotPasswordPage() {
     }
   };
 
-  // Step 2: Submit code and new password
+  // Resend OTP via email
+  const handleResendOtp = async () => {
+    if (resendCooldown > 0 || resending) return;
+    setErrorMsg('');
+    setResending(true);
+
+    try {
+      const res = await fetch('/api/admin/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: identifier.trim() })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to resend verification code.');
+      }
+
+      setSuccessInfo({
+        maskedEmail: data.maskedEmail,
+        username: data.username
+      });
+      setResendCooldown(60);
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to resend verification code.');
+    } finally {
+      setResending(false);
+    }
+  };
+
+  // Step 2: Submit code from email and new password
   const handleResetPassword = async (e) => {
     e.preventDefault();
     setErrorMsg('');
 
     if (!resetCode.trim()) {
-      setErrorMsg('Please enter the 6-digit verification code.');
+      setErrorMsg('Please enter the 6-digit verification code sent to your email.');
       return;
     }
 
@@ -106,7 +147,7 @@ export default function AdminForgotPasswordPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          tokenOrCode: resetCode.trim() || resetToken,
+          tokenOrCode: resetCode.trim(),
           newPassword,
           confirmPassword
         })
@@ -121,14 +162,14 @@ export default function AdminForgotPasswordPage() {
       setStep(3);
 
     } catch (err) {
-      setErrorMsg(err.message || 'Failed to update password. Code may have expired.');
+      setErrorMsg(err.message || 'Failed to update password. Code may have expired or is incorrect.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#f0f7ff] overflow-hidden flex flex-col justify-between selection:bg-[#1a6dff]/20 selection:text-[#0f1a3a] font-sans">
+    <div className="relative min-h-screen w-full bg-[#f0f7ff] overflow-hidden flex flex-col justify-between selection:bg-[#009ab1]/20 selection:text-[#0f1a3a] font-sans">
 
       {/* ========================================================================= */}
       {/* 1. BACKGROUND CAMPUS PHOTO & FLUID ORGANIC WAVES */}
@@ -181,10 +222,10 @@ export default function AdminForgotPasswordPage() {
           <div className="mb-6">
             <Link href="/" className="inline-block group">
               <div className="flex items-baseline select-none">
-                <span style={SERIF} className="text-[38px] sm:text-[44px] font-bold text-[#0f1a3a] tracking-tight leading-none group-hover:text-[#1a6dff] transition-colors">
+                <span style={SERIF} className="text-[38px] sm:text-[44px] font-bold text-[#0f1a3a] tracking-tight leading-none group-hover:text-[#009ab1] transition-colors">
                   LEn
                 </span>
-                <span style={SERIF} className="text-[38px] sm:text-[44px] font-bold italic text-[#1a6dff] tracking-tight ml-0.5 leading-none">
+                <span style={SERIF} className="text-[38px] sm:text-[44px] font-bold italic text-[#009ab1] tracking-tight ml-0.5 leading-none">
                   SE
                 </span>
               </div>
@@ -202,12 +243,12 @@ export default function AdminForgotPasswordPage() {
             <>
               {/* Access Badge */}
               <div className="flex items-center gap-3 mb-3.5">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-100 to-blue-50 border border-sky-200/90 flex items-center justify-center text-[#1a6dff] shadow-[0_4px_14px_rgba(56,189,248,0.22)] shrink-0">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-100 to-blue-50 border border-sky-200/90 flex items-center justify-center text-[#009ab1] shadow-[0_4px_14px_rgba(56,189,248,0.22)] shrink-0">
                   <Key size={18} strokeWidth={2.2} />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-6 h-[1.5px] bg-[#1a6dff]/40" />
-                  <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#1a6dff]">
+                  <span className="w-6 h-[1.5px] bg-[#009ab1]/40" />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#009ab1]">
                     Self-Service Recovery
                   </span>
                 </div>
@@ -216,7 +257,7 @@ export default function AdminForgotPasswordPage() {
               {/* Title & Subtitle */}
               <div className="mb-5">
                 <h1 style={SERIF} className="text-3xl sm:text-[34px] font-normal text-[#0f1a3a] leading-tight tracking-tight">
-                  Reset <em style={SERIF} className="italic text-[#1a6dff] font-normal">Password</em>
+                  Reset <em style={SERIF} className="italic text-[#009ab1] font-normal">Password</em>
                 </h1>
                 <p className="text-xs sm:text-[13px] text-slate-500 mt-1 font-normal leading-relaxed">
                   Enter your registered administrator email or username to generate a secure recovery code.
@@ -235,7 +276,7 @@ export default function AdminForgotPasswordPage() {
                   <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1.5">
                     Username or Registered Email
                   </label>
-                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
+                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-sky-600">
                       <Mail size={17} />
                     </div>
@@ -254,7 +295,7 @@ export default function AdminForgotPasswordPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#1466f6] to-[#0052e0] hover:from-[#0d59e0] hover:to-[#0047c7] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(20,102,246,0.35)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                    className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#009ab1] to-[#008296] hover:from-[#008296] hover:to-[#006f80] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(20,102,246,0.35)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
                   >
                     {loading ? (
                       <>
@@ -273,44 +314,42 @@ export default function AdminForgotPasswordPage() {
             </>
           )}
 
-          {/* ==================== Step 2: Enter Code & New Password ==================== */}
+          {/* ==================== Step 2: Enter Code from Email & New Password ==================== */}
           {step === 2 && (
             <>
               <div className="flex items-center gap-3 mb-3.5">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-50 border border-emerald-200/90 flex items-center justify-center text-emerald-600 shadow-[0_4px_14px_rgba(16,185,129,0.22)] shrink-0">
-                  <ShieldCheck size={18} strokeWidth={2.2} />
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-100 to-blue-50 border border-sky-200/90 flex items-center justify-center text-[#009ab1] shadow-[0_4px_14px_rgba(26,109,255,0.22)] shrink-0">
+                  <Mail size={18} strokeWidth={2.2} />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-6 h-[1.5px] bg-emerald-500/40" />
-                  <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-700">
-                    Code Verified
+                  <span className="w-6 h-[1.5px] bg-[#009ab1]/40" />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#009ab1]">
+                    OTP Dispatched to Email
                   </span>
                 </div>
               </div>
 
               <div className="mb-4">
                 <h1 style={SERIF} className="text-2xl sm:text-[30px] font-normal text-[#0f1a3a] leading-tight tracking-tight">
-                  Enter <em style={SERIF} className="italic text-[#1a6dff] font-normal">New Password</em>
+                  Verify OTP &amp; <em style={SERIF} className="italic text-[#009ab1] font-normal">Set Password</em>
                 </h1>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Verification code generated for {successInfo?.email}
+                  A one-time verification code has been dispatched to your registered email address.
                 </p>
               </div>
 
-              {/* Code Display Banner */}
-              {successInfo?.code && (
-                <div className="mb-4 p-3 rounded-xl bg-blue-50/90 border border-blue-200/80 text-center space-y-0.5">
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-[#1a6dff] block">
-                    Your One-Time Verification Code
-                  </span>
-                  <div className="text-2xl font-mono font-black tracking-widest text-[#0f1a3a]">
-                    {successInfo.code}
-                  </div>
-                  <span className="text-[9.5px] text-slate-400 block">
-                    Valid for 60 minutes
-                  </span>
+              {/* Secure Email Delivery Notice (No OTP displayed on screen) */}
+              <div className="mb-4 p-3.5 rounded-xl bg-blue-50/80 border border-blue-200/80 flex items-start gap-3 text-left">
+                <div className="w-8 h-8 rounded-lg bg-blue-600/10 text-[#009ab1] flex items-center justify-center shrink-0 mt-0.5">
+                  <Mail size={16} />
                 </div>
-              )}
+                <div className="text-xs text-slate-600 leading-relaxed flex-1">
+                  <p className="font-bold text-[#0f1a3a] mb-0.5">Check Your Email Inbox</p>
+                  <p className="text-[11.5px]">
+                    We sent a confidential 6-digit verification code to <strong className="text-slate-800">{successInfo?.maskedEmail}</strong>. Please check your inbox (and spam folder) and enter the code below.
+                  </p>
+                </div>
+              </div>
 
               {errorMsg && (
                 <div className="mb-3.5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2.5">
@@ -321,10 +360,20 @@ export default function AdminForgotPasswordPage() {
 
               <form onSubmit={handleResetPassword} className="space-y-3.5">
                 <div>
-                  <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1">
-                    6-Digit Verification Code
-                  </label>
-                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700">
+                      6-Digit Verification Code
+                    </label>
+                    <button
+                      type="button"
+                      disabled={resendCooldown > 0 || resending}
+                      onClick={handleResendOtp}
+                      className="text-[11px] font-bold text-[#009ab1] hover:text-blue-700 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                    >
+                      {resending ? 'Sending...' : resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend Code'}
+                    </button>
+                  </div>
+                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-sky-600">
                       <KeyRound size={16} />
                     </div>
@@ -333,7 +382,8 @@ export default function AdminForgotPasswordPage() {
                       required
                       value={resetCode}
                       onChange={(e) => setResetCode(e.target.value)}
-                      placeholder="e.g. 762004"
+                      placeholder="Enter 6-digit code from email"
+                      maxLength={12}
                       className="w-full pl-10 pr-4 py-2.5 bg-transparent rounded-xl text-xs sm:text-sm font-mono font-bold text-slate-900 tracking-wider outline-none"
                     />
                   </div>
@@ -343,7 +393,7 @@ export default function AdminForgotPasswordPage() {
                   <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1">
                     New Password
                   </label>
-                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
+                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-sky-600">
                       <Lock size={16} />
                     </div>
@@ -369,7 +419,7 @@ export default function AdminForgotPasswordPage() {
                   <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1">
                     Confirm New Password
                   </label>
-                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
+                  <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-sky-600">
                       <Lock size={16} />
                     </div>
@@ -388,7 +438,7 @@ export default function AdminForgotPasswordPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#1466f6] to-[#0052e0] hover:from-[#0d59e0] hover:to-[#0047c7] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(20,102,246,0.35)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                    className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#009ab1] to-[#008296] hover:from-[#008296] hover:to-[#006f80] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(20,102,246,0.35)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
                   >
                     {loading ? (
                       <>
@@ -426,7 +476,7 @@ export default function AdminForgotPasswordPage() {
               <div className="pt-2">
                 <Link
                   href="/admin/login"
-                  className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#1466f6] to-[#0052e0] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(20,102,246,0.35)] transition-all hover:scale-[1.01]"
+                  className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#009ab1] to-[#008296] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(20,102,246,0.35)] transition-all hover:scale-[1.01]"
                 >
                   <span>Proceed to Admin Sign In</span>
                   <ArrowRight size={17} />
@@ -444,7 +494,7 @@ export default function AdminForgotPasswordPage() {
 
           <Link
             href="/admin/login"
-            className="w-full py-2.5 px-5 rounded-xl border border-sky-300 bg-sky-50/50 hover:bg-sky-100/70 text-[#1a6dff] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-[1.01] shadow-2xs"
+            className="w-full py-2.5 px-5 rounded-xl border border-sky-300 bg-sky-50/50 hover:bg-sky-100/70 text-[#009ab1] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-[1.01] shadow-2xs"
           >
             <LogIn size={15} />
             <span>RETURN TO SIGN IN</span>
@@ -453,7 +503,7 @@ export default function AdminForgotPasswordPage() {
           {/* Bottom Security Note */}
           <div className="mt-4 text-center">
             <p className="text-[11px] text-slate-500 font-medium flex items-center justify-center gap-1.5">
-              <ShieldCheck size={13} className="text-[#1a6dff]" />
+              <ShieldCheck size={13} className="text-[#009ab1]" />
               <span>Protected environment with BetterAuth encryption</span>
             </p>
           </div>

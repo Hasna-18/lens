@@ -72,12 +72,12 @@ export default function MobileDrawer({ isOpen, onClose }) {
           <path d="M100 0 C170 100, 230 160, 300 220 L300 0 Z" fill="url(#mobileWave2)" />
           <defs>
             <linearGradient id="mobileWave1" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="#2563eb" stopOpacity="0.12" />
+              <stop offset="0%" stopColor="#009ab1" stopOpacity="0.55" />
+              <stop offset="100%" stopColor="#009ab1" stopOpacity="0.12" />
             </linearGradient>
             <linearGradient id="mobileWave2" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#818cf8" stopOpacity="0.08" />
+              <stop offset="0%" stopColor="#009ab1" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#009ab1" stopOpacity="0.08" />
             </linearGradient>
           </defs>
         </svg>
@@ -87,7 +87,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
           {[...Array(3)].map((_, col) => (
             <div key={col} className="flex flex-col gap-1.5">
               {[...Array(14)].map((_, row) => (
-                <span key={row} className="w-1 h-1 rounded-full bg-blue-600/70 block" />
+                <span key={row} className="w-1 h-1 rounded-full bg-[#009ab1]/70 block" />
               ))}
             </div>
           ))}
@@ -107,8 +107,8 @@ export default function MobileDrawer({ isOpen, onClose }) {
             <path d="M0 45 C120 10, 260 85, 400 30 L400 100 L0 100 Z" fill="url(#bottomBlueWave)" />
             <defs>
               <linearGradient id="bottomBlueWave" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#38bdf8" />
-                <stop offset="100%" stopColor="#2563eb" />
+                <stop offset="0%" stopColor="#009ab1" />
+                <stop offset="100%" stopColor="#008397" />
               </linearGradient>
             </defs>
           </svg>
@@ -120,7 +120,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
           <div className="flex items-center justify-between pt-0.5">
             <div className="flex items-center gap-2.5 sm:gap-3">
               {/* Circular White Emblem */}
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white shadow-[0_4px_16px_rgba(37,99,235,0.12)] border border-blue-50/80 p-2 sm:p-2.5 flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white shadow-[0_4px_16px_rgba(0,154,177,0.15)] border border-[#009ab1]/20 p-2 sm:p-2.5 flex items-center justify-center shrink-0">
                 <img src="/logo.png" alt="LEnSE Logo" className="w-full h-full object-contain" />
               </div>
 
@@ -129,7 +129,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
                   <span style={SERIF} className="text-xl sm:text-2xl font-medium tracking-tight text-slate-800 leading-none">
                     LEnSE
                   </span>
-                  <span className="px-2 py-0.5 rounded-full bg-[#dbeafe] text-[9px] sm:text-[9.5px] font-bold tracking-wider text-[#1d4ed8] uppercase leading-none">
+                  <span className="px-2 py-0.5 rounded-full bg-[#009ab1]/15 text-[9px] sm:text-[9.5px] font-bold tracking-wider text-[#009ab1] uppercase leading-none">
                     PORTAL
                   </span>
                 </div>
@@ -142,7 +142,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
             {/* Circular Frosted Close Button */}
             <button 
               onClick={onClose} 
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 backdrop-blur-md shadow-xs border border-white/80 text-slate-600 hover:bg-white hover:text-[#1d63ed] flex items-center justify-center transition-all cursor-pointer group"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 backdrop-blur-md shadow-xs border border-white/80 text-slate-600 hover:bg-white hover:text-[#009ab1] flex items-center justify-center transition-all cursor-pointer group"
               aria-label="Close navigation"
             >
               <X size={18} strokeWidth={2.2} className="group-hover:rotate-90 transition-transform duration-200" />
@@ -151,13 +151,13 @@ export default function MobileDrawer({ isOpen, onClose }) {
 
           {/* Accent Divider: Pip Dot & Thin Progress Track */}
           <div className="flex items-center gap-1.5 px-0.5 pt-0.5">
-            <div className="w-2 h-2 rounded-full bg-[#1d63ed] shadow-[0_0_8px_rgba(29,99,237,0.7)] shrink-0" />
-            <div className="h-[1.5px] flex-1 bg-gradient-to-r from-blue-300/60 via-blue-200/40 to-transparent rounded-full" />
+            <div className="w-2 h-2 rounded-full bg-[#009ab1] shadow-[0_0_8px_rgba(0,154,177,0.7)] shrink-0" />
+            <div className="h-[1.5px] flex-1 bg-gradient-to-r from-[#009ab1]/60 via-[#009ab1]/30 to-transparent rounded-full" />
           </div>
 
           {/* Section Indicator */}
           <div className="flex items-center gap-2 px-0.5 pt-0.5 pb-0.5">
-            <div className="w-[3px] h-3.5 bg-[#1d63ed] rounded-full" />
+            <div className="w-[3px] h-3.5 bg-[#009ab1] rounded-full" />
             <span className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.18em] text-slate-500">
               Navigation Menu
             </span>
@@ -176,7 +176,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
                     href={item.href}
                     prefetch={true}
                     onClick={onClose}
-                    className="w-full bg-gradient-to-r from-[#1b62ec] via-[#2467f5] to-[#38bdf8] text-white shadow-[0_10px_25px_rgba(27,98,236,0.38)] rounded-[1.25rem] sm:rounded-[1.35rem] px-3 sm:px-3.5 py-2 sm:py-2.5 flex items-center justify-between relative overflow-hidden group transition-all"
+                    className="w-full bg-[#009ab1] text-white shadow-[0_10px_25px_rgba(0,154,177,0.38)] rounded-[1.25rem] sm:rounded-[1.35rem] px-3 sm:px-3.5 py-2 sm:py-2.5 flex items-center justify-between relative overflow-hidden group transition-all"
                   >
                     {/* Subtle diagonal gloss streak */}
                     <div className="absolute -top-12 -left-12 w-48 h-32 bg-white/20 rotate-45 pointer-events-none filter blur-sm" />
@@ -189,7 +189,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
                         <span className="text-[13.5px] sm:text-[14px] font-semibold text-white tracking-tight leading-snug">
                           {item.label}
                         </span>
-                        <span className="text-[10px] sm:text-[11px] font-normal text-sky-100 leading-tight mt-0.5">
+                        <span className="text-[10px] sm:text-[11px] font-normal text-white/80 leading-tight mt-0.5">
                           {item.desc}
                         </span>
                       </div>
@@ -208,14 +208,14 @@ export default function MobileDrawer({ isOpen, onClose }) {
                   href={item.href}
                   prefetch={true}
                   onClick={onClose}
-                  className="w-full bg-white/75 backdrop-blur-md border border-white/90 shadow-[0_2px_8px_rgba(37,99,235,0.03)] hover:bg-white hover:shadow-[0_4px_16px_rgba(37,99,235,0.08)] rounded-[1.25rem] sm:rounded-[1.35rem] px-3 sm:px-3.5 py-2 sm:py-2.5 flex items-center justify-between transition-all group"
+                  className="w-full bg-white/75 backdrop-blur-md border border-white/90 shadow-[0_2px_8px_rgba(0,154,177,0.06)] hover:bg-white hover:shadow-[0_4px_16px_rgba(0,154,177,0.12)] rounded-[1.25rem] sm:rounded-[1.35rem] px-3 sm:px-3.5 py-2 sm:py-2.5 flex items-center justify-between transition-all group"
                 >
                   <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
-                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white shadow-[0_2px_6px_rgba(0,0,0,0.04)] border border-blue-50/80 flex items-center justify-center text-[#1d63ed] shrink-0 group-hover:scale-105 transition-transform">
-                      <Icon size={19} strokeWidth={1.8} className="text-[#1d63ed]" />
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white shadow-[0_2px_6px_rgba(0,0,0,0.04)] border border-[#009ab1]/20 flex items-center justify-center text-[#009ab1] shrink-0 group-hover:scale-105 transition-transform">
+                      <Icon size={19} strokeWidth={1.8} className="text-[#009ab1]" />
                     </div>
                     <div className="flex flex-col text-left min-w-0">
-                      <span className="text-[13.5px] sm:text-[14px] font-semibold text-slate-800 tracking-tight leading-snug group-hover:text-[#1d63ed] transition-colors">
+                      <span className="text-[13.5px] sm:text-[14px] font-semibold text-slate-800 tracking-tight leading-snug group-hover:text-[#009ab1] transition-colors">
                         {item.label}
                       </span>
                       <span className="text-[10px] sm:text-[11px] font-normal text-slate-400 leading-tight mt-0.5">
@@ -235,7 +235,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
             <Link
               href="/contact"
               onClick={onClose}
-              className="w-full bg-gradient-to-r from-[#1b62ec] via-[#2467f5] to-[#38bdf8] hover:from-[#1855cc] hover:to-[#2ca5dd] text-white shadow-[0_12px_28px_rgba(27,98,236,0.42)] rounded-[1.3rem] sm:rounded-[1.4rem] p-2.5 sm:p-3.5 flex items-center gap-3 relative overflow-hidden transition-all active:scale-[0.98] group cursor-pointer"
+              className="w-full bg-[#009ab1] hover:bg-[#008397] text-white shadow-[0_12px_28px_rgba(0,154,177,0.42)] rounded-[1.3rem] sm:rounded-[1.4rem] p-2.5 sm:p-3.5 flex items-center gap-3 relative overflow-hidden transition-all active:scale-[0.98] group cursor-pointer"
             >
               {/* Gloss glare */}
               <div className="absolute -top-12 -left-12 w-48 h-32 bg-white/20 rotate-45 pointer-events-none filter blur-sm" />
@@ -251,7 +251,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
                   </span>
                   <ArrowRight size={13} strokeWidth={2.4} className="text-white group-hover:translate-x-1 transition-transform" />
                 </div>
-                <span className="text-[9.5px] sm:text-[10.5px] text-sky-100 font-medium tracking-wide block mt-0.5">
+                <span className="text-[9.5px] sm:text-[10.5px] text-white/80 font-medium tracking-wide block mt-0.5">
                   Collaborate • Participate • Make an Impact
                 </span>
               </div>
@@ -262,7 +262,7 @@ export default function MobileDrawer({ isOpen, onClose }) {
         {/* Footer Area: Overlaid over the bottom campus building facade */}
         <div className="relative z-10 pt-4 pb-1 shrink-0 flex items-center justify-between px-1">
           <div className="flex items-center gap-1.5 text-slate-600 min-w-0">
-            <MapPin size={13} className="text-[#1d63ed] shrink-0" strokeWidth={2.4} />
+            <MapPin size={13} className="text-[#009ab1] shrink-0" strokeWidth={2.4} />
             <span className="text-[10px] sm:text-[10.5px] font-medium tracking-tight">
               Kariavattom Campus, Thiruvananthapuram
             </span>

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { initiatePasswordReset } from '../../../../lib/betterAuth.js';
+import { sendPasswordResetOtpEmail, maskEmail } from '../../../../lib/emailService.js';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,16 +16,26 @@ export async function POST(request) {
       );
     }
 
-    const resetData = await initiatePasswordReset(identifier);
+    // 1. Generate code and save securely to database
+    const resetData = await initiatePasswordReset(identifier.trim());
 
+    // 2. Dispatch OTP via email to the administrator's registered email
+    const emailResult = await sendPasswordResetOtpEmail({
+      to: resetData.email,
+      name: resetData.name,
+      code: resetData.code,
+      expiresMinutes: 15
+    });
+
+    const masked = maskEmail(resetData.email);
+
+    // 3. Respond with confirmation - STRICTLY NEVER EXPOSING OTP/CODE/TOKEN
     return NextResponse.json({
       success: true,
-      message: `Password reset verification code generated for ${resetData.email}. Use the code below or the security token to reset your password.`,
-      email: resetData.email,
+      message: `A 6-digit verification code has been sent to your registered email (${masked}). Please check your inbox.`,
+      maskedEmail: masked,
       username: resetData.username,
-      code: resetData.code,
-      token: resetData.token,
-      expiresAt: resetData.expiresAt
+      emailDelivered: emailResult.delivered
     });
 
   } catch (error) {

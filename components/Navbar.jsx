@@ -89,12 +89,12 @@ export default function Navbar() {
             <img
               src="/logo.png"
               alt="LEnSE Logo"
-              className="h-9 sm:h-10 w-auto object-contain drop-shadow-[0_0_12px_rgba(56,189,248,0.35)] transition-transform duration-300 group-hover:scale-105"
+              className="h-9 sm:h-10 w-auto object-contain drop-shadow-[0_0_12px_rgba(0,154,177,0.35)] transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
 
           {/* Center Navigation Capsule - White Glass Capsule Starts Before Home & Ends After Contact */}
-          <nav className="pointer-events-auto hidden lg:flex items-center gap-1.5 xl:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-1.5 rounded-full bg-white/90 dark:bg-[#080f1e]/90 backdrop-blur-2xl border border-white/80 dark:border-white/15 shadow-[0_8px_30px_rgba(2,132,199,0.08),inset_0_1.5px_2px_#fff] dark:shadow-[0_12px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.08)]">
+          <nav className="pointer-events-auto hidden lg:flex items-center gap-1.5 xl:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-1.5 rounded-full bg-white/90 dark:bg-[#080f1e]/90 backdrop-blur-2xl border border-white/80 dark:border-white/15 shadow-[0_8px_30px_rgba(0,154,177,0.12),inset_0_1.5px_2px_#fff] dark:shadow-[0_12px_36px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.08)]">
             {navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href === '/programs' && pathname === '/academics');
 
@@ -107,8 +107,8 @@ export default function Navbar() {
                   onTouchStart={() => handlePrefetch(link.href)}
                   className={`relative px-3.5 py-1.5 lg:px-4 xl:px-4.5 text-[13px] lg:text-[13.5px] xl:text-[14px] font-medium tracking-wide rounded-full transition-all duration-200 ease-out active:scale-95 select-none whitespace-nowrap ${
                     isActive
-                      ? 'text-white font-semibold bg-gradient-to-r from-blue-600 via-blue-600 to-sky-600 shadow-[0_2px_10px_rgba(37,99,235,0.38)]'
-                      : 'text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-white hover:bg-blue-50/80 dark:hover:bg-white/10'
+                      ? 'text-white font-semibold bg-[#009ab1] shadow-[0_3px_12px_rgba(0,154,177,0.4)]'
+                      : 'text-slate-700 dark:text-slate-200 hover:text-[#009ab1] dark:hover:text-white hover:bg-[#009ab1]/10 dark:hover:bg-white/10'
                   }`}
                 >
                   <span>{link.label}</span>
@@ -123,7 +123,7 @@ export default function Navbar() {
             <button
               onClick={() => setSearchOpen(true)}
               aria-label="Search website"
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#080f1e]/90 backdrop-blur-xl border border-white/80 dark:border-white/15 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white hover:border-blue-300 dark:hover:border-sky-400 hover:bg-blue-50 dark:hover:bg-sky-950/60 flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#080f1e]/90 backdrop-blur-xl border border-white/80 dark:border-white/15 text-slate-700 dark:text-slate-300 hover:text-[#009ab1] dark:hover:text-white hover:border-[#009ab1]/40 dark:hover:border-[#009ab1]/50 hover:bg-[#009ab1]/10 dark:hover:bg-[#009ab1]/20 flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
             >
               <Search size={16} />
             </button>
@@ -132,34 +132,34 @@ export default function Navbar() {
             <button
               onClick={toggleTheme}
               aria-label="Toggle light/dark theme"
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#080f1e]/90 backdrop-blur-xl border border-white/80 dark:border-white/15 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white hover:border-blue-300 dark:hover:border-sky-400 hover:bg-blue-50 dark:hover:bg-sky-950/60 flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#080f1e]/90 backdrop-blur-xl border border-white/80 dark:border-white/15 text-slate-700 dark:text-slate-300 hover:text-[#009ab1] dark:hover:text-white hover:border-[#009ab1]/40 dark:hover:border-[#009ab1]/50 hover:bg-[#009ab1]/10 dark:hover:bg-[#009ab1]/20 flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
             >
               {theme === 'dark' ? (
-                <Sun size={16} className="text-sky-400 group-hover:rotate-45 transition-transform duration-200" />
+                <Sun size={16} className="text-[#009ab1] group-hover:rotate-45 transition-transform duration-200" />
               ) : (
-                <Moon size={16} className="text-blue-600 group-hover:-rotate-12 transition-transform duration-200" />
+                <Moon size={16} className="text-[#009ab1] group-hover:-rotate-12 transition-transform duration-200" />
               )}
             </button>
 
             {/* Get Involved Button */}
             <Link
               href="/contact"
-              className="hidden sm:flex items-center gap-1.5 px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white text-[12.5px] sm:text-[13px] font-semibold tracking-wide transition-all duration-200 shadow-[0_3px_14px_rgba(2,132,199,0.38)] hover:shadow-[0_5px_18px_rgba(2,132,199,0.5)] hover:-translate-y-0.5 active:translate-y-0 group"
+              className="hidden sm:flex items-center gap-1.5 px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#009ab1] hover:bg-[#008397] text-white text-[12.5px] sm:text-[13px] font-semibold tracking-wide transition-all duration-200 shadow-[0_3px_14px_rgba(0,154,177,0.38)] hover:shadow-[0_5px_18px_rgba(0,154,177,0.5)] hover:-translate-y-0.5 active:translate-y-0 group"
             >
               <span>Get Involved</span>
-              <ArrowRight size={13} className="text-sky-200 group-hover:translate-x-0.5 transition-transform" />
+              <ArrowRight size={13} className="text-white group-hover:translate-x-0.5 transition-transform" />
             </Link>
 
             {/* Mobile Hamburger Button (visible on screens < lg) */}
             <button
               id="mobile-menu-button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#080f1e]/90 backdrop-blur-xl border border-white/80 dark:border-white/15 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-white hover:border-blue-300 dark:hover:border-sky-400 hover:bg-blue-50 dark:hover:bg-sky-950/60 flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
+              className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#080f1e]/90 backdrop-blur-xl border border-white/80 dark:border-white/15 text-slate-700 dark:text-slate-200 hover:text-[#009ab1] dark:hover:text-white hover:border-[#009ab1]/40 dark:hover:border-[#009ab1]/50 hover:bg-[#009ab1]/10 dark:hover:bg-[#009ab1]/20 flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
               aria-label="Toggle navigation menu"
               aria-expanded={mobileOpen}
             >
               {mobileOpen ? (
-                <X size={17} className="text-blue-600 dark:text-sky-400" />
+                <X size={17} className="text-[#009ab1]" />
               ) : (
                 <Menu size={17} />
               )}

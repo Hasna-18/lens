@@ -153,7 +153,7 @@ export default function AdminRegisterPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#f0f7ff] overflow-hidden flex flex-col justify-between selection:bg-[#1a6dff]/20 selection:text-[#0f1a3a] font-sans">
+    <div className="relative min-h-screen w-full bg-[#f0f7ff] overflow-hidden flex flex-col justify-between selection:bg-[#009ab1]/20 selection:text-[#0f1a3a] font-sans">
 
       {/* ========================================================================= */}
       {/* 1. BACKGROUND CAMPUS PHOTO & FLUID ORGANIC WAVES */}
@@ -202,10 +202,10 @@ export default function AdminRegisterPage() {
           <div className="mb-4">
             <Link href="/" className="inline-block group">
               <div className="flex items-baseline select-none">
-                <span style={SERIF} className="text-[36px] sm:text-[42px] font-bold text-[#0f1a3a] tracking-tight leading-none group-hover:text-[#1a6dff] transition-colors">
+                <span style={SERIF} className="text-[36px] sm:text-[42px] font-bold text-[#0f1a3a] tracking-tight leading-none group-hover:text-[#009ab1] transition-colors">
                   LEn
                 </span>
-                <span style={SERIF} className="text-[36px] sm:text-[42px] font-bold italic text-[#1a6dff] tracking-tight ml-0.5 leading-none">
+                <span style={SERIF} className="text-[36px] sm:text-[42px] font-bold italic text-[#009ab1] tracking-tight ml-0.5 leading-none">
                   SE
                 </span>
               </div>
@@ -221,8 +221,8 @@ export default function AdminRegisterPage() {
               <Shield size={16} strokeWidth={2.2} />
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-4 h-[1.5px] bg-[#1a6dff]/40" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a6dff]">
+              <span className="w-4 h-[1.5px] bg-[#009ab1]/40" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#009ab1]">
                 Super Admin Provisioning
               </span>
             </div>
@@ -231,7 +231,7 @@ export default function AdminRegisterPage() {
           {/* Title & Subtitle */}
           <div className="mb-3">
             <h1 style={SERIF} className="text-2xl sm:text-[28px] font-normal text-[#0f1a3a] leading-tight tracking-tight">
-              Generate <em style={SERIF} className="italic text-[#1a6dff] font-normal">Administrator</em>
+              Generate <em style={SERIF} className="italic text-[#009ab1] font-normal">Administrator</em>
             </h1>
             <p className="text-xs text-slate-500 font-normal leading-relaxed">
               New administrator accounts can only be provisioned by a verified Super Administrator.
@@ -275,7 +275,7 @@ export default function AdminRegisterPage() {
                 <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1">
                   Super Admin Security Key <span className="text-rose-500">*</span>
                 </label>
-                <div className="relative rounded-xl border border-amber-300 focus-within:border-[#1a6dff] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-amber-50/20 shadow-2xs">
+                <div className="relative rounded-xl border border-amber-300 focus-within:border-[#009ab1] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-amber-50/20 shadow-2xs">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-amber-600">
                     <KeyRound size={15} />
                   </div>
@@ -304,7 +304,7 @@ export default function AdminRegisterPage() {
               <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1">
                 Full Name
               </label>
-              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white shadow-2xs">
+              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white shadow-2xs">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-sky-600">
                   <User size={15} />
                 </div>
@@ -326,7 +326,7 @@ export default function AdminRegisterPage() {
                 <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1">
                   Official Email
                 </label>
-                <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white shadow-2xs">
+                <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white shadow-2xs">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-sky-600">
                     <Mail size={14} />
                   </div>
@@ -346,7 +346,7 @@ export default function AdminRegisterPage() {
                 <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1">
                   Admin Username
                 </label>
-                <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white shadow-2xs">
+                <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white shadow-2xs">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-sky-600 font-bold text-xs">
                     @
                   </div>
@@ -368,7 +368,7 @@ export default function AdminRegisterPage() {
               <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1">
                 Password
               </label>
-              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white shadow-2xs">
+              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white shadow-2xs">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-sky-600">
                   <KeyRound size={15} />
                 </div>
@@ -410,7 +410,7 @@ export default function AdminRegisterPage() {
               <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1">
                 Confirm Password
               </label>
-              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white shadow-2xs">
+              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-3 focus-within:ring-blue-100 transition-all bg-white shadow-2xs">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-sky-600">
                   <KeyRound size={15} />
                 </div>
@@ -450,7 +450,7 @@ export default function AdminRegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#1466f6] to-[#0052e0] hover:from-[#0d59e0] hover:to-[#0047c7] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(20,102,246,0.35)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#009ab1] to-[#008296] hover:from-[#008296] hover:to-[#006f80] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(20,102,246,0.35)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
               >
                 {loading ? (
                   <>
@@ -476,7 +476,7 @@ export default function AdminRegisterPage() {
 
           <Link
             href="/admin/login"
-            className="w-full py-2.5 px-5 rounded-xl border border-sky-300 bg-sky-50/50 hover:bg-sky-100/70 text-[#1a6dff] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-[1.01] shadow-2xs"
+            className="w-full py-2.5 px-5 rounded-xl border border-sky-300 bg-sky-50/50 hover:bg-sky-100/70 text-[#009ab1] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-[1.01] shadow-2xs"
           >
             <LogIn size={15} />
             <span>RETURN TO SIGN IN</span>
@@ -485,7 +485,7 @@ export default function AdminRegisterPage() {
           {/* Security Note */}
           <div className="mt-3 text-center">
             <p className="text-[10px] text-slate-500 font-medium flex items-center justify-center gap-1.5">
-              <ShieldCheck size={13} className="text-[#1a6dff]" />
+              <ShieldCheck size={13} className="text-[#009ab1]" />
               <span>Super Admin Managed • Neon PostgreSQL Encryption</span>
             </p>
           </div>

@@ -27,7 +27,7 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 
 /* ---------- shared design system matching About & Events ---------- */
 const SERIF = { fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif" };
-const BLUE = 'text-[#1a6dff]';
+const BLUE = 'text-[#009ab1]';
 const GLASS =
   'bg-gradient-to-br from-white/80 via-sky-50/60 to-blue-100/40 backdrop-blur-xl border border-white/90 shadow-[0_18px_45px_rgba(37,99,235,0.10),inset_0_1px_0_rgba(255,255,255,1)]';
 
@@ -42,7 +42,7 @@ const Em = ({ children, light = false }) => (
 function SectionTag({ text, light = false, className = '' }) {
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${light ? 'bg-sky-300' : 'bg-[#1a6dff]'}`} />
+      <span className={`w-1.5 h-1.5 rounded-full ${light ? 'bg-sky-300' : 'bg-[#009ab1]'}`} />
       <span className={`text-[11px] font-bold tracking-[0.22em] uppercase ${light ? 'text-sky-200' : BLUE}`}>{text}</span>
       <span className={`w-16 h-px ${light ? 'bg-white/20' : 'bg-blue-200'}`} />
     </div>
@@ -170,7 +170,7 @@ export default function InitiativesPage() {
 
         {/* Decorative Ring + Dots on left edge (matching About page) */}
         <div className="hidden lg:block absolute -left-[270px] top-[22%] w-[320px] h-[320px] rounded-full border border-sky-400/50 pointer-events-none" />
-        <div className="hidden lg:block absolute left-[80px] top-[60%] w-2.5 h-2.5 rounded-full bg-[#1a6dff] shadow-[0_0_12px_rgba(26,109,255,0.6)] pointer-events-none" />
+        <div className="hidden lg:block absolute left-[80px] top-[60%] w-2.5 h-2.5 rounded-full bg-[#009ab1] shadow-[0_0_12px_rgba(26,109,255,0.6)] pointer-events-none" />
         <Dots rows={8} cols={5} className="hidden lg:grid absolute left-3 bottom-16 pointer-events-none" />
 
         <Wrap className="w-full relative z-10 my-auto">
@@ -179,14 +179,14 @@ export default function InitiativesPage() {
             <div className="lg:col-span-7 space-y-6">
               <div className="flex items-center gap-3">
                 <span className={`flex items-center gap-2 text-[11px] font-bold tracking-[0.24em] uppercase ${BLUE}`}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#1a6dff]" />LEnSE INITIATIVES
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#009ab1]" />LEnSE INITIATIVES
                 </span>
                 <span className="text-slate-300">|</span>
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-                  <Home size={12} className="text-[#1a6dff]" />
-                  <Link href="/" className="hover:text-[#1a6dff] transition-colors">Home</Link>
+                  <Home size={12} className="text-[#009ab1]" />
+                  <Link href="/" className="hover:text-[#009ab1] transition-colors">Home</Link>
                   <span className="text-slate-300">&gt;</span>
-                  <span className="text-[#1a6dff]">Initiatives</span>
+                  <span className="text-[#009ab1]">Initiatives</span>
                 </div>
               </div>
 
@@ -201,13 +201,13 @@ export default function InitiativesPage() {
 
               <div className="flex flex-wrap items-center gap-3.5 pt-2">
                 <a href="#initiatives-section" className="inline-flex">
-                  <span className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#0a6cff] to-[#1fa2ff] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3 shadow-[0_12px_26px_rgba(10,108,255,0.4)] hover:scale-[1.03] transition">
+                  <span className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#009ab1] to-[#1fa2ff] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3 shadow-[0_12px_26px_rgba(10,108,255,0.4)] hover:scale-[1.03] transition">
                     EXPLORE INITIATIVES <ArrowRight size={13} />
                   </span>
                 </a>
 
                 <Link href="/contact" className="inline-flex">
-                  <span className="px-7 py-3.5 rounded-full bg-white/90 border border-white shadow-[0_10px_24px_rgba(37,99,235,0.12)] text-[#1a6dff] text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:scale-[1.03] transition">
+                  <span className="px-7 py-3.5 rounded-full bg-white/90 border border-white shadow-[0_10px_24px_rgba(37,99,235,0.12)] text-[#009ab1] text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:scale-[1.03] transition">
                     REQUEST CAMP
                   </span>
                 </Link>
@@ -250,11 +250,11 @@ export default function InitiativesPage() {
                 key={i}
                 className="flex flex-col items-center text-center px-3 py-3 sm:py-4 group transition-all duration-300 rounded-2xl hover:bg-white/60 cursor-default"
               >
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1a6dff] mb-2.5 group-hover:scale-105 transition-transform shadow-xs">
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#009ab1] mb-2.5 group-hover:scale-105 transition-transform shadow-xs">
                   <ft.icon size={20} strokeWidth={1.6} />
                 </div>
 
-                <h4 style={SERIF} className="text-[15px] sm:text-[17px] font-normal text-slate-900 mb-1 leading-tight group-hover:text-[#1a6dff] transition-colors">
+                <h4 style={SERIF} className="text-[15px] sm:text-[17px] font-normal text-slate-900 mb-1 leading-tight group-hover:text-[#009ab1] transition-colors">
                   {ft.title}
                 </h4>
 
@@ -279,7 +279,7 @@ export default function InitiativesPage() {
             </div>
             <Link
               href="/contact"
-              className="self-start sm:self-auto px-5 py-2.5 rounded-full bg-white/90 border border-blue-100 text-xs font-bold text-[#1a6dff] hover:bg-blue-50 flex items-center gap-2 transition shadow-sm"
+              className="self-start sm:self-auto px-5 py-2.5 rounded-full bg-white/90 border border-blue-100 text-xs font-bold text-[#009ab1] hover:bg-blue-50 flex items-center gap-2 transition shadow-sm"
             >
               <span>Request School Partnership</span>
               <ArrowRight size={13} />
@@ -311,7 +311,7 @@ export default function InitiativesPage() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out absolute inset-0 block"
                       onError={(e) => { e.currentTarget.src = "/events/events_book_plant.jpg"; }}
                     />
-                    <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#1a6dff] text-[9.5px] font-bold uppercase tracking-wider border border-white shadow-sm">
+                    <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#009ab1] text-[9.5px] font-bold uppercase tracking-wider border border-white shadow-sm">
                       {item.tag || 'OUTREACH'}
                     </div>
                   </div>
@@ -320,11 +320,11 @@ export default function InitiativesPage() {
                   <div className="lg:col-span-7 space-y-3.5 sm:space-y-4">
                     <div className="space-y-1">
                       {item.partner && (
-                        <span className="text-[10px] sm:text-[11px] font-bold text-[#1a6dff] uppercase tracking-wider block">
+                        <span className="text-[10px] sm:text-[11px] font-bold text-[#009ab1] uppercase tracking-wider block">
                           Partner: {item.partner}
                         </span>
                       )}
-                      <h3 style={SERIF} className="text-2xl sm:text-3xl font-normal text-[#0f1a3a] leading-tight group-hover:text-[#1a6dff] transition-colors">
+                      <h3 style={SERIF} className="text-2xl sm:text-3xl font-normal text-[#0f1a3a] leading-tight group-hover:text-[#009ab1] transition-colors">
                         {item.title}
                       </h3>
                     </div>
@@ -335,7 +335,7 @@ export default function InitiativesPage() {
 
                     {item.outcomes && (
                       <div className="p-3 sm:p-3.5 rounded-2xl bg-white/80 border border-blue-100 text-xs text-slate-700 flex items-center gap-2.5 shadow-sm">
-                        <CheckCircle2 size={16} className="text-[#1a6dff] shrink-0" />
+                        <CheckCircle2 size={16} className="text-[#009ab1] shrink-0" />
                         <span className="font-medium text-slate-800">{item.outcomes}</span>
                       </div>
                     )}
@@ -354,11 +354,11 @@ export default function InitiativesPage() {
 
                     <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-blue-100/70">
                       <span className="text-xs text-slate-500 flex items-center gap-1.5 font-medium">
-                        <MapPin size={13} className="text-[#1a6dff]" />
+                        <MapPin size={13} className="text-[#009ab1]" />
                         {item.locations || 'Across Kerala'}
                       </span>
 
-                      <Link href="/contact" className="inline-flex items-center gap-2 text-xs font-bold text-[#1a6dff] hover:text-blue-700 transition-colors group/link">
+                      <Link href="/contact" className="inline-flex items-center gap-2 text-xs font-bold text-[#009ab1] hover:text-blue-700 transition-colors group/link">
                         <span>Request Camp at Your School</span>
                         <ArrowRight size={13} className="group-link:translate-x-0.5 transition-transform" />
                       </Link>
@@ -395,7 +395,7 @@ export default function InitiativesPage() {
                 <Link href="/contact" className="inline-flex">
                   <span className="px-7 py-3.5 rounded-full bg-white hover:bg-sky-50 text-[#0f1a3a] text-xs font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-md hover:scale-105 active:scale-95">
                     <span>Request Camp Partnership</span>
-                    <ArrowRight size={13} className="text-[#1a6dff]" />
+                    <ArrowRight size={13} className="text-[#009ab1]" />
                   </span>
                 </Link>
               </div>

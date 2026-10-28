@@ -18,24 +18,24 @@ function FluidWaveRibbons() {
       >
         <defs>
           <linearGradient id="waveGrad1" x1="0%" y1="30%" x2="100%" y2="70%">
-            <stop offset="0%" stopColor="#bae6fd" stopOpacity="0.1" />
-            <stop offset="25%" stopColor="#38bdf8" stopOpacity="0.45" />
-            <stop offset="60%" stopColor="#2563eb" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#93c5fd" stopOpacity="0.1" />
+            <stop offset="0%" stopColor="#009ab1" stopOpacity="0.08" />
+            <stop offset="25%" stopColor="#009ab1" stopOpacity="0.35" />
+            <stop offset="60%" stopColor="#009ab1" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#009ab1" stopOpacity="0.08" />
           </linearGradient>
 
           <linearGradient id="waveGrad2" x1="0%" y1="70%" x2="100%" y2="30%">
-            <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.1" />
-            <stop offset="40%" stopColor="#0284c7" stopOpacity="0.35" />
-            <stop offset="80%" stopColor="#38bdf8" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#bae6fd" stopOpacity="0.05" />
+            <stop offset="0%" stopColor="#009ab1" stopOpacity="0.08" />
+            <stop offset="40%" stopColor="#009ab1" stopOpacity="0.35" />
+            <stop offset="80%" stopColor="#009ab1" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#009ab1" stopOpacity="0.05" />
           </linearGradient>
 
           <linearGradient id="meshGrad" x1="0%" y1="50%" x2="100%" y2="50%">
-            <stop offset="0%" stopColor="#0284c7" stopOpacity="0" />
-            <stop offset="30%" stopColor="#38bdf8" stopOpacity="0.5" />
-            <stop offset="70%" stopColor="#2563eb" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#60a5fa" stopOpacity="0" />
+            <stop offset="0%" stopColor="#009ab1" stopOpacity="0" />
+            <stop offset="30%" stopColor="#009ab1" stopOpacity="0.5" />
+            <stop offset="70%" stopColor="#009ab1" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#009ab1" stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -78,28 +78,28 @@ function LenseEmblem({ className = "w-16 h-16" }) {
     <svg viewBox="0 0 120 120" className={className} fill="none">
       <defs>
         <radialGradient id="sphereCenterGrad" cx="35%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#bae6fd" />
-          <stop offset="40%" stopColor="#38bdf8" />
-          <stop offset="85%" stopColor="#0284c7" />
-          <stop offset="100%" stopColor="#0369a1" />
+          <stop offset="0%" stopColor="#f0fafb" />
+          <stop offset="40%" stopColor="#009ab1" />
+          <stop offset="85%" stopColor="#008397" />
+          <stop offset="100%" stopColor="#006a7b" />
         </radialGradient>
 
         <linearGradient id="petalLeftGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#60a5fa" />
-          <stop offset="45%" stopColor="#2563eb" />
-          <stop offset="100%" stopColor="#1e3a8a" />
+          <stop offset="0%" stopColor="#009ab1" />
+          <stop offset="45%" stopColor="#008397" />
+          <stop offset="100%" stopColor="#005462" />
         </linearGradient>
 
         <linearGradient id="petalRightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#38bdf8" />
-          <stop offset="55%" stopColor="#0284c7" />
-          <stop offset="100%" stopColor="#075985" />
+          <stop offset="0%" stopColor="#4fbacb" />
+          <stop offset="55%" stopColor="#009ab1" />
+          <stop offset="100%" stopColor="#008397" />
         </linearGradient>
 
         <linearGradient id="petalCenterGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stopColor="#93c5fd" />
-          <stop offset="50%" stopColor="#2563eb" />
-          <stop offset="100%" stopColor="#1d4ed8" />
+          <stop offset="0%" stopColor="#8ed6e0" />
+          <stop offset="50%" stopColor="#009ab1" />
+          <stop offset="100%" stopColor="#008397" />
         </linearGradient>
 
         <filter id="emblemGlow" x="-20%" y="-20%" width="140%" height="140%">
@@ -241,9 +241,9 @@ export default function LenseLoader({
       <FluidWaveRibbons />
 
       {/* Out-of-focus Floating Depth Spheres (matching reference artwork) */}
-      <div className="absolute -bottom-16 -right-16 w-80 h-80 rounded-full bg-gradient-to-tr from-sky-400/30 via-blue-600/20 to-transparent blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-10 -left-12 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-500/25 via-sky-300/20 to-transparent blur-2xl pointer-events-none" />
-      <div className="absolute top-12 right-12 w-48 h-48 rounded-full bg-radial from-blue-400/20 to-transparent blur-2xl pointer-events-none" />
+      <div className="absolute -bottom-16 -right-16 w-80 h-80 rounded-full bg-gradient-to-tr from-[#009ab1]/25 via-[#009ab1]/15 to-transparent blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-10 -left-12 w-64 h-64 rounded-full bg-gradient-to-tr from-[#009ab1]/20 via-[#009ab1]/10 to-transparent blur-2xl pointer-events-none" />
+      <div className="absolute top-12 right-12 w-48 h-48 rounded-full bg-radial from-[#009ab1]/15 to-transparent blur-2xl pointer-events-none" />
 
       {/* Top Spacer / Balance */}
       <div className="w-full h-4 sm:h-8" />
@@ -255,7 +255,7 @@ export default function LenseLoader({
         
         {/* Top-Left: LEARN */}
         <div className="absolute -top-12 -left-12 sm:-top-16 sm:-left-20 flex flex-col items-center gap-1.5 z-20 transition-transform duration-300 hover:scale-105">
-          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 dark:bg-[#0c1a36]/95 border border-sky-100 dark:border-white/15 shadow-[0_8px_24px_rgba(2,132,199,0.18)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.5)] flex items-center justify-center text-[#0a6cff] dark:text-sky-400">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 dark:bg-[#0c1a36]/95 border border-[#009ab1]/20 dark:border-white/15 shadow-[0_8px_24px_rgba(0,154,177,0.18)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.5)] flex items-center justify-center text-[#009ab1] dark:text-[#009ab1]">
             <GraduationCap size={18} strokeWidth={1.8} />
           </div>
           <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-[0.22em] text-slate-500 dark:text-slate-400 uppercase">
@@ -265,7 +265,7 @@ export default function LenseLoader({
 
         {/* Top-Right: COLLABORATE */}
         <div className="absolute -top-12 -right-16 sm:-top-16 sm:-right-24 flex flex-col items-center gap-1.5 z-20 transition-transform duration-300 hover:scale-105">
-          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 dark:bg-[#0c1a36]/95 border border-sky-100 dark:border-white/15 shadow-[0_8px_24px_rgba(2,132,199,0.18)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.5)] flex items-center justify-center text-[#0a6cff] dark:text-sky-400">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 dark:bg-[#0c1a36]/95 border border-[#009ab1]/20 dark:border-white/15 shadow-[0_8px_24px_rgba(0,154,177,0.18)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.5)] flex items-center justify-center text-[#009ab1] dark:text-[#009ab1]">
             <Users size={18} strokeWidth={1.8} />
           </div>
           <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-[0.22em] text-slate-500 dark:text-slate-400 uppercase">
@@ -275,7 +275,7 @@ export default function LenseLoader({
 
         {/* Bottom-Left: INNOVATE */}
         <div className="absolute -bottom-8 -left-14 sm:-bottom-10 sm:-left-20 flex flex-col items-center gap-1.5 z-20 transition-transform duration-300 hover:scale-105">
-          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 dark:bg-[#0c1a36]/95 border border-sky-100 dark:border-white/15 shadow-[0_8px_24px_rgba(2,132,199,0.18)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.5)] flex items-center justify-center text-[#0a6cff] dark:text-sky-400">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 dark:bg-[#0c1a36]/95 border border-[#009ab1]/20 dark:border-white/15 shadow-[0_8px_24px_rgba(0,154,177,0.18)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.5)] flex items-center justify-center text-[#009ab1] dark:text-[#009ab1]">
             <Lightbulb size={18} strokeWidth={1.8} />
           </div>
           <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-[0.22em] text-slate-500 dark:text-slate-400 uppercase">
@@ -285,7 +285,7 @@ export default function LenseLoader({
 
         {/* Bottom-Right: SUSTAIN */}
         <div className="absolute -bottom-8 -right-12 sm:-bottom-10 sm:-right-16 flex flex-col items-center gap-1.5 z-20 transition-transform duration-300 hover:scale-105">
-          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 dark:bg-[#0c1a36]/95 border border-sky-100 dark:border-white/15 shadow-[0_8px_24px_rgba(2,132,199,0.18)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.5)] flex items-center justify-center text-[#0a6cff] dark:text-sky-400">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 dark:bg-[#0c1a36]/95 border border-[#009ab1]/20 dark:border-white/15 shadow-[0_8px_24px_rgba(0,154,177,0.18)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.5)] flex items-center justify-center text-[#009ab1] dark:text-[#009ab1]">
             <Leaf size={18} strokeWidth={1.8} />
           </div>
           <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-[0.22em] text-slate-500 dark:text-slate-400 uppercase">
@@ -302,24 +302,23 @@ export default function LenseLoader({
             <defs>
               {/* Progress Arc Glowing Gradient */}
               <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#0a6cff" />
-                <stop offset="50%" stopColor="#0091ff" />
-                <stop offset="100%" stopColor="#38bdf8" />
+                <stop offset="0%" stopColor="#009ab1" />
+                <stop offset="100%" stopColor="#009ab1" />
               </linearGradient>
 
               {/* 3D Blue Sphere Gradient for Moving Head Node */}
               <radialGradient id="tipSphereGrad" cx="35%" cy="30%" r="70%">
-                <stop offset="0%" stopColor="#e0f2fe" />
-                <stop offset="35%" stopColor="#38bdf8" />
-                <stop offset="70%" stopColor="#0a6cff" />
-                <stop offset="100%" stopColor="#06328a" />
+                <stop offset="0%" stopColor="#f0fafb" />
+                <stop offset="40%" stopColor="#4fbacb" />
+                <stop offset="85%" stopColor="#009ab1" />
+                <stop offset="100%" stopColor="#008397" />
               </radialGradient>
 
               {/* White Satellite Sphere Gradient */}
               <radialGradient id="whiteSphereGrad" cx="35%" cy="30%" r="70%">
                 <stop offset="0%" stopColor="#ffffff" />
-                <stop offset="60%" stopColor="#e0f2fe" />
-                <stop offset="100%" stopColor="#93c5fd" />
+                <stop offset="60%" stopColor="#f0fafb" />
+                <stop offset="100%" stopColor="#009ab1" />
               </radialGradient>
 
               {/* Drop Shadow for the Arc */}
@@ -330,7 +329,7 @@ export default function LenseLoader({
 
               {/* Drop Shadow for tip sphere */}
               <filter id="tipShadow" x="-50%" y="-50%" width="200%" height="200%">
-                <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#0a6cff" floodOpacity="0.6" />
+                <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#009ab1" floodOpacity="0.6" />
               </filter>
             </defs>
 
@@ -340,7 +339,7 @@ export default function LenseLoader({
               cy={center}
               r={166}
               fill="none"
-              stroke="#0284c7"
+              stroke="#009ab1"
               strokeWidth="1.2"
               strokeDasharray="2.5 7"
               opacity="0.35"
@@ -352,7 +351,7 @@ export default function LenseLoader({
               cy={center}
               r={128}
               fill="none"
-              stroke="#38bdf8"
+              stroke="#009ab1"
               strokeWidth="0.8"
               opacity="0.25"
             />
@@ -400,7 +399,7 @@ export default function LenseLoader({
               cx={center + 166 * Math.cos(-0.6)}
               cy={center + 166 * Math.sin(-0.6)}
               r="3.5"
-              fill="#0a6cff"
+              fill="#009ab1"
               opacity="0.75"
             />
 
@@ -474,7 +473,7 @@ export default function LenseLoader({
 
             {/* 0% - 100% Counter */}
             <div className="mt-3 flex flex-col items-center">
-              <span className="text-3xl sm:text-[34px] font-extrabold text-[#0a6cff] dark:text-[#38bdf8] leading-none tracking-tight font-sans">
+              <span className="text-3xl sm:text-[34px] font-extrabold text-[#009ab1] dark:text-[#009ab1] leading-none tracking-tight font-sans">
                 {p}%
               </span>
               
@@ -483,9 +482,9 @@ export default function LenseLoader({
               </span>
 
               {/* Horizontal Gradient Progress Fill Bar */}
-              <div className="w-36 sm:w-44 h-1.5 sm:h-2 rounded-full bg-blue-100/90 dark:bg-blue-950/80 p-0.5 mt-2 overflow-hidden shadow-inner border border-blue-200/50 dark:border-white/10">
+              <div className="w-36 sm:w-44 h-1.5 sm:h-2 rounded-full bg-[#009ab1]/15 dark:bg-[#009ab1]/25 p-0.5 mt-2 overflow-hidden shadow-inner border border-[#009ab1]/30 dark:border-white/10">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-[#0a6cff] via-[#1fa2ff] to-[#38bdf8] shadow-[0_0_10px_rgba(10,108,255,0.5)] transition-all duration-100 ease-out"
+                  className="h-full rounded-full bg-[#009ab1] shadow-[0_0_10px_rgba(0,154,177,0.5)] transition-all duration-100 ease-out"
                   style={{ width: `${p}%` }}
                 />
               </div>

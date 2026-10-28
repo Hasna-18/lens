@@ -72,6 +72,35 @@ const SectionDots = ({ cols, rows, gap = 16, className = '' }) => (
   </div>
 );
 
+function Dots({ rows = 5, cols = 10, className = '' }) {
+  return (
+    <div className={`grid gap-2 pointer-events-none select-none ${className}`} style={{ gridTemplateColumns: `repeat(${cols}, 3px)` }}>
+      {Array.from({ length: rows * cols }).map((_, i) => (
+        <span key={i} className="w-[3px] h-[3px] rounded-full bg-[#009ab1]/60 dark:bg-sky-400/60" />
+      ))}
+    </div>
+  );
+}
+
+function Swirl({ className = '' }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`absolute pointer-events-none rounded-full bg-gradient-to-br from-[#009ab1]/20 via-[#38bdf8]/15 to-transparent blur-3xl ${className}`}
+    />
+  );
+}
+
+function Flow({ className = '' }) {
+  return (
+    <svg aria-hidden="true" className={`absolute pointer-events-none ${className}`} viewBox="0 0 800 160" fill="none" preserveAspectRatio="none">
+      <path d="M0 150 C200 20 420 10 800 60" stroke="#009ab1" strokeOpacity="0.35" strokeWidth="1.2" />
+      <path d="M0 160 C220 50 440 40 800 90" stroke="#38bdf8" strokeOpacity="0.32" strokeWidth="1" />
+      <path d="M0 140 C180 0 400 -10 800 30" stroke="#93c5fd" strokeOpacity="0.55" strokeWidth="1" />
+    </svg>
+  );
+}
+
 const parseDateParts = (dateStr) => {
   if (!dateStr) return { day: '18', month: 'MAY', year: '2025' };
   try {
@@ -102,7 +131,7 @@ const CARD_THEMES = [
     tagBg: 'bg-blue-50 text-blue-600 border-blue-200/80',
     waveColor: '#3b82f6',
     gradient: 'from-blue-500/15 via-sky-400/10 to-transparent',
-    iconBg: 'bg-gradient-to-br from-[#0a6cff] to-sky-400 shadow-[0_8px_20px_rgba(10,108,255,0.3)] text-white',
+    iconBg: 'bg-gradient-to-br from-[#009ab1] to-sky-400 shadow-[0_8px_20px_rgba(10,108,255,0.3)] text-white',
     icon: GraduationCap,
   },
   {
@@ -280,86 +309,96 @@ export default function NewsPage() {
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#030712] text-slate-900 dark:text-slate-100 font-sans pb-28 pt-28 sm:pt-36 relative overflow-hidden selection:bg-blue-500/20 transition-colors duration-300">
 
       {/* ============================================================ */}
-      {/* 0. HERO NATURAL ENVIRONMENT BLEND */}
+      {/* 0. HERO NATURAL ENVIRONMENT & SPHERE (MATCHING EVENTS PAGE) */}
       {/* ============================================================ */}
-      <div className="absolute top-0 right-0 w-full lg:w-[54%] xl:w-[48%] h-[580px] sm:h-[640px] pointer-events-none z-0 overflow-hidden select-none rounded-bl-[3.5rem] lg:rounded-bl-[5.5rem]">
+      <div className="absolute top-0 right-0 w-full lg:w-[68%] xl:w-[62%] h-[840px] sm:h-[920px] pointer-events-none z-0 overflow-hidden select-none">
         <img
           src="https://images.pexels.com/photos/14314638/pexels-photo-14314638.jpeg"
-          alt="LEnSE News & Insights"
-          className="w-full h-full object-cover object-center lg:object-[center_35%] scale-[1.02] transform-gpu transition-transform duration-1000 ease-out"
-          onError={(e) => {
-            e.currentTarget.src = "/home/bg.png";
-          }}
+          alt="LEnSE Sustainability Sphere"
+          className="w-full h-full object-cover object-center lg:object-right-top scale-[1.04] transform-gpu transition-transform duration-1000 ease-out"
         />
 
         {/* Soft Organic Fade Masks into the Canvas */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#f8fafc] dark:from-[#030712] via-[#f8fafc]/45 dark:via-[#030712]/50 via-[15%] to-transparent to-[45%] w-full h-full hidden lg:block" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#f8fafc] dark:from-[#030712] via-[#f8fafc]/75 dark:via-[#030712]/80 via-[25%] to-transparent w-full h-full block lg:hidden" />
-        <div className="absolute bottom-0 left-0 right-0 h-36 bg-gradient-to-t from-[#f8fafc] dark:from-[#030712] via-[#f8fafc]/75 dark:via-[#030712]/75 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#f8fafc] dark:from-[#030712] via-[#f8fafc]/80 dark:via-[#030712]/80 via-[18%] to-transparent to-[42%] w-full h-full" />
+        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#f8fafc] dark:from-[#030712] via-[#f8fafc]/60 dark:via-[#030712]/60 to-transparent" />
         <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#f8fafc] dark:from-[#030712] to-transparent" />
-
-        {/* Delicate Ambient Blue Highlight */}
-        <div className="absolute inset-0 bg-blue-500/5 dark:bg-blue-400/5 mix-blend-overlay pointer-events-none" />
       </div>
 
-      {/* Ambient background glows (matching About & Home pages) */}
+      {/* Abstract geometry and soft ambience (matching Events page) */}
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[1100px] z-0 pointer-events-none overflow-hidden">
+        <Swirl className="-top-16 -left-24 w-[420px] h-[360px]" />
+        <Swirl className="top-[390px] right-[-100px] w-[420px] h-[420px] opacity-70" />
+        <div className="hidden lg:block absolute -left-[190px] top-[250px] w-[320px] h-[320px] rounded-full border border-[#009ab1]/20 dark:border-sky-400/20" />
+        <div className="hidden lg:block absolute left-[92px] top-[405px] w-2.5 h-2.5 rounded-full bg-[#009ab1]/60 dark:bg-sky-400/60" />
+        <div className="hidden lg:block absolute right-[7%] top-[520px] w-[180px] h-[180px] rounded-full border border-[#009ab1]/15 dark:border-sky-400/15" />
+        <Dots rows={8} cols={6} className="hidden sm:grid absolute left-5 top-[560px] opacity-60" />
+        <Dots rows={7} cols={10} className="hidden lg:grid absolute right-10 top-[690px] opacity-50" />
+        <Flow className="hidden lg:block absolute right-0 top-[610px] w-[52%] h-40" />
+      </div>
+
+      {/* Ambient background glows */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-100/60 dark:from-blue-950/20 via-sky-50/40 dark:via-transparent to-transparent blur-[110px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-sky-100/50 dark:from-blue-900/15 via-blue-50/30 dark:via-transparent to-transparent blur-[130px] rounded-full" />
+        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#009ab1]/15 dark:from-blue-950/20 via-sky-50/30 dark:via-transparent to-transparent blur-[100px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#009ab1]/15 dark:from-blue-900/15 via-sky-50/30 dark:via-transparent to-transparent blur-[120px] rounded-full" />
         <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-50/40 dark:from-indigo-950/20 to-transparent blur-3xl rounded-full" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-10">
 
         {/* ============================================================ */}
-        {/* A. DESKTOP VIEW HERO (LARGE SCREENS) */}
+        {/* A. DESKTOP VIEW HERO (VISIBLE ON LARGE SCREENS ONLY) */}
         {/* ============================================================ */}
         <div className="hidden lg:block">
-          <div className="grid grid-cols-12 gap-8 lg:gap-6 items-center min-h-[440px] sm:min-h-[480px]">
 
-            {/* Left Content */}
-            <div className="col-span-12 lg:col-span-7 space-y-6 lg:pr-4 z-10">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border border-blue-100 dark:border-blue-900/40 shadow-xs hover:border-[#1a6dff]/40 transition-colors duration-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#1a6dff]" />
-                <span className="text-[11px] font-bold tracking-[0.22em] text-[#1a6dff] dark:text-sky-400 uppercase">
-                  UPDATES &amp; STORIES
+          {/* 1. HERO SECTION */}
+          <div className="grid grid-cols-12 gap-8 lg:gap-4 items-center min-h-[480px] sm:min-h-[560px]">
+
+            {/* Left: Text & CTA */}
+            <div className="col-span-6 space-y-6 lg:pr-2 z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-white/80 dark:border-slate-800 shadow-sm hover:border-[#009ab1]/70 transition-colors duration-300">
+                <span className="text-[11px] font-bold tracking-[0.22em] text-[#009ab1] dark:text-sky-400 uppercase">
+                  LEnSE NEWS &amp; MEDIA
                 </span>
               </div>
 
-              <h1 className="text-5xl sm:text-6xl lg:text-[4.2rem] font-normal text-slate-900 dark:text-white leading-[1.06] tracking-tight font-serif">
-                News &amp; Insights.<br />
-                <span className="italic text-[#1a6dff] dark:text-sky-400 font-serif font-normal">Stories that inspire.</span>
+              <h1 className="text-5xl sm:text-6xl lg:text-[4.5rem] font-normal text-slate-900 dark:text-white leading-[1.05] tracking-tight font-serif">
+                Stories that<br />
+                <span className="italic text-[#009ab1] dark:text-sky-400 font-serif font-normal">inspire change.</span>
               </h1>
 
-              <p className="text-slate-600 dark:text-slate-300 text-[14px] leading-[1.75] max-w-lg font-normal">
-                Stay informed with the latest research breakthroughs, state-wide STEM training milestones, global academic partnerships, and community initiatives from the Centre for Learning Engineering and Sustainability Education.
+              <p className="text-slate-600 dark:text-slate-300 text-[13.5px] leading-[1.72] max-w-[430px] font-normal">
+                Discover research breakthroughs, statewide STEM training milestones, partnerships, and stories that bring people together to create a more sustainable future.
               </p>
 
-              {/* Quick Key Highlights */}
-              <div className="pt-2 flex flex-wrap items-center gap-3">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-2xs">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>Real-Time Updates</span>
-                </div>
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-2xs">
-                  <span className="text-[#1a6dff] dark:text-sky-400 font-bold">{newsList.length || '8+'}</span>
-                  <span>Published Articles</span>
-                </div>
+              <div className="pt-2">
+                <a href="#news-list-section" className="inline-flex group">
+                  <button className="px-7 py-3.5 rounded-full bg-gradient-to-r from-[#009ab1] to-[#009ab1] hover:from-[#0052cc] hover:to-[#009ab1] text-white text-[11px] font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-[0_12px_28px_rgba(10,108,255,0.32),inset_0_1px_1px_rgba(255,255,255,0.25)] hover:scale-105 active:scale-95 cursor-pointer">
+                    <span>Explore All Stories</span>
+                    <div className="w-5 h-5 rounded-full border border-white/35 flex items-center justify-center group-hover:bg-white/20 group-hover:border-white transition-all duration-300">
+                      <ArrowRight size={10} className="text-white group-hover:translate-x-0.5 transition-transform duration-300" />
+                    </div>
+                  </button>
+                </a>
               </div>
             </div>
 
-            {/* Right: Floating Glass Highlight Chip that anchors the image */}
-            <div className="hidden lg:flex col-span-12 lg:col-span-5 justify-end z-10 pr-2">
-              <div className="p-5 rounded-[2rem] bg-white/75 dark:bg-slate-900/75 backdrop-blur-xl border border-white/90 dark:border-slate-800 shadow-[0_15px_40px_rgba(26,109,255,0.08)] space-y-2 max-w-[280px] hover:-translate-y-1 transition duration-300">
-                <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-100 dark:border-blue-900/40 flex items-center justify-center text-[#1a6dff] dark:text-sky-400">
-                  <Sparkles size={17} />
+            {/* Right: Transparent Crystal Glass "Latest Coverage" Card */}
+            <div className="col-span-6 relative flex items-center justify-start lg:justify-center min-h-[340px] sm:min-h-[420px]">
+              <div className="relative lg:ml-[-50px] xl:ml-[-90px] bg-gradient-to-br from-white/65 dark:from-slate-900/65 via-white/45 dark:via-slate-900/45 to-[#009ab1]/12 backdrop-blur-2xl p-6 sm:p-7 rounded-[2.2rem] border-[1.5px] border-white/95 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(255,255,255,0.3),inset_2px_0_4px_rgba(255,255,255,0.8),0_25px_50px_-10px_rgba(10,108,255,0.18)] dark:shadow-[0_25px_50px_-10px_rgba(0,0,0,0.5)] w-52 sm:w-60 z-20 group transition-all duration-500 hover:-translate-y-2 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_35px_70px_-10px_rgba(10,108,255,0.28)] cursor-pointer">
+                <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-white/70 dark:from-white/10 via-white/20 to-transparent rounded-tl-[2.2rem] pointer-events-none" />
+                <div className="w-12 h-12 rounded-full bg-gradient-to-b from-white/95 dark:from-slate-800 via-blue-50/60 dark:via-slate-800/60 to-[#009ab1]/12 backdrop-blur-2xl border-[1.5px] border-white dark:border-slate-700 shadow-[inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(0,0,0,0.06),0_10px_20px_rgba(10,108,255,0.15)] flex items-center justify-center absolute -top-5 -right-5 text-[#009ab1] dark:text-sky-400 z-30 transition-all duration-500 group-hover:scale-115 group-hover:rotate-12 group-hover:text-blue-700 dark:group-hover:text-sky-300">
+                  <FileText size={20} strokeWidth={1.75} />
                 </div>
-                <p className="text-[10px] font-bold tracking-[0.2em] text-[#1a6dff] dark:text-sky-400 uppercase">
-                  PRESS &amp; STORIES
+                <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-1.5 relative z-10 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] group-hover:tracking-[0.25em] transition-all duration-300">
+                  Latest Coverage
                 </p>
-                <p className="text-xs font-medium text-slate-700 dark:text-slate-300 leading-snug">
-                  Discover initiatives and milestones driving educational sustainability.
+                <h3 className="text-4xl sm:text-5xl font-serif text-slate-900 dark:text-white mb-3 tracking-tight font-normal relative z-10 drop-shadow-[0_1px_1px_rgba(255,255,255,0.6)] group-hover:scale-105 origin-left transition-transform duration-300">
+                  {newsList.length > 0 ? `${newsList.length}+` : '8+'}
+                </h3>
+                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium mb-3 relative z-10 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">
+                  Promoting innovative, inclusive and sustainable learning insights.
                 </p>
+                <div className="w-5 h-[1.5px] bg-[#009ab1] dark:bg-sky-400 rounded-full mt-2 relative z-10 group-hover:w-10 transition-all duration-300" />
               </div>
             </div>
 
@@ -367,26 +406,61 @@ export default function NewsPage() {
         </div>
 
         {/* ============================================================ */}
-        {/* B. MOBILE VIEW HERO (SCREENS < LG) */}
+        {/* B. MOBILE VIEW (VISIBLE ON MOBILE / SCREENS < LG) */}
         {/* ============================================================ */}
-        <div className="block lg:hidden pb-4">
+        <div className="block lg:hidden pb-6">
+
+          {/* 1. Mobile Hero */}
           <div className="pt-3 pb-2 relative">
-            <div className="w-full space-y-3 z-10">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-blue-100 dark:border-blue-900/40 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:scale-105 transition-transform duration-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#1a6dff]" />
-                <span className="text-[9.5px] font-bold tracking-wider text-[#1a6dff] dark:text-sky-400 uppercase">
-                  NEWS &bull; INSIGHTS
-                </span>
+            <div className="grid grid-cols-12 gap-2.5 items-start">
+              {/* Left text */}
+              <div className="col-span-7 space-y-2.5 z-10 pr-0.5">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 border border-white/80 dark:border-slate-800 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:scale-105 transition-transform duration-300">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#009ab1]" />
+                  <span className="text-[9.5px] font-bold tracking-wider text-[#009ab1] dark:text-sky-400 uppercase">
+                    LEnSE NEWS
+                  </span>
+                </div>
+
+                <h1 className="text-2xl sm:text-3xl font-normal text-slate-900 dark:text-white leading-[1.1] tracking-tight font-serif">
+                  Stories that<br />
+                  <span className="italic text-[#009ab1] dark:text-sky-400 font-serif font-normal">inspire change.</span>
+                </h1>
+
+                <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed font-normal">
+                  Stay updated with achievements, initiatives, partnerships and community stories from LEnSE.
+                </p>
+
+                <div className="pt-1">
+                  <a href="#news-list-section" className="inline-flex group">
+                    <button className="px-5 py-2.5 rounded-full bg-[#009ab1] hover:bg-blue-600 text-white text-xs font-semibold tracking-wide flex items-center gap-2 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
+                      <span>Explore All Stories</span>
+                      <ArrowRight size={12} className="text-white group-hover:translate-x-1 transition-transform duration-300" />
+                    </button>
+                  </a>
+                </div>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl font-normal text-slate-900 dark:text-white leading-[1.1] tracking-tight font-serif">
-                News &amp; Insights.<br />
-                <span className="italic text-[#1a6dff] dark:text-sky-400 font-serif font-normal">Stories that inspire.</span>
-              </h1>
+              {/* Right Glass Card: Latest Coverage */}
+              <div className="col-span-5 flex justify-end items-start pt-1 relative">
+                <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl p-3.5 sm:p-4 rounded-2xl border border-white/80 dark:border-slate-800 shadow-[0_8px_25px_rgba(10,108,255,0.08)] w-full max-w-[165px] z-20 group transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+                  <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-slate-800 border border-white/80 dark:border-slate-700 shadow-sm flex items-center justify-center absolute -top-2.5 -right-2.5 text-[#009ab1] dark:text-sky-400 z-30 group-hover:scale-115 group-hover:rotate-12 transition-all duration-300">
+                    <FileText size={16} strokeWidth={2} />
+                  </div>
 
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed font-normal max-w-lg">
-                Stay updated with achievements, initiatives, partnerships and community stories from LEnSE.
-              </p>
+                  <p className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-0.5 relative z-10 group-hover:tracking-widest transition-all duration-300">
+                    LATEST COVERAGE
+                  </p>
+
+                  <h3 className="text-3xl font-serif text-slate-900 dark:text-white mb-0.5 tracking-tight font-bold relative z-10 group-hover:scale-105 origin-left transition-transform duration-300">
+                    {newsList.length > 0 ? `${newsList.length}+` : '8+'}
+                  </h3>
+
+                  <p className="text-[10px] text-slate-600 dark:text-slate-300 leading-snug font-medium mb-1 relative z-10">
+                    Promoting innovative, inclusive and sustainable learning insights.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -426,7 +500,7 @@ export default function NewsPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search news, topics, tags..."
-              className="w-full pl-11 pr-4 py-2.5 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/85 dark:border-white/10 text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#0a6cff]/25 focus:border-[#0a6cff] shadow-[0_4px_20px_rgba(0,0,0,0.03),inset_0_1px_1px_#fff]"
+              className="w-full pl-11 pr-4 py-2.5 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/85 dark:border-white/10 text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#009ab1]/25 focus:border-[#009ab1] shadow-[0_4px_20px_rgba(0,0,0,0.03),inset_0_1px_1px_#fff]"
             />
           </div>
 
@@ -443,7 +517,7 @@ export default function NewsPage() {
                   }}
                   className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer ${
                     isSelected
-                      ? 'bg-gradient-to-r from-[#0a6cff] to-[#1a6dff] text-white shadow-[0_4px_16px_rgba(10,108,255,0.38),inset_0_1px_1px_rgba(255,255,255,0.4)] scale-[1.02]'
+                      ? 'bg-gradient-to-r from-[#009ab1] to-[#009ab1] text-white shadow-[0_4px_16px_rgba(10,108,255,0.38),inset_0_1px_1px_rgba(255,255,255,0.4)] scale-[1.02]'
                       : 'bg-white/65 dark:bg-slate-900/65 hover:bg-white/90 dark:hover:bg-slate-800/90 backdrop-blur-xl text-slate-700 dark:text-slate-300 border border-white/80 dark:border-white/10 shadow-[0_2px_10px_rgba(0,0,0,0.02),inset_0_1px_1px_#fff] hover:border-blue-200 dark:hover:border-blue-900/50'
                   }`}
                 >
@@ -468,14 +542,14 @@ export default function NewsPage() {
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
                 <div>
                   <div className="inline-flex items-center gap-2 mb-2">
-                    <span className="w-2 h-2 rounded-full bg-[#0a6cff]" />
-                    <span className="text-[10.5px] font-bold tracking-[0.22em] text-[#0a6cff] dark:text-sky-400 uppercase">
+                    <span className="w-2 h-2 rounded-full bg-[#009ab1]" />
+                    <span className="text-[10.5px] font-bold tracking-[0.22em] text-[#009ab1] dark:text-sky-400 uppercase">
                       NEWS &amp; INSIGHTS
                     </span>
                   </div>
                   <div className="flex items-baseline gap-3 flex-wrap">
                     <h2 className="text-3xl sm:text-4xl lg:text-[2.6rem] font-serif font-bold text-slate-900 dark:text-white tracking-tight">
-                      Latest <span className="font-serif italic font-normal text-[#0a6cff] dark:text-sky-400">News</span>
+                      Latest <span className="font-serif italic font-normal text-[#009ab1] dark:text-sky-400">News</span>
                     </h2>
                     <span className="text-slate-300 dark:text-slate-600 text-2xl font-light hidden sm:inline">—</span>
                     <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-[13px] font-normal max-w-sm">
@@ -493,7 +567,7 @@ export default function NewsPage() {
                     <button
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-[#0a6cff] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition cursor-pointer shadow-2xs"
+                      className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-[#009ab1] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition cursor-pointer shadow-2xs"
                       aria-label="Previous Page"
                     >
                       <ChevronLeft size={15} />
@@ -501,7 +575,7 @@ export default function NewsPage() {
                     <button
                       onClick={() => handlePageChange(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className="w-8 h-8 rounded-full bg-[#0a6cff] text-white disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition cursor-pointer shadow-sm shadow-blue-500/30"
+                      className="w-8 h-8 rounded-full bg-[#009ab1] text-white disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition cursor-pointer shadow-sm shadow-blue-500/30"
                       aria-label="Next Page"
                     >
                       <ChevronRight size={15} />
@@ -513,12 +587,12 @@ export default function NewsPage() {
               {/* NEWS CARDS LIST (matching picture) */}
               {loading ? (
                 <div className="text-center py-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-[2rem] border border-slate-200/80 dark:border-slate-800 p-8 shadow-sm">
-                  <div className="inline-block animate-spin w-8 h-8 border-4 border-blue-500/20 border-t-[#0a6cff] rounded-full mb-3"></div>
+                  <div className="inline-block animate-spin w-8 h-8 border-4 border-blue-500/20 border-t-[#009ab1] rounded-full mb-3"></div>
                   <h4 className="text-base font-serif text-slate-900 dark:text-white mb-1">Loading News...</h4>
                 </div>
               ) : filteredNews.length === 0 ? (
                 <div className="text-center py-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-[2rem] border border-slate-200/80 dark:border-slate-800 p-8 shadow-sm">
-                  <div className="w-14 h-14 bg-blue-50 dark:bg-blue-950/60 rounded-full flex items-center justify-center text-[#0a6cff] dark:text-sky-400 mx-auto mb-3 shadow-inner border border-blue-100 dark:border-blue-900/40">
+                  <div className="w-14 h-14 bg-blue-50 dark:bg-blue-950/60 rounded-full flex items-center justify-center text-[#009ab1] dark:text-sky-400 mx-auto mb-3 shadow-inner border border-blue-100 dark:border-blue-900/40">
                     <FileText size={24} />
                   </div>
                   <h4 className="text-base font-serif text-slate-900 dark:text-white mb-1">No news found</h4>
@@ -527,7 +601,7 @@ export default function NewsPage() {
                   </p>
                   <button
                     onClick={() => { setSelectedCategory('All'); setSearchQuery(''); }}
-                    className="px-5 py-2 rounded-full bg-gradient-to-r from-[#0a6cff] to-[#1a6dff] hover:from-[#095edb] hover:to-[#155edb] text-white text-[11px] font-bold uppercase tracking-wider transition-colors shadow-md shadow-blue-500/20 cursor-pointer"
+                    className="px-5 py-2 rounded-full bg-gradient-to-r from-[#009ab1] to-[#009ab1] hover:from-[#095edb] hover:to-[#155edb] text-white text-[11px] font-bold uppercase tracking-wider transition-colors shadow-md shadow-blue-500/20 cursor-pointer"
                   >
                     Show All News
                   </button>
@@ -602,7 +676,7 @@ export default function NewsPage() {
                             </span>
 
                             {/* Title */}
-                            <h3 className="text-base sm:text-[17px] font-serif font-bold text-slate-900 dark:text-white leading-snug group-hover:text-[#0a6cff] dark:group-hover:text-sky-400 transition-colors line-clamp-2 mt-1">
+                            <h3 className="text-base sm:text-[17px] font-serif font-bold text-slate-900 dark:text-white leading-snug group-hover:text-[#009ab1] dark:group-hover:text-sky-400 transition-colors line-clamp-2 mt-1">
                               {item.title}
                             </h3>
 
@@ -614,15 +688,15 @@ export default function NewsPage() {
                             {/* Meta row: Date + Read Story */}
                             <div className="flex items-center justify-between text-xs pt-2">
                               <span className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500 font-medium">
-                                <Calendar size={13} className="text-[#0a6cff] dark:text-sky-400" />
+                                <Calendar size={13} className="text-[#009ab1] dark:text-sky-400" />
                                 <span>{item.date}</span>
                               </span>
 
                               <div className="inline-flex items-center gap-2 group/btn">
-                                <span className="w-7 h-7 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-900/40 text-[#0a6cff] dark:text-sky-400 flex items-center justify-center group-hover:bg-[#0a6cff] group-hover:text-white transition-colors shadow-2xs">
+                                <span className="w-7 h-7 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-900/40 text-[#009ab1] dark:text-sky-400 flex items-center justify-center group-hover:bg-[#009ab1] group-hover:text-white transition-colors shadow-2xs">
                                   <ArrowRight size={13} />
                                 </span>
-                                <span className="text-xs font-bold text-[#0a6cff] dark:text-sky-400 group-hover:text-blue-700 transition-colors">
+                                <span className="text-xs font-bold text-[#009ab1] dark:text-sky-400 group-hover:text-blue-700 transition-colors">
                                   Read Story
                                 </span>
                               </div>
@@ -643,7 +717,7 @@ export default function NewsPage() {
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-[#0a6cff] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition cursor-pointer shadow-2xs"
+                  className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-[#009ab1] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition cursor-pointer shadow-2xs"
                   title="Previous Page"
                   aria-label="Previous Page"
                 >
@@ -665,7 +739,7 @@ export default function NewsPage() {
                       onClick={() => handlePageChange(page)}
                       className={`w-8 h-8 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${
                         isCurrent
-                          ? 'bg-[#0a6cff] text-white shadow-md shadow-blue-500/30 scale-105'
+                          ? 'bg-[#009ab1] text-white shadow-md shadow-blue-500/30 scale-105'
                           : 'bg-white dark:bg-slate-900 hover:bg-blue-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800'
                       }`}
                       aria-label={`Page ${page}`}
@@ -679,7 +753,7 @@ export default function NewsPage() {
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-[#0a6cff] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition cursor-pointer shadow-2xs"
+                  className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-[#009ab1] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition cursor-pointer shadow-2xs"
                   title="Next Page"
                   aria-label="Next Page"
                 >
@@ -789,15 +863,15 @@ export default function NewsPage() {
               {/* Sidebar Header */}
               <div className="space-y-2.5 relative z-10 pr-14">
                 <div className="inline-flex items-center gap-2">
-                  <Activity size={18} strokeWidth={2.4} className="text-[#0a6cff] dark:text-sky-400" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0a6cff] dark:bg-sky-400" />
-                  <span className="text-[11px] font-bold tracking-[0.22em] text-[#0a6cff] dark:text-sky-400 uppercase">
+                  <Activity size={18} strokeWidth={2.4} className="text-[#009ab1] dark:text-sky-400" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#009ab1] dark:bg-sky-400" />
+                  <span className="text-[11px] font-bold tracking-[0.22em] text-[#009ab1] dark:text-sky-400 uppercase">
                     NEWS AT A GLANCE
                   </span>
                 </div>
                 <h3 className="text-3xl sm:text-[36px] font-serif font-bold text-slate-900 dark:text-white leading-[1.12] tracking-tight">
                   Key Updates<br />
-                  <span className="font-serif italic font-normal text-[#0a6cff] dark:text-sky-400">at a Glance.</span>
+                  <span className="font-serif italic font-normal text-[#009ab1] dark:text-sky-400">at a Glance.</span>
                 </h3>
                 <p className="text-xs sm:text-[13px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal max-w-[270px]">
                   Explore the latest stories, milestones and announcements from LEnSE.
@@ -817,13 +891,13 @@ export default function NewsPage() {
 
                     <div className="flex items-center gap-3.5 relative z-10">
                       {/* 3D Liquid Frosted Glass Pebble Bubble */}
-                      <div className="w-12 h-12 sm:w-[50px] sm:h-[50px] rounded-[1.15rem] bg-gradient-to-b from-white/95 via-blue-50/70 to-blue-100/50 dark:from-slate-700/80 dark:via-blue-950/60 dark:to-slate-800/80 backdrop-blur-md border border-white/95 dark:border-white/20 shadow-[0_8px_20px_rgba(37,99,235,0.14),inset_0_2px_4px_#fff,inset_0_-2px_4px_rgba(147,197,253,0.4)] flex items-center justify-center text-[#0a6cff] dark:text-sky-400 shrink-0 group-hover:scale-105 group-hover:shadow-[0_10px_25px_rgba(37,99,235,0.22)] transition-all duration-300 relative overflow-hidden">
+                      <div className="w-12 h-12 sm:w-[50px] sm:h-[50px] rounded-[1.15rem] bg-gradient-to-b from-white/95 via-blue-50/70 to-blue-100/50 dark:from-slate-700/80 dark:via-blue-950/60 dark:to-slate-800/80 backdrop-blur-md border border-white/95 dark:border-white/20 shadow-[0_8px_20px_rgba(37,99,235,0.14),inset_0_2px_4px_#fff,inset_0_-2px_4px_rgba(147,197,253,0.4)] flex items-center justify-center text-[#009ab1] dark:text-sky-400 shrink-0 group-hover:scale-105 group-hover:shadow-[0_10px_25px_rgba(37,99,235,0.22)] transition-all duration-300 relative overflow-hidden">
                         {/* Specular glass reflection rim on top-left of pebble */}
                         <div className="absolute top-1 left-1.5 w-4 h-2 bg-white/70 rounded-full blur-[0.5px] pointer-events-none transform -rotate-12" />
                         <stat.icon size={22} strokeWidth={1.9} className="relative z-10" />
                       </div>
                       <div>
-                        <h4 className="text-[14.5px] sm:text-[15px] font-serif font-bold text-slate-900 dark:text-white group-hover:text-[#0a6cff] dark:group-hover:text-sky-400 transition-colors leading-tight">
+                        <h4 className="text-[14.5px] sm:text-[15px] font-serif font-bold text-slate-900 dark:text-white group-hover:text-[#009ab1] dark:group-hover:text-sky-400 transition-colors leading-tight">
                           {stat.label}
                         </h4>
                         <p className="text-[11.5px] sm:text-[12px] text-slate-400 dark:text-slate-500 font-normal leading-tight mt-0.5">
@@ -833,7 +907,7 @@ export default function NewsPage() {
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0 pr-1 relative z-10">
-                      <span className="px-3 py-0.5 rounded-full bg-blue-500/10 dark:bg-blue-400/15 backdrop-blur-md text-[#0a6cff] dark:text-sky-400 font-bold text-[12.5px] border border-blue-200/70 dark:border-blue-400/30 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] min-w-[28px]">
+                      <span className="px-3 py-0.5 rounded-full bg-blue-500/10 dark:bg-blue-400/15 backdrop-blur-md text-[#009ab1] dark:text-sky-400 font-bold text-[12.5px] border border-blue-200/70 dark:border-blue-400/30 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] min-w-[28px]">
                         {stat.count}
                       </span>
                       <ChevronRight size={15} strokeWidth={2.4} className="text-slate-400 dark:text-slate-500 group-hover:translate-x-0.5 transition-transform" />
@@ -847,7 +921,7 @@ export default function NewsPage() {
                 {/* Left: View All News Pill Button with Wave Art */}
                 <button
                   onClick={() => { setSelectedCategory('All'); setSearchQuery(''); }}
-                  className="flex-1 h-13 py-3.5 px-6 rounded-full bg-gradient-to-r from-[#0052e0] via-[#1a6dff] to-[#38bdf8] hover:from-[#0047c4] hover:to-[#0ea5e9] text-white font-medium text-[14px] shadow-[0_14px_32px_rgba(26,109,255,0.38),inset_0_1.5px_2px_rgba(255,255,255,0.5),inset_0_-2px_4px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 group transition-all duration-300 relative overflow-hidden cursor-pointer active:scale-[0.98]"
+                  className="flex-1 h-13 py-3.5 px-6 rounded-full bg-gradient-to-r from-[#008296] via-[#009ab1] to-[#38bdf8] hover:from-[#0047c4] hover:to-[#0ea5e9] text-white font-medium text-[14px] shadow-[0_14px_32px_rgba(26,109,255,0.38),inset_0_1.5px_2px_rgba(255,255,255,0.5),inset_0_-2px_4px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 group transition-all duration-300 relative overflow-hidden cursor-pointer active:scale-[0.98]"
                 >
                   {/* Glass top reflection */}
                   <span className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent rounded-t-full pointer-events-none" />
@@ -862,7 +936,7 @@ export default function NewsPage() {
                 {/* Right: Circular 3D Blue Glass Button with Arrow */}
                 <button
                   onClick={() => { setSelectedCategory('All'); setSearchQuery(''); }}
-                  className="w-13 h-13 rounded-full bg-gradient-to-br from-[#38bdf8] via-[#1a6dff] to-[#0052e0] hover:scale-105 active:scale-95 text-white flex items-center justify-center shrink-0 shadow-[0_14px_32px_rgba(26,109,255,0.38),inset_0_2px_3px_rgba(255,255,255,0.6)] border border-white/60 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                  className="w-13 h-13 rounded-full bg-gradient-to-br from-[#38bdf8] via-[#009ab1] to-[#008296] hover:scale-105 active:scale-95 text-white flex items-center justify-center shrink-0 shadow-[0_14px_32px_rgba(26,109,255,0.38),inset_0_2px_3px_rgba(255,255,255,0.6)] border border-white/60 transition-all duration-300 cursor-pointer relative overflow-hidden"
                   aria-label="View All News"
                 >
                   <span className="absolute top-1 left-2 w-4 h-2 bg-white/60 rounded-full blur-[0.5px] pointer-events-none transform -rotate-12" />

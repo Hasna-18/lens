@@ -177,7 +177,7 @@ function PageTransitionInternal({ children }) {
       {!isInitialLoad && isNavigating && (
         <div className="fixed top-0 left-0 right-0 z-[9999] h-[3px] bg-transparent pointer-events-none">
           <div
-            className="h-full bg-gradient-to-r from-blue-600 via-sky-400 to-blue-500 shadow-[0_0_12px_rgba(56,189,248,0.85)] transition-all duration-150 ease-out"
+            className="h-full bg-[#009ab1] shadow-[0_0_12px_rgba(0,154,177,0.85)] transition-all duration-150 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>

@@ -147,7 +147,7 @@ export default function AdminLayout({ children }) {
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans flex flex-col justify-between selection:bg-[#1a6dff]/20 selection:text-[#0f1a3a]">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans flex flex-col justify-between selection:bg-[#009ab1]/20 selection:text-[#0f1a3a]">
 
       {/* ========================================================================= */}
       {/* 1. ELEVATED ADMIN TOPBAR (Home Page Sapphire Aesthetic) */}
@@ -170,7 +170,7 @@ export default function AdminLayout({ children }) {
                 <span className="font-extrabold text-base text-[#0f1a3a] tracking-tight">
                   LEnSE
                 </span>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-[#1a6dff] border border-blue-200/60">
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-[#009ab1] border border-blue-200/60">
                   Command
                 </span>
               </div>
@@ -190,11 +190,11 @@ export default function AdminLayout({ children }) {
                   href={item.href}
                   className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all ${
                     item.active
-                      ? 'bg-blue-50/90 text-[#1a6dff] shadow-xs border border-blue-200/60 font-bold'
+                      ? 'bg-blue-50/90 text-[#009ab1] shadow-xs border border-blue-200/60 font-bold'
                       : 'text-slate-600 hover:text-[#0f1a3a] hover:bg-slate-100/80 border border-transparent'
                   }`}
                 >
-                  <Icon size={15} className={item.active ? 'text-[#1a6dff]' : 'text-slate-400'} />
+                  <Icon size={15} className={item.active ? 'text-[#009ab1]' : 'text-slate-400'} />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -209,7 +209,7 @@ export default function AdminLayout({ children }) {
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-600 hover:text-[#1a6dff] hover:border-blue-300 hover:bg-blue-50/50 transition-all shadow-2xs"
+              className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-600 hover:text-[#009ab1] hover:border-blue-300 hover:bg-blue-50/50 transition-all shadow-2xs"
               title="Preview public site in new tab"
             >
               <ExternalLink size={13} className="text-slate-400" />
@@ -218,7 +218,7 @@ export default function AdminLayout({ children }) {
 
             {/* Admin User Chip */}
             <div className="hidden md:flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200/80 shadow-2xs">
-              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#1a6dff] to-[#38bdf8] text-white flex items-center justify-center text-xs font-bold shadow-xs">
+              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#009ab1] to-[#38bdf8] text-white flex items-center justify-center text-xs font-bold shadow-xs">
                 {initial}
               </div>
               <div className="flex flex-col text-left">
@@ -256,11 +256,11 @@ export default function AdminLayout({ children }) {
                 href={item.href}
                 className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                   item.active
-                    ? 'bg-white text-[#1a6dff] shadow-xs border border-blue-200/70'
+                    ? 'bg-white text-[#009ab1] shadow-xs border border-blue-200/70'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                <Icon size={14} className={item.active ? 'text-[#1a6dff]' : 'text-slate-400'} />
+                <Icon size={14} className={item.active ? 'text-[#009ab1]' : 'text-slate-400'} />
                 <span>{item.label}</span>
               </Link>
             );

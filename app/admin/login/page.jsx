@@ -91,7 +91,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#f0f7ff] overflow-hidden flex flex-col justify-between selection:bg-[#1a6dff]/20 selection:text-[#0f1a3a] font-sans">
+    <div className="relative min-h-screen w-full bg-[#f0f7ff] overflow-hidden flex flex-col justify-between selection:bg-[#009ab1]/20 selection:text-[#0f1a3a] font-sans">
 
       {/* ========================================================================= */}
       {/* 1. BACKGROUND CAMPUS PHOTO & FLUID ORGANIC WAVES (Matching Design Mockup) */}
@@ -148,10 +148,10 @@ export default function AdminLoginPage() {
           <div className="mb-6">
             <Link href="/" className="inline-block group">
               <div className="flex items-baseline select-none">
-                <span style={SERIF} className="text-[38px] sm:text-[44px] font-bold text-[#0f1a3a] tracking-tight leading-none group-hover:text-[#1a6dff] transition-colors">
+                <span style={SERIF} className="text-[38px] sm:text-[44px] font-bold text-[#0f1a3a] tracking-tight leading-none group-hover:text-[#009ab1] transition-colors">
                   LEn
                 </span>
-                <span style={SERIF} className="text-[38px] sm:text-[44px] font-bold italic text-[#1a6dff] tracking-tight ml-0.5 leading-none">
+                <span style={SERIF} className="text-[38px] sm:text-[44px] font-bold italic text-[#009ab1] tracking-tight ml-0.5 leading-none">
                   SE
                 </span>
               </div>
@@ -166,12 +166,12 @@ export default function AdminLoginPage() {
 
           {/* ==================== Access Badge ==================== */}
           <div className="flex items-center gap-3 mb-3.5">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-100 to-blue-50 border border-sky-200/90 flex items-center justify-center text-[#1a6dff] shadow-[0_4px_14px_rgba(56,189,248,0.22)] shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-100 to-blue-50 border border-sky-200/90 flex items-center justify-center text-[#009ab1] shadow-[0_4px_14px_rgba(56,189,248,0.22)] shrink-0">
               <Lock size={18} strokeWidth={2.2} />
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-6 h-[1.5px] bg-[#1a6dff]/40" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#1a6dff]">
+              <span className="w-6 h-[1.5px] bg-[#009ab1]/40" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#009ab1]">
                 Administrative Access
               </span>
             </div>
@@ -180,7 +180,7 @@ export default function AdminLoginPage() {
           {/* ==================== Title & Subtitle ==================== */}
           <div className="mb-5">
             <h1 style={SERIF} className="text-3xl sm:text-[34px] font-normal text-[#0f1a3a] leading-tight tracking-tight">
-              Sign In to <em style={SERIF} className="italic text-[#1a6dff] font-normal">LEnSE</em>
+              Sign In to <em style={SERIF} className="italic text-[#009ab1] font-normal">LEnSE</em>
             </h1>
             <p className="text-xs sm:text-[13px] text-slate-500 mt-1 font-normal leading-relaxed">
               Centre for Learning Engineering &amp; Sustainability Education
@@ -210,7 +210,7 @@ export default function AdminLoginPage() {
               <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1.5">
                 Username or Registered Email
               </label>
-              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
+              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-sky-600">
                   <User size={17} />
                 </div>
@@ -234,12 +234,12 @@ export default function AdminLoginPage() {
                 </label>
                 <Link
                   href="/admin/forgot-password"
-                  className="text-xs font-semibold text-[#1a6dff] hover:text-blue-800 transition-colors"
+                  className="text-xs font-semibold text-[#009ab1] hover:text-blue-800 transition-colors"
                 >
                   Forgot password?
                 </Link>
               </div>
-              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
+              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-sky-600">
                   <KeyRound size={17} />
                 </div>
@@ -270,7 +270,7 @@ export default function AdminLoginPage() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-300 text-[#1a6dff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#1a6dff]"
+                  className="w-4 h-4 rounded border-slate-300 text-[#009ab1] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#009ab1]"
                 />
                 <span className="text-xs text-slate-600 font-medium">Remember me on this device</span>
               </label>
@@ -283,7 +283,7 @@ export default function AdminLoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#1466f6] to-[#0052e0] hover:from-[#0d59e0] hover:to-[#0047c7] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(20,102,246,0.35)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#009ab1] to-[#008296] hover:from-[#008296] hover:to-[#006f80] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(20,102,246,0.35)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
               >
                 {loading ? (
                   <>
@@ -310,7 +310,7 @@ export default function AdminLoginPage() {
           {/* Register New Administrator Button */}
           <Link
             href="/admin/register"
-            className="w-full py-3 px-5 rounded-xl border border-sky-300 bg-sky-50/50 hover:bg-sky-100/70 text-[#1a6dff] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-[1.01] shadow-2xs"
+            className="w-full py-3 px-5 rounded-xl border border-sky-300 bg-sky-50/50 hover:bg-sky-100/70 text-[#009ab1] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-[1.01] shadow-2xs"
           >
             <UserPlus size={16} />
             <span>REGISTER NEW ADMINISTRATOR</span>
@@ -319,7 +319,7 @@ export default function AdminLoginPage() {
           {/* Bottom Security Note */}
           <div className="mt-4 text-center">
             <p className="text-[11px] text-slate-500 font-medium flex items-center justify-center gap-1.5">
-              <ShieldCheck size={13} className="text-[#1a6dff]" />
+              <ShieldCheck size={13} className="text-[#009ab1]" />
               <span>Protected environment with BetterAuth encryption</span>
             </p>
           </div>

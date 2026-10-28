@@ -100,8 +100,8 @@ export default function ContactPage() {
 
       {/* Extreme Neon Glows (Glassmorphism Core in Oceanic Blue) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#1a6dff]/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[20%] right-[-10%] w-[40%] h-[60%] bg-[#0a6cff]/10 blur-[150px] rounded-full" />
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#009ab1]/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[20%] right-[-10%] w-[40%] h-[60%] bg-[#009ab1]/10 blur-[150px] rounded-full" />
         <div className="absolute bottom-[-10%] left-[20%] w-[50%] h-[50%] bg-[#38bdf8]/10 blur-[140px] rounded-full" />
       </div>
 
@@ -115,15 +115,15 @@ export default function ContactPage() {
           <div className="lg:col-span-8 space-y-7 z-10">
             {/* Glowing Tagline Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgba(26,109,255,0.12)] transition-all duration-300">
-              <span className="w-2 h-2 rounded-full bg-[#1a6dff] animate-pulse shadow-[0_0_10px_#1a6dff]" />
-              <span className="text-[10px] sm:text-[11px] font-black tracking-[0.25em] text-[#1a6dff] uppercase">
+              <span className="w-2 h-2 rounded-full bg-[#009ab1] animate-pulse shadow-[0_0_10px_#009ab1]" />
+              <span className="text-[10px] sm:text-[11px] font-black tracking-[0.25em] text-[#009ab1] uppercase">
                 CONNECT &bull; COLLABORATE &bull; ENGAGE
               </span>
             </div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-[5rem] font-serif font-medium text-[#0f1a3a] leading-[1.05] tracking-tight drop-shadow-sm">
               Get in Touch with<br />
-              <span className="italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#0a6cff] to-[#1fa2ff]">LEnSE.</span>
+              <span className="italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#009ab1] to-[#1fa2ff]">LEnSE.</span>
             </h1>
 
             <p className="text-slate-600 text-sm sm:text-base leading-[1.7] max-w-lg font-medium drop-shadow-sm">
@@ -133,7 +133,7 @@ export default function ContactPage() {
             <div className="flex flex-wrap items-center gap-4 pt-4">
               <button
                 onClick={scrollToForm}
-                className="px-8 py-4 rounded-full bg-gradient-to-r from-[#0a6cff] to-[#1fa2ff] text-white text-[12px] font-black uppercase tracking-[0.15em] flex items-center gap-3 transition-all duration-300 shadow-[0_12px_26px_rgba(10,108,255,0.35)] hover:scale-105 active:scale-95 cursor-pointer"
+                className="px-8 py-4 rounded-full bg-gradient-to-r from-[#009ab1] to-[#1fa2ff] text-white text-[12px] font-black uppercase tracking-[0.15em] flex items-center gap-3 transition-all duration-300 shadow-[0_12px_26px_rgba(10,108,255,0.35)] hover:scale-105 active:scale-95 cursor-pointer"
               >
                 <Send size={14} />
                 <span>Send a Message</span>
@@ -142,7 +142,7 @@ export default function ContactPage() {
 
               <button
                 onClick={scrollToOffice}
-                className="px-7 py-4 rounded-full bg-white/80 backdrop-blur-xl border border-blue-100 hover:bg-white text-[#1a6dff] text-[12px] font-bold uppercase tracking-[0.1em] flex items-center gap-2.5 transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(26,109,255,0.18)] hover:scale-105 active:scale-95 cursor-pointer"
+                className="px-7 py-4 rounded-full bg-white/80 backdrop-blur-xl border border-blue-100 hover:bg-white text-[#009ab1] text-[12px] font-bold uppercase tracking-[0.1em] flex items-center gap-2.5 transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(26,109,255,0.18)] hover:scale-105 active:scale-95 cursor-pointer"
               >
                 <Building2 size={16} />
                 <span>Director's Office</span>
@@ -167,10 +167,10 @@ export default function ContactPage() {
 
               {/* 1. Email Us */}
               <div className="flex flex-col items-center text-center py-3.5 px-3 hover:bg-white/60 dark:hover:bg-slate-800/60 rounded-xl sm:rounded-2xl transition-all duration-300 group">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 shadow-[0_4px_12px_rgba(37,99,235,0.08),inset_0_1.5px_2px_#fff] flex items-center justify-center text-[#0a6cff] dark:text-sky-400 mb-2 group-hover:scale-105 group-hover:bg-[#0a6cff] group-hover:text-white transition-all duration-300">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 shadow-[0_4px_12px_rgba(37,99,235,0.08),inset_0_1.5px_2px_#fff] flex items-center justify-center text-[#009ab1] dark:text-sky-400 mb-2 group-hover:scale-105 group-hover:bg-[#009ab1] group-hover:text-white transition-all duration-300">
                   <Mail size={18} strokeWidth={2} />
                 </div>
-                <h4 className="text-[13.5px] font-bold text-slate-900 dark:text-white mb-0.5 group-hover:text-[#0a6cff] transition-colors">
+                <h4 className="text-[13.5px] font-bold text-slate-900 dark:text-white mb-0.5 group-hover:text-[#009ab1] transition-colors">
                   Email Us
                 </h4>
                 <p className="text-[11.5px] text-slate-500 dark:text-slate-400 font-normal leading-tight">
@@ -181,10 +181,10 @@ export default function ContactPage() {
 
               {/* 2. Visit Campus */}
               <div className="flex flex-col items-center text-center py-3.5 px-3 hover:bg-white/60 dark:hover:bg-slate-800/60 rounded-xl sm:rounded-2xl transition-all duration-300 group">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 shadow-[0_4px_12px_rgba(37,99,235,0.08),inset_0_1.5px_2px_#fff] flex items-center justify-center text-[#0a6cff] dark:text-sky-400 mb-2 group-hover:scale-105 group-hover:bg-[#0a6cff] group-hover:text-white transition-all duration-300">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 shadow-[0_4px_12px_rgba(37,99,235,0.08),inset_0_1.5px_2px_#fff] flex items-center justify-center text-[#009ab1] dark:text-sky-400 mb-2 group-hover:scale-105 group-hover:bg-[#009ab1] group-hover:text-white transition-all duration-300">
                   <MapPin size={18} strokeWidth={2} />
                 </div>
-                <h4 className="text-[13.5px] font-bold text-slate-900 dark:text-white mb-0.5 group-hover:text-[#0a6cff] transition-colors">
+                <h4 className="text-[13.5px] font-bold text-slate-900 dark:text-white mb-0.5 group-hover:text-[#009ab1] transition-colors">
                   Visit Campus
                 </h4>
                 <p className="text-[11.5px] text-slate-500 dark:text-slate-400 font-normal leading-tight">
@@ -194,7 +194,7 @@ export default function ContactPage() {
                   href="https://maps.google.com/?q=University+of+Kerala+Kariavattom+Campus"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0a6cff] dark:text-sky-400 hover:text-[#0052e0] mt-1 group/link"
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#009ab1] dark:text-sky-400 hover:text-[#008296] mt-1 group/link"
                 >
                   <span>View on Maps</span>
                   <ArrowRight size={11} className="group-hover/link:translate-x-0.5 transition-transform" />
@@ -203,10 +203,10 @@ export default function ContactPage() {
 
               {/* 3. Centre Office */}
               <div className="flex flex-col items-center text-center py-3.5 px-3 hover:bg-white/60 dark:hover:bg-slate-800/60 rounded-xl sm:rounded-2xl transition-all duration-300 group">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 shadow-[0_4px_12px_rgba(37,99,235,0.08),inset_0_1.5px_2px_#fff] flex items-center justify-center text-[#0a6cff] dark:text-sky-400 mb-2 group-hover:scale-105 group-hover:bg-[#0a6cff] group-hover:text-white transition-all duration-300">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 shadow-[0_4px_12px_rgba(37,99,235,0.08),inset_0_1.5px_2px_#fff] flex items-center justify-center text-[#009ab1] dark:text-sky-400 mb-2 group-hover:scale-105 group-hover:bg-[#009ab1] group-hover:text-white transition-all duration-300">
                   <Building2 size={18} strokeWidth={2} />
                 </div>
-                <h4 className="text-[13.5px] font-bold text-slate-900 dark:text-white mb-0.5 group-hover:text-[#0a6cff] transition-colors">
+                <h4 className="text-[13.5px] font-bold text-slate-900 dark:text-white mb-0.5 group-hover:text-[#009ab1] transition-colors">
                   Centre Office
                 </h4>
                 <p className="text-[11.5px] text-slate-500 dark:text-slate-400 font-normal leading-tight">
@@ -214,7 +214,7 @@ export default function ContactPage() {
                 </p>
                 <a
                   href="#director-office-card"
-                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0a6cff] dark:text-sky-400 hover:text-[#0052e0] mt-1 group/link"
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#009ab1] dark:text-sky-400 hover:text-[#008296] mt-1 group/link"
                 >
                   <span>Get Directions</span>
                   <ArrowRight size={11} className="group-hover/link:translate-x-0.5 transition-transform" />
@@ -223,16 +223,16 @@ export default function ContactPage() {
 
               {/* 4. Office Hours */}
               <div className="flex flex-col items-center text-center py-3.5 px-3 hover:bg-white/60 dark:hover:bg-slate-800/60 rounded-xl sm:rounded-2xl transition-all duration-300 group">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 shadow-[0_4px_12px_rgba(37,99,235,0.08),inset_0_1.5px_2px_#fff] flex items-center justify-center text-[#0a6cff] dark:text-sky-400 mb-2 group-hover:scale-105 group-hover:bg-[#0a6cff] group-hover:text-white transition-all duration-300">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 shadow-[0_4px_12px_rgba(37,99,235,0.08),inset_0_1.5px_2px_#fff] flex items-center justify-center text-[#009ab1] dark:text-sky-400 mb-2 group-hover:scale-105 group-hover:bg-[#009ab1] group-hover:text-white transition-all duration-300">
                   <Clock size={18} strokeWidth={2} />
                 </div>
-                <h4 className="text-[13.5px] font-bold text-slate-900 dark:text-white mb-0.5 group-hover:text-[#0a6cff] transition-colors">
+                <h4 className="text-[13.5px] font-bold text-slate-900 dark:text-white mb-0.5 group-hover:text-[#009ab1] transition-colors">
                   Office Hours
                 </h4>
                 <p className="text-[11.5px] text-slate-500 dark:text-slate-400 font-normal leading-tight">
                   09:30 AM – 05:00 PM
                 </p>
-                <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-blue-50/90 dark:bg-blue-950/70 text-[#0a6cff] dark:text-sky-400 border border-blue-100 dark:border-blue-900/40 font-bold text-[10px]">
+                <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-blue-50/90 dark:bg-blue-950/70 text-[#009ab1] dark:text-sky-400 border border-blue-100 dark:border-blue-900/40 font-bold text-[10px]">
                   Mon – Fri
                 </span>
               </div>
@@ -300,13 +300,13 @@ export default function ContactPage() {
             {/* Form Header */}
             <div className="space-y-2 relative z-10 pr-20">
               <div className="inline-flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#0a6cff]" />
-                <span className="text-[11px] font-bold tracking-[0.22em] text-[#0a6cff] dark:text-sky-400 uppercase">
+                <span className="w-2 h-2 rounded-full bg-[#009ab1]" />
+                <span className="text-[11px] font-bold tracking-[0.22em] text-[#009ab1] dark:text-sky-400 uppercase">
                   DIRECT ENQUIRY
                 </span>
               </div>
               <h3 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 dark:text-white leading-tight">
-                Send us a <span className="font-serif italic font-normal text-[#0a6cff] dark:text-sky-400">Message.</span>
+                Send us a <span className="font-serif italic font-normal text-[#009ab1] dark:text-sky-400">Message.</span>
               </h3>
               <p className="text-xs sm:text-[13px] text-slate-500 dark:text-slate-400 font-normal leading-relaxed max-w-md">
                 Submit your query, institutional collaboration proposal, or camp request. We typically respond within 1–2 working days.
@@ -315,12 +315,12 @@ export default function ContactPage() {
 
             {submitted ? (
               <div className="p-10 rounded-[2.5rem] bg-white/70 dark:bg-slate-800/70 backdrop-blur-2xl border border-white/80 dark:border-white/15 text-center space-y-4 mt-6 animate-in fade-in zoom-in-95 duration-500 shadow-[0_20px_50px_rgba(37,99,235,0.1),inset_0_2px_3px_#fff] relative z-10">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#0a6cff] to-[#1fa2ff] rounded-full flex items-center justify-center text-white mx-auto shadow-[0_10px_30px_rgba(10,108,255,0.35),inset_0_2px_3px_#fff]">
+                <div className="w-20 h-20 bg-gradient-to-br from-[#009ab1] to-[#1fa2ff] rounded-full flex items-center justify-center text-white mx-auto shadow-[0_10px_30px_rgba(10,108,255,0.35),inset_0_2px_3px_#fff]">
                   <CheckCircle2 size={36} />
                 </div>
                 <h4 className="text-2xl font-serif font-bold text-slate-900 dark:text-white">Message Received!</h4>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-sm mx-auto font-medium">
-                  Your enquiry has been securely sent to the Director's Office. We will contact you shortly at <span className="font-bold text-[#0a6cff]">{form.email}</span>.
+                  Your enquiry has been securely sent to the Director's Office. We will contact you shortly at <span className="font-bold text-[#009ab1]">{form.email}</span>.
                 </p>
               </div>
             ) : (
@@ -339,11 +339,11 @@ export default function ContactPage() {
                       Your Name <span className="text-blue-600">*</span>
                     </label>
                     <div className="relative group/input">
-                      <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0a6cff] transition-transform duration-300 group-focus-within/input:scale-110" />
+                      <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#009ab1] transition-transform duration-300 group-focus-within/input:scale-110" />
                       <input
                         type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
                         placeholder="e.g. Dr. Ramesh Kumar"
-                        className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 text-xs sm:text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:bg-white/75 dark:focus:bg-slate-800/70 focus:border-[#0a6cff] focus:ring-4 focus:ring-blue-400/20 shadow-[0_4px_16px_rgba(180,215,255,0.18),inset_0_1.5px_2px_rgba(255,255,255,0.9)] transition-all duration-300"
+                        className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 text-xs sm:text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:bg-white/75 dark:focus:bg-slate-800/70 focus:border-[#009ab1] focus:ring-4 focus:ring-blue-400/20 shadow-[0_4px_16px_rgba(180,215,255,0.18),inset_0_1.5px_2px_rgba(255,255,255,0.9)] transition-all duration-300"
                       />
                     </div>
                   </div>
@@ -353,11 +353,11 @@ export default function ContactPage() {
                       Email Address <span className="text-blue-600">*</span>
                     </label>
                     <div className="relative group/input">
-                      <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0a6cff] transition-transform duration-300 group-focus-within/input:scale-110" />
+                      <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#009ab1] transition-transform duration-300 group-focus-within/input:scale-110" />
                       <input
                         type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
                         placeholder="e.g. ramesh@university.edu"
-                        className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 text-xs sm:text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:bg-white/75 dark:focus:bg-slate-800/70 focus:border-[#0a6cff] focus:ring-4 focus:ring-blue-400/20 shadow-[0_4px_16px_rgba(180,215,255,0.18),inset_0_1.5px_2px_rgba(255,255,255,0.9)] transition-all duration-300"
+                        className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 text-xs sm:text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:bg-white/75 dark:focus:bg-slate-800/70 focus:border-[#009ab1] focus:ring-4 focus:ring-blue-400/20 shadow-[0_4px_16px_rgba(180,215,255,0.18),inset_0_1.5px_2px_rgba(255,255,255,0.9)] transition-all duration-300"
                       />
                     </div>
                   </div>
@@ -370,11 +370,11 @@ export default function ContactPage() {
                       Organization / School
                     </label>
                     <div className="relative group/input">
-                      <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0a6cff] transition-transform duration-300 group-focus-within/input:scale-110" />
+                      <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#009ab1] transition-transform duration-300 group-focus-within/input:scale-110" />
                       <input
                         type="text" value={form.organization} onChange={(e) => setForm({ ...form, organization: e.target.value })}
                         placeholder="e.g. Govt. HSS"
-                        className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 text-xs sm:text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:bg-white/75 dark:focus:bg-slate-800/70 focus:border-[#0a6cff] focus:ring-4 focus:ring-blue-400/20 shadow-[0_4px_16px_rgba(180,215,255,0.18),inset_0_1.5px_2px_rgba(255,255,255,0.9)] transition-all duration-300"
+                        className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 text-xs sm:text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:bg-white/75 dark:focus:bg-slate-800/70 focus:border-[#009ab1] focus:ring-4 focus:ring-blue-400/20 shadow-[0_4px_16px_rgba(180,215,255,0.18),inset_0_1.5px_2px_rgba(255,255,255,0.9)] transition-all duration-300"
                       />
                     </div>
                   </div>
@@ -384,10 +384,10 @@ export default function ContactPage() {
                       Inquiry Category
                     </label>
                     <div className="relative">
-                      <ListFilter size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0a6cff] pointer-events-none" />
+                      <ListFilter size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#009ab1] pointer-events-none" />
                       <select
                         value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                        className="w-full pl-11 pr-10 py-3.5 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 text-xs sm:text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:bg-white/75 dark:focus:bg-slate-800/70 focus:border-[#0a6cff] focus:ring-4 focus:ring-blue-400/20 shadow-[0_4px_16px_rgba(180,215,255,0.18),inset_0_1.5px_2px_rgba(255,255,255,0.9)] transition-all duration-300 cursor-pointer appearance-none"
+                        className="w-full pl-11 pr-10 py-3.5 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 text-xs sm:text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:bg-white/75 dark:focus:bg-slate-800/70 focus:border-[#009ab1] focus:ring-4 focus:ring-blue-400/20 shadow-[0_4px_16px_rgba(180,215,255,0.18),inset_0_1.5px_2px_rgba(255,255,255,0.9)] transition-all duration-300 cursor-pointer appearance-none"
                       >
                         <option value="General Enquiry">General Enquiry</option>
                         <option value="Research Collaboration">Research &amp; Academic Collaboration</option>
@@ -408,7 +408,7 @@ export default function ContactPage() {
                   <textarea
                     required rows={5} maxLength={500} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}
                     placeholder="Tell us about your proposal or requirements..."
-                    className="w-full p-4 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 text-xs sm:text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:bg-white/75 dark:focus:bg-slate-800/70 focus:border-[#0a6cff] focus:ring-4 focus:ring-blue-400/20 shadow-[0_4px_16px_rgba(180,215,255,0.18),inset_0_1.5px_2px_rgba(255,255,255,0.9)] resize-y transition-all duration-300 min-h-[140px]"
+                    className="w-full p-4 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 text-xs sm:text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:bg-white/75 dark:focus:bg-slate-800/70 focus:border-[#009ab1] focus:ring-4 focus:ring-blue-400/20 shadow-[0_4px_16px_rgba(180,215,255,0.18),inset_0_1.5px_2px_rgba(255,255,255,0.9)] resize-y transition-all duration-300 min-h-[140px]"
                   />
                   <div className="text-right">
                     <span className="text-[11px] text-slate-400 font-mono">{form.message.length}/500</span>
@@ -420,7 +420,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#0052e0] via-[#1a6dff] to-[#38bdf8] hover:from-[#0047c4] hover:to-[#0ea5e9] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-[0_12px_28px_rgba(26,109,255,0.35),inset_0_1.5px_1.5px_rgba(255,255,255,0.6)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#008296] via-[#009ab1] to-[#38bdf8] hover:from-[#0047c4] hover:to-[#0ea5e9] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-[0_12px_28px_rgba(26,109,255,0.35),inset_0_1.5px_1.5px_rgba(255,255,255,0.6)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send size={14} />
                     <span>{isSubmitting ? 'Sending...' : 'SUBMIT MESSAGE'}</span>
@@ -454,15 +454,15 @@ export default function ContactPage() {
 
                 <div className="space-y-1 flex-1 min-w-0">
                   <div className="inline-flex items-center gap-1.5 mb-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0a6cff]" />
-                    <span className="text-[10px] font-bold tracking-[0.2em] text-[#0a6cff] dark:text-sky-400 uppercase">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#009ab1]" />
+                    <span className="text-[10px] font-bold tracking-[0.2em] text-[#009ab1] dark:text-sky-400 uppercase">
                       DIRECTOR'S OFFICE
                     </span>
                   </div>
                   <h3 className="text-2xl sm:text-[26px] font-serif font-bold leading-tight text-slate-900 dark:text-white">
                     Dr. Divya C. Senan
                   </h3>
-                  <p className="text-[13px] text-[#0a6cff] dark:text-sky-400 font-semibold leading-relaxed">
+                  <p className="text-[13px] text-[#009ab1] dark:text-sky-400 font-semibold leading-relaxed">
                     Director, CLESE
                   </p>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 font-normal leading-tight">
@@ -479,13 +479,13 @@ export default function ContactPage() {
                   { icon: Mail, label: 'Email', value: 'lenseedu24@gmail.com', isLink: true }
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 shadow-[0_6px_20px_rgba(180,215,255,0.2),inset_0_1.5px_2px_rgba(255,255,255,0.95)] hover:bg-white/70 dark:hover:bg-slate-800/70 hover:shadow-[0_10px_25px_rgba(37,99,235,0.14)] hover:scale-[1.01] transition-all duration-300">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 flex items-center justify-center text-[#0a6cff] dark:text-sky-400 shrink-0 shadow-[0_4px_12px_rgba(37,99,235,0.1),inset_0_1.5px_2px_#fff]">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 flex items-center justify-center text-[#009ab1] dark:text-sky-400 shrink-0 shadow-[0_4px_12px_rgba(37,99,235,0.1),inset_0_1.5px_2px_#fff]">
                       <item.icon size={18} strokeWidth={1.8} />
                     </div>
                     <div className="space-y-0.5 min-w-0">
-                      <span className="block text-[10px] font-bold text-[#0a6cff] dark:text-sky-400 uppercase tracking-wider">{item.label}</span>
+                      <span className="block text-[10px] font-bold text-[#009ab1] dark:text-sky-400 uppercase tracking-wider">{item.label}</span>
                       {item.isLink ? (
-                        <a href={`mailto:${item.value}`} className="text-slate-900 dark:text-white font-semibold text-xs block hover:text-[#0a6cff] transition-colors truncate">{item.value}</a>
+                        <a href={`mailto:${item.value}`} className="text-slate-900 dark:text-white font-semibold text-xs block hover:text-[#009ab1] transition-colors truncate">{item.value}</a>
                       ) : (
                         <span className="text-slate-700 dark:text-slate-300 text-xs font-medium leading-snug block">{item.value}</span>
                       )}
@@ -498,7 +498,7 @@ export default function ContactPage() {
               <div className="pt-1 relative z-10">
                 <a
                   href="mailto:lenseedu24@gmail.com"
-                  className="w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-[#0052e0] via-[#1a6dff] to-[#38bdf8] hover:from-[#0047c4] hover:to-[#0ea5e9] text-white font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-[0_12px_28px_rgba(26,109,255,0.35),inset_0_1.5px_1.5px_rgba(255,255,255,0.6)] hover:scale-[1.01] active:scale-95 transition-all duration-300 cursor-pointer"
+                  className="w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-[#008296] via-[#009ab1] to-[#38bdf8] hover:from-[#0047c4] hover:to-[#0ea5e9] text-white font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-[0_12px_28px_rgba(26,109,255,0.35),inset_0_1.5px_1.5px_rgba(255,255,255,0.6)] hover:scale-[1.01] active:scale-95 transition-all duration-300 cursor-pointer"
                 >
                   <Mail size={15} />
                   <span>EMAIL DIRECTOR</span>
@@ -514,10 +514,10 @@ export default function ContactPage() {
 
               <div className="flex items-center justify-between relative z-10">
                 <h4 className="text-lg font-serif font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
-                  <Users size={19} className="text-[#0a6cff] dark:text-sky-400" />
+                  <Users size={19} className="text-[#009ab1] dark:text-sky-400" />
                   Academic Partners
                 </h4>
-                <Link href="/about#partners" className="text-xs font-bold text-[#0a6cff] dark:text-sky-400 hover:text-[#0052e0] flex items-center gap-1 group/link">
+                <Link href="/about#partners" className="text-xs font-bold text-[#009ab1] dark:text-sky-400 hover:text-[#008296] flex items-center gap-1 group/link">
                   <span>View All</span>
                   <ArrowRight size={13} className="group-hover/link:translate-x-0.5 transition-transform" />
                 </Link>
@@ -534,7 +534,7 @@ export default function ContactPage() {
                   <div key={idx} className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 shadow-[0_6px_20px_rgba(180,215,255,0.2),inset_0_1.5px_2px_rgba(255,255,255,0.95)] hover:bg-white/75 dark:hover:bg-slate-800/70 hover:shadow-[0_10px_25px_rgba(37,99,235,0.15),inset_0_2px_3px_#fff] hover:scale-[1.02] transition-all duration-300 cursor-default group">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-b from-white/95 via-blue-50/70 to-blue-100/40 dark:bg-slate-900 border border-white dark:border-slate-700 flex items-center justify-center shadow-[0_4px_12px_rgba(37,99,235,0.1),inset_0_1.5px_2px_#fff] shrink-0 overflow-hidden">
                       {/* Circular placeholder ready for user's 4 image icons */}
-                      <span className="text-[10px] font-bold text-[#0a6cff] dark:text-sky-400">
+                      <span className="text-[10px] font-bold text-[#009ab1] dark:text-sky-400">
                         {partner.name.split(' ')[0].slice(0, 3)}
                       </span>
                     </div>
@@ -569,15 +569,15 @@ export default function ContactPage() {
               {/* Left Quote Column (5 cols) */}
               <div className="lg:col-span-5 space-y-3">
                 <div className="inline-flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#0a6cff]" />
-                  <span className="text-[11px] font-bold tracking-[0.22em] text-[#0a6cff] dark:text-sky-400 uppercase">
+                  <span className="w-2 h-2 rounded-full bg-[#009ab1]" />
+                  <span className="text-[11px] font-bold tracking-[0.22em] text-[#009ab1] dark:text-sky-400 uppercase">
                     OUR CORE COMMITMENT
                   </span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl lg:text-[2rem] font-serif font-bold text-slate-900 dark:text-white leading-[1.25] tracking-tight">
-                  <span className="text-4xl text-[#0a6cff] font-serif leading-none mr-1">“</span>Knowledge shared today<br />
+                  <span className="text-4xl text-[#009ab1] font-serif leading-none mr-1">“</span>Knowledge shared today<br />
                   builds a more equitable and<br />
-                  <span className="font-serif italic font-normal text-[#0a6cff] dark:text-sky-400">sustainable tomorrow.”</span>
+                  <span className="font-serif italic font-normal text-[#009ab1] dark:text-sky-400">sustainable tomorrow.”</span>
                 </h2>
               </div>
 
@@ -590,7 +590,7 @@ export default function ContactPage() {
                   { icon: Leaf, title: 'Sustainable Impact', sub: 'Long-term change' }
                 ].map((pill, idx) => (
                   <div key={idx} className="flex flex-col items-center text-center p-5 rounded-3xl bg-white/50 dark:bg-slate-800/40 backdrop-blur-xl border border-white/80 dark:border-white/15 shadow-[0_8px_24px_rgba(180,215,255,0.22),inset_0_1.5px_2px_rgba(255,255,255,0.95)] hover:bg-white/75 dark:hover:bg-slate-800/70 hover:shadow-[0_14px_32px_rgba(37,99,235,0.16),inset_0_2px_3px_#fff] hover:-translate-y-1 transition-all duration-300 group">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 text-[#0a6cff] dark:text-sky-400 flex items-center justify-center mb-3 shadow-[0_6px_16px_rgba(37,99,235,0.1),inset_0_2px_4px_#fff] group-hover:scale-105 group-hover:shadow-[0_8px_20px_rgba(37,99,235,0.18)] transition-all duration-300">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-b from-white/95 via-blue-50/75 to-blue-100/50 dark:from-slate-800 dark:via-blue-950/60 dark:to-slate-900 border border-white/95 dark:border-blue-900/40 text-[#009ab1] dark:text-sky-400 flex items-center justify-center mb-3 shadow-[0_6px_16px_rgba(37,99,235,0.1),inset_0_2px_4px_#fff] group-hover:scale-105 group-hover:shadow-[0_8px_20px_rgba(37,99,235,0.18)] transition-all duration-300">
                       <pill.icon size={22} strokeWidth={1.8} />
                     </div>
                     <span className="text-[13px] text-slate-900 dark:text-white font-bold leading-tight block mb-0.5">

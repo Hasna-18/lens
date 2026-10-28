@@ -24,7 +24,7 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 
 /* ---------- shared design system matching About & Events ---------- */
 const SERIF = { fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif" };
-const BLUE = 'text-[#1a6dff]';
+const BLUE = 'text-[#009ab1]';
 const GLASS =
   'bg-gradient-to-br from-white/80 via-sky-50/60 to-blue-100/40 backdrop-blur-xl border border-white/90 shadow-[0_18px_45px_rgba(37,99,235,0.10),inset_0_1px_0_rgba(255,255,255,1)]';
 
@@ -39,7 +39,7 @@ const Em = ({ children, light = false }) => (
 function SectionTag({ text, light = false, className = '' }) {
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${light ? 'bg-sky-300' : 'bg-[#1a6dff]'}`} />
+      <span className={`w-1.5 h-1.5 rounded-full ${light ? 'bg-sky-300' : 'bg-[#009ab1]'}`} />
       <span className={`text-[11px] font-bold tracking-[0.22em] uppercase ${light ? 'text-sky-200' : BLUE}`}>{text}</span>
       <span className={`w-16 h-px ${light ? 'bg-white/20' : 'bg-blue-200'}`} />
     </div>
@@ -203,7 +203,7 @@ export default function AcademicResourcesPage() {
 
         {/* Decorative Ring + Dots on left edge (matching About page) */}
         <div className="hidden lg:block absolute -left-[270px] top-[22%] w-[320px] h-[320px] rounded-full border border-sky-400/50 pointer-events-none" />
-        <div className="hidden lg:block absolute left-[80px] top-[60%] w-2.5 h-2.5 rounded-full bg-[#1a6dff] pointer-events-none" />
+        <div className="hidden lg:block absolute left-[80px] top-[60%] w-2.5 h-2.5 rounded-full bg-[#009ab1] pointer-events-none" />
         <Dots rows={8} cols={5} className="hidden lg:grid absolute left-3 bottom-16 pointer-events-none" />
 
         <Wrap className="w-full relative z-10 my-auto">
@@ -212,14 +212,14 @@ export default function AcademicResourcesPage() {
             <div className="lg:col-span-7 space-y-6">
               <div className="flex items-center gap-3">
                 <span className={`flex items-center gap-2 text-[11px] font-bold tracking-[0.24em] uppercase ${BLUE}`}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#1a6dff]" />OPEN REPOSITORY
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#009ab1]" />OPEN REPOSITORY
                 </span>
                 <span className="text-slate-300">|</span>
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-                  <Home size={12} className="text-[#1a6dff]" />
-                  <Link href="/" className="hover:text-[#1a6dff] transition-colors">Home</Link>
+                  <Home size={12} className="text-[#009ab1]" />
+                  <Link href="/" className="hover:text-[#009ab1] transition-colors">Home</Link>
                   <span className="text-slate-300">&gt;</span>
-                  <span className="text-[#1a6dff]">Resources</span>
+                  <span className="text-[#009ab1]">Resources</span>
                 </div>
               </div>
 
@@ -235,7 +235,7 @@ export default function AcademicResourcesPage() {
               <div className="pt-2">
                 <button
                   onClick={scrollToCatalog}
-                  className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#0a6cff] to-[#1fa2ff] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3 shadow-[0_12px_26px_rgba(10,108,255,0.4)] hover:scale-[1.03] transition cursor-pointer"
+                  className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#009ab1] to-[#1fa2ff] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3 shadow-[0_12px_26px_rgba(10,108,255,0.4)] hover:scale-[1.03] transition cursor-pointer"
                 >
                   <BookOpen size={14} />
                   <span>EXPLORE CATALOG</span>
@@ -252,7 +252,7 @@ export default function AcademicResourcesPage() {
                   { title: 'Build a', sub: 'sustainable future', icon: Globe }
                 ].map((p, i) => (
                   <div key={i} className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1a6dff] shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#009ab1] shrink-0">
                       <p.icon size={15} strokeWidth={1.75} />
                     </div>
                     <div className="flex flex-col text-xs leading-tight">
@@ -301,7 +301,7 @@ export default function AcademicResourcesPage() {
                       key={cat.id}
                       onClick={() => setActiveCategory(cat.id)}
                       className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer ${isActive
-                        ? 'bg-[#1a6dff] text-white shadow-md scale-105'
+                        ? 'bg-[#009ab1] text-white shadow-md scale-105'
                         : 'bg-white/80 border border-blue-100 text-slate-700 hover:bg-blue-50/80 shadow-2xs'
                         }`}
                     >
@@ -320,7 +320,7 @@ export default function AcademicResourcesPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search resources..."
-                    className="w-full pl-10 pr-8 py-2.5 rounded-full bg-white border border-blue-100 text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1a6dff]/30 shadow-xs"
+                    className="w-full pl-10 pr-8 py-2.5 rounded-full bg-white border border-blue-100 text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#009ab1]/30 shadow-xs"
                   />
                   {searchQuery && (
                     <button
@@ -340,7 +340,7 @@ export default function AcademicResourcesPage() {
                     else setSortOrder('default');
                   }}
                   className={`p-2.5 rounded-full border border-blue-100 transition-all shadow-xs cursor-pointer ${sortOrder !== 'default'
-                    ? 'bg-[#1a6dff] text-white'
+                    ? 'bg-[#009ab1] text-white'
                     : 'bg-white text-slate-600 hover:bg-blue-50'
                     }`}
                   title={`Sort: ${sortOrder === 'az' ? 'A to Z' : sortOrder === 'za' ? 'Z to A' : 'Default'}`}
@@ -376,7 +376,7 @@ export default function AcademicResourcesPage() {
               </div>
             ) : filteredResources.length === 0 ? (
               <div className="col-span-full text-center py-20 bg-white/70 backdrop-blur-xl rounded-[2.5rem] border border-blue-100 p-8 shadow-sm">
-                <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-100 text-[#1a6dff] flex items-center justify-center mx-auto mb-3 shadow-xs">
+                <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-100 text-[#009ab1] flex items-center justify-center mx-auto mb-3 shadow-xs">
                   <BookOpen size={22} />
                 </div>
                 <h4 style={SERIF} className="text-xl font-normal text-slate-900 mb-1">No resources found</h4>
@@ -385,7 +385,7 @@ export default function AcademicResourcesPage() {
                 </p>
                 <button
                   onClick={() => { setActiveCategory('All'); setSearchQuery(''); }}
-                  className="px-5 py-2.5 rounded-full bg-[#1a6dff] text-white text-xs font-bold uppercase tracking-wider hover:scale-105 transition shadow-sm cursor-pointer"
+                  className="px-5 py-2.5 rounded-full bg-[#009ab1] text-white text-xs font-bold uppercase tracking-wider hover:scale-105 transition shadow-sm cursor-pointer"
                 >
                   Reset Filters
                 </button>
@@ -420,7 +420,7 @@ export default function AcademicResourcesPage() {
                       <div>
                         {/* Category Badge & Meta */}
                         <div className="flex items-center justify-between gap-1 flex-wrap mb-1.5">
-                          <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-blue-50 text-[#1a6dff] border border-blue-100">
+                          <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-blue-50 text-[#009ab1] border border-blue-100">
                             {res.category}
                           </span>
                           <span className="text-[10px] font-medium text-slate-400">
@@ -429,7 +429,7 @@ export default function AcademicResourcesPage() {
                         </div>
 
                         {/* Title */}
-                        <h3 style={SERIF} className="text-[16px] sm:text-[17px] font-normal text-slate-900 group-hover:text-[#1a6dff] transition-colors leading-snug line-clamp-2">
+                        <h3 style={SERIF} className="text-[16px] sm:text-[17px] font-normal text-slate-900 group-hover:text-[#009ab1] transition-colors leading-snug line-clamp-2">
                           {res.title}
                         </h3>
 
@@ -444,7 +444,7 @@ export default function AcademicResourcesPage() {
                   {/* Card Footer: Date & Buttons */}
                   <div className="pt-3 mt-3 border-t border-blue-100/70 flex items-center justify-between relative z-10 gap-2">
                     <div className="flex items-center gap-1.5 text-[10.5px] text-slate-500 font-medium shrink-0">
-                      <Calendar size={12} className="text-[#1a6dff]" />
+                      <Calendar size={12} className="text-[#009ab1]" />
                       <span>{res.date}</span>
                     </div>
 
@@ -454,7 +454,7 @@ export default function AcademicResourcesPage() {
                           href={`/api/resources/download?id=${res.id}&mode=preview`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-3 py-1.5 rounded-full bg-white border border-blue-100 text-[#1a6dff] hover:bg-blue-50 text-[11px] font-bold flex items-center gap-1.5 transition shadow-2xs cursor-pointer"
+                          className="px-3 py-1.5 rounded-full bg-white border border-blue-100 text-[#009ab1] hover:bg-blue-50 text-[11px] font-bold flex items-center gap-1.5 transition shadow-2xs cursor-pointer"
                           title={`Preview ${res.title} in browser`}
                         >
                           <Eye size={12} />
@@ -464,7 +464,7 @@ export default function AcademicResourcesPage() {
                         <a
                           href={`/api/resources/download?id=${res.id}&mode=download`}
                           download
-                          className="px-3.5 py-1.5 rounded-full bg-[#1a6dff] hover:bg-blue-600 text-white text-[11px] font-bold flex items-center gap-1.5 transition shadow-xs hover:scale-105 active:scale-95 cursor-pointer"
+                          className="px-3.5 py-1.5 rounded-full bg-[#009ab1] hover:bg-blue-600 text-white text-[11px] font-bold flex items-center gap-1.5 transition shadow-xs hover:scale-105 active:scale-95 cursor-pointer"
                           title={`Download ${res.title}`}
                         >
                           <Download size={11} />
