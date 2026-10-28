@@ -997,63 +997,34 @@ export default function HomePage() {
 
           </div>
 
-          {/* 4 Pillars in a refined glass row across bottom of hero */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12 pt-8 border-t border-sky-100/70">
-            {[
-              { title: 'STEM Education', desc: 'Hands-on learning & scientific inquiry', icon: LayoutGrid },
-              { title: 'Sustainability', desc: 'Eco-conscious practices for a greener future', icon: Leaf },
-              { title: 'Teacher Empowerment', desc: 'Pedagogical training & mentor support', icon: UserCheck },
-              { title: 'Inclusive Learning', desc: 'Equal opportunities for every student', icon: Users }
-            ].map((item, i) => (
-              <div
-                key={i}
-                className={`${GLASS} rounded-[1.6rem] p-4.5 flex items-center gap-3.5 hover:-translate-y-1 transition duration-300 group cursor-default`}
-              >
-                <div className="w-10 h-10 rounded-full bg-blue-50/90 border border-blue-100 flex items-center justify-center text-[#1a6dff] shrink-0 group-hover:scale-105 transition-transform">
-                  <item.icon size={18} strokeWidth={1.6} />
-                </div>
-                <div>
-                  <h4 className="text-[14px] font-bold text-slate-900 leading-snug group-hover:text-[#1a6dff] transition-colors">
-                    {item.title}
-                  </h4>
-                  <p className="text-[11.5px] text-slate-500 leading-tight mt-0.5 font-normal">
-                    {item.desc}
-                  </p>
-                </div>
+          {/* 4 Core Pillars - Sleek Minimalist Glass Strip */}
+          <div className="mt-12 sm:mt-14 pt-8 border-t border-blue-100/60 dark:border-white/10">
+            <div className="rounded-2xl sm:rounded-3xl bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-white/80 dark:border-white/10 p-2 sm:p-2.5 shadow-[0_10px_32px_rgba(2,132,199,0.06),inset_0_1px_1px_#fff] dark:shadow-[0_12px_36px_rgba(0,0,0,0.3)]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-blue-100/60 dark:divide-white/10">
+                {[
+                  { title: 'STEM Education', desc: 'Hands-on inquiry & practical innovation', icon: LayoutGrid },
+                  { title: 'Sustainability', desc: 'Eco-conscious practices for a greener future', icon: Leaf },
+                  { title: 'Teacher Empowerment', desc: 'Pedagogical training & mentor support', icon: UserCheck },
+                  { title: 'Inclusive Learning', desc: 'Equal STEM opportunities for every student', icon: Users }
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className="p-3 sm:p-3.5 flex items-center gap-3.5 hover:bg-white/60 dark:hover:bg-white/5 rounded-xl sm:rounded-2xl transition-all duration-300 group cursor-default"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-blue-50/90 dark:bg-blue-950/60 border border-blue-100/80 dark:border-white/10 flex items-center justify-center text-blue-600 dark:text-sky-400 shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                      <item.icon size={18} strokeWidth={1.7} />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-[13.5px] sm:text-[14px] font-bold text-slate-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors truncate">
+                        {item.title}
+                      </h4>
+                      <p className="text-[11px] sm:text-[11.5px] text-slate-500 dark:text-slate-400 leading-snug mt-0.5 line-clamp-1 font-normal">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </Wrap>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 2. STATS DOCK */}
-      {/* ========================================================================= */}
-      <section className="relative py-6 sm:py-8">
-        <Wrap>
-          <div className={`${GLASS} rounded-[2rem] py-5 px-6 sm:px-10 shadow-[0_20px_50px_rgba(37,99,235,0.12)]`}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-blue-100/70 gap-6 sm:gap-0">
-              {[
-                { titleTop: 'Hands-on STEM', titleBottom: 'Learning', desc: 'For students & teachers', icon: GraduationCap },
-                { titleTop: '44+', titleBottom: 'Schools Impacted', desc: 'Across Kerala', icon: Users },
-                { titleTop: 'Global', titleBottom: 'Collaboration', desc: 'With Clarkson Univ, USA', icon: Globe },
-                { titleTop: 'Social', titleBottom: 'Impact', desc: 'Supporting rural learners', icon: Sprout }
-              ].map((stat, idx) => (
-                <div key={idx} className={`flex items-center gap-4 py-2 group cursor-default hover:-translate-y-0.5 transition-transform duration-300 ${idx === 0 ? 'sm:pr-6' : idx === 3 ? 'sm:pl-6' : 'sm:px-6'}`}>
-                  <div className="w-12 h-12 rounded-full bg-blue-50/90 border border-blue-100 flex items-center justify-center text-[#1a6dff] shrink-0 shadow-sm group-hover:scale-105 transition-all duration-300">
-                    <stat.icon size={22} strokeWidth={1.6} />
-                  </div>
-                  <div className="flex flex-col justify-center min-w-0">
-                    <h4 className="text-[14px] sm:text-[15px] font-bold leading-tight text-slate-900">
-                      <span className="block truncate">{stat.titleTop}</span>
-                      {stat.titleBottom && <span className="block text-[#1a6dff] truncate">{stat.titleBottom}</span>}
-                    </h4>
-                    <p className="text-[11.5px] text-slate-500 mt-1 leading-snug">
-                      {stat.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </Wrap>
@@ -1187,6 +1158,7 @@ export default function HomePage() {
           </div>
         </Wrap>
       </section>
+
 
       {/* ========================================================================= */}
       {/* 5. WHAT WE DO SECTION */}

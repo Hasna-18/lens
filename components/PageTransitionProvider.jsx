@@ -13,6 +13,7 @@ export const usePageTransition = () => useContext(PageTransitionContext);
 function PageTransitionInternal({ children }) {
   const pathname = usePathname();
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [progress, setProgress] = useState(0);
   const activeNavigationRef = useRef(false);
   const prevPathnameRef = useRef(pathname);
@@ -20,6 +21,7 @@ function PageTransitionInternal({ children }) {
   // Initial site load smooth 0 -> 100% animation
   useEffect(() => {
     setIsNavigating(true);
+    setIsInitialLoad(true);
     setProgress(0);
     let start = performance.now();
     let frameId;
@@ -47,6 +49,7 @@ function PageTransitionInternal({ children }) {
         setProgress(100);
         setTimeout(() => {
           setIsNavigating(false);
+          setIsInitialLoad(false);
         }, 140);
       }
     };
@@ -55,7 +58,7 @@ function PageTransitionInternal({ children }) {
     return () => cancelAnimationFrame(frameId);
   }, []);
 
-  // When pathname changes, smoothly jump progress to 100% and fade out
+  // When pathname changes, smoothly finish progress and transition
   useEffect(() => {
     if (prevPathnameRef.current !== pathname) {
       prevPathnameRef.current = pathname;
@@ -66,7 +69,7 @@ function PageTransitionInternal({ children }) {
           setIsNavigating(false);
           activeNavigationRef.current = false;
           window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-        }, 150);
+        }, 80);
         return () => clearTimeout(timer);
       }
     }
@@ -126,17 +129,17 @@ function PageTransitionInternal({ children }) {
     if (activeNavigationRef.current) return;
     activeNavigationRef.current = true;
     setIsNavigating(true);
-    setProgress(0);
+    setProgress(25);
 
     const start = performance.now();
-    const duration = 380;
+    const duration = 280;
 
     const animateCrawl = (now) => {
       if (!activeNavigationRef.current) return;
       const elapsed = now - start;
       const t = Math.min(1, elapsed / duration);
-      // Crawl quickly to 88% while route loads
-      const current = Math.min(88, Math.round(t * 88));
+      // Crawl quickly to 90% while route loads
+      const current = Math.min(90, Math.round(25 + t * 65));
       setProgress(current);
 
       if (t < 1 && activeNavigationRef.current) {
@@ -146,22 +149,22 @@ function PageTransitionInternal({ children }) {
 
     requestAnimationFrame(animateCrawl);
 
-    // Safety timeout in case route transition is instantaneous or delayed
+    // Safety timeout in case route transition is delayed
     setTimeout(() => {
       if (activeNavigationRef.current) {
         setProgress(100);
         setTimeout(() => {
           setIsNavigating(false);
           activeNavigationRef.current = false;
-        }, 120);
+        }, 80);
       }
-    }, 2000);
+    }, 1500);
   };
 
   return (
     <PageTransitionContext.Provider value={{ isNavigating, startTransition }}>
-      {/* Full-screen LEnSE Loader overlay */}
-      {isNavigating && (
+      {/* Initial load full-screen LEnSE Loader */}
+      {isInitialLoad && (
         <LenseLoader
           fullScreen={true}
           progress={progress}
@@ -170,8 +173,18 @@ function PageTransitionInternal({ children }) {
         />
       )}
 
-      {/* Page Content */}
-      <div className={`transition-opacity duration-200 ${isNavigating ? 'opacity-90' : 'opacity-100'}`}>
+      {/* Silky Top Progress Bar on Route & Slug Transitions */}
+      {!isInitialLoad && isNavigating && (
+        <div className="fixed top-0 left-0 right-0 z-[9999] h-[3px] bg-transparent pointer-events-none">
+          <div
+            className="h-full bg-gradient-to-r from-blue-600 via-sky-400 to-blue-500 shadow-[0_0_12px_rgba(56,189,248,0.85)] transition-all duration-150 ease-out"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      )}
+
+      {/* Page Content with smooth transition */}
+      <div className={`transition-opacity duration-150 ${isNavigating && !isInitialLoad ? 'opacity-95' : 'opacity-100'}`}>
         {children}
       </div>
     </PageTransitionContext.Provider>

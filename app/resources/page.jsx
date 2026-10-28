@@ -9,7 +9,6 @@ import {
   Search,
   BookOpen,
   Users,
-  Info,
   ArrowRight,
   Sparkles,
   Calendar,
@@ -100,7 +99,6 @@ export default function AcademicResourcesPage() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState('default'); // default, az, za
-  const [howToUseModalOpen, setHowToUseModalOpen] = useState(false);
   const [resourcesList, setResourcesList] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -234,7 +232,7 @@ export default function AcademicResourcesPage() {
                 Access digital courseware, conference proceedings, STEM learning toolkits, educator handbooks, and institutional reports published by LEnSE.
               </p>
 
-              <div className="flex flex-wrap items-center gap-3.5 pt-2">
+              <div className="pt-2">
                 <button
                   onClick={scrollToCatalog}
                   className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#0a6cff] to-[#1fa2ff] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3 shadow-[0_12px_26px_rgba(10,108,255,0.4)] hover:scale-[1.03] transition cursor-pointer"
@@ -242,14 +240,6 @@ export default function AcademicResourcesPage() {
                   <BookOpen size={14} />
                   <span>EXPLORE CATALOG</span>
                   <ArrowRight size={13} />
-                </button>
-
-                <button
-                  onClick={() => setHowToUseModalOpen(true)}
-                  className="px-7 py-3.5 rounded-full bg-white/90 border border-white shadow-[0_10px_24px_rgba(37,99,235,0.12)] text-[#1a6dff] text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:scale-[1.03] transition cursor-pointer"
-                >
-                  <Info size={14} className="text-[#1a6dff]" />
-                  <span>HOW TO USE</span>
                 </button>
               </div>
 
@@ -535,80 +525,7 @@ export default function AcademicResourcesPage() {
 
       </Wrap>
 
-      {/* ============================================================ */}
-      {/* 4. "HOW TO USE" MODAL */}
-      {/* ============================================================ */}
-      {howToUseModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-          <div className="relative w-full max-w-xl bg-white/95 backdrop-blur-2xl border border-white rounded-[2.5rem] p-6 sm:p-8 shadow-2xl space-y-6">
 
-            <div className="flex items-center justify-between pb-3 border-b border-blue-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 text-[#1a6dff] flex items-center justify-center shadow-xs">
-                  <Info size={19} />
-                </div>
-                <div>
-                  <h3 style={SERIF} className="text-xl font-normal text-slate-900">
-                    How to Use LEnSE Academic Resources
-                  </h3>
-                  <span className="text-[11px] text-slate-500 font-medium">
-                    Open Academic Repository • University of Kerala
-                  </span>
-                </div>
-              </div>
-              <button
-                onClick={() => setHowToUseModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center cursor-pointer transition-colors"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <div className="space-y-4 text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal">
-              <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100">
-                <strong className="text-slate-900 block mb-1.5 font-bold">Accessing Publications &amp; Guides:</strong>
-                <ul className="list-disc list-inside space-y-1 pl-1 text-slate-600">
-                  <li>Click <strong>&quot;Download&quot;</strong> on any published resource to receive the complete PDF/Toolkit.</li>
-                  <li>Click <strong>&quot;Preview&quot;</strong> to inspect the document directly in a clean browser viewer.</li>
-                  <li>Resources labeled <strong>&quot;Coming Soon&quot;</strong> are currently undergoing committee peer review.</li>
-                  <li>Use category tabs and instant search to filter by specific curriculum materials.</li>
-                </ul>
-              </div>
-
-              <div className="space-y-1.5">
-                <strong className="text-slate-900 block font-bold">Licensing &amp; Open Access:</strong>
-                <p>
-                  All materials are released under the Creative Commons Attribution 4.0 (CC-BY) license. Educators and researchers are free to share, adapt, and build upon these materials with proper attribution.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100 flex items-center justify-between gap-3 shadow-xs">
-                <div>
-                  <span className="font-bold text-xs text-slate-900 block">Have a suggestion or contribution?</span>
-                  <span className="text-[11px] text-slate-500">Submit proposed curriculum or feedback to our team.</span>
-                </div>
-                <Link
-                  href="/contact"
-                  className="px-4 py-2 rounded-full bg-[#1a6dff] hover:bg-blue-600 text-white text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 shrink-0 transition shadow-xs"
-                >
-                  <span>Contact</span>
-                  <ArrowRight size={12} />
-                </Link>
-              </div>
-            </div>
-
-            <div className="flex justify-end pt-2">
-              <button
-                onClick={() => setHowToUseModalOpen(false)}
-                className="px-6 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold cursor-pointer transition"
-              >
-                Close
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
 
     </div>
   );

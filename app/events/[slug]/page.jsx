@@ -29,6 +29,7 @@ import {
   X,
   AlertCircle
 } from 'lucide-react';
+import { getFromCache, setInCache } from '../../../lib/clientCache';
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
@@ -57,8 +58,21 @@ export default function EventDetailPage({ params }) {
   const resolvedParams = params && typeof params.then === 'function' ? use(params) : params;
   const eventSlug = String(resolvedParams?.slug || resolvedParams?.id || '1');
 
-  const [event, setEvent] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Synchronously initialize state from memory cache for instant 0ms rendering
+  const [event, setEvent] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    const specific = getFromCache(`clese_event_${eventSlug}_cache`);
+    if (specific && (specific.title || specific.id)) return specific;
+
+    const allEvents = getFromCache('clese_events_cache');
+    if (Array.isArray(allEvents)) {
+      const match = allEvents.find(e => String(e.slug) === eventSlug || String(e.id) === eventSlug);
+      if (match) return match;
+    }
+    return null;
+  });
+
+  const [loading, setLoading] = useState(() => !event);
   const [error, setError] = useState(null);
 
   const [email, setEmail] = useState('');
@@ -130,22 +144,48 @@ export default function EventDetailPage({ params }) {
 
   useEffect(() => {
     let isMounted = true;
+
+    // Synchronous secondary check in case cache populated between renders
+    if (!event) {
+      const specific = getFromCache(`clese_event_${eventSlug}_cache`);
+      if (specific && (specific.title || specific.id)) {
+        setEvent(specific);
+        setLoading(false);
+      } else {
+        const allEvents = getFromCache('clese_events_cache');
+        if (Array.isArray(allEvents)) {
+          const match = allEvents.find(e => String(e.slug) === eventSlug || String(e.id) === eventSlug);
+          if (match) {
+            setEvent(match);
+            setLoading(false);
+          }
+        }
+      }
+    }
+
     async function fetchEventData() {
       try {
-        setLoading(true);
+        if (!event && !getFromCache(`clese_event_${eventSlug}_cache`)) {
+          setLoading(true);
+        }
         const res = await fetch(`/api/events/${encodeURIComponent(eventSlug)}`);
         if (res.ok) {
           const data = await res.json();
           if (data && isMounted) {
             setEvent(data);
+            setInCache(`clese_event_${eventSlug}_cache`, data);
             setError(null);
           }
         } else {
-          if (isMounted) setError('Event not found');
+          if (isMounted && !event && !getFromCache(`clese_event_${eventSlug}_cache`)) {
+            setError('Event not found');
+          }
         }
       } catch (err) {
         console.error('Error fetching event from database:', err);
-        if (isMounted) setError('Error connecting to database');
+        if (isMounted && !event && !getFromCache(`clese_event_${eventSlug}_cache`)) {
+          setError('Error connecting to database');
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -177,10 +217,10 @@ export default function EventDetailPage({ params }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f9faf7] dark:bg-[#031008] flex items-center justify-center font-outfit">
-        <div className="text-center space-y-3">
-          <Loader2 className="animate-spin text-[#2d5a3c] dark:text-[#a2d45e] mx-auto" size={32} />
-          <p className="text-[#445548] dark:text-slate-400 text-xs font-medium tracking-wide">Loading Event Details...</p>
+      <div className="min-h-screen bg-[#f4f8ff] dark:bg-[#030712] flex items-center justify-center font-sans">
+        <div className="text-center space-y-3 animate-in fade-in duration-200">
+          <Loader2 className="animate-spin text-[#1a6dff] dark:text-sky-400 mx-auto" size={32} />
+          <p className="text-slate-500 dark:text-slate-400 text-xs font-medium tracking-wider uppercase">Loading Event Details...</p>
         </div>
       </div>
     );

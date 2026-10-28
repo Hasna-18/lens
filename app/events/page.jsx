@@ -21,7 +21,7 @@ import {
   Atom,
   Lightbulb
 } from 'lucide-react';
-import { getFromCache, fetchWithCache, prefetchEndpoint } from '../../lib/clientCache';
+import { getFromCache, setInCache, fetchWithCache, prefetchEndpoint } from '../../lib/clientCache';
 import { sortEventsLatestFirst } from '../../lib/eventUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
@@ -154,8 +154,14 @@ export default function EventsPage() {
     // Load from cache synchronously on client mount after hydration
     const cached = getFromCache('clese_events_cache');
     if (cached && Array.isArray(cached) && cached.length > 0) {
-      setEvents(formatEventsList(cached));
+      const list = formatEventsList(cached);
+      setEvents(list);
       setLoading(false);
+      // Pre-warm individual event slug caches in memory
+      list.forEach(e => {
+        const s = e.slug || e.id;
+        if (s) setInCache(`clese_event_${s}_cache`, e);
+      });
     }
 
     fetchWithCache('/api/events', 'clese_events_cache', formatEventsList)
@@ -163,6 +169,11 @@ export default function EventsPage() {
         if (isMounted && Array.isArray(formatted) && formatted.length > 0) {
           setEvents(formatted);
           setLoading(false);
+          // Pre-warm individual event slug caches in memory
+          formatted.forEach(e => {
+            const s = e.slug || e.id;
+            if (s) setInCache(`clese_event_${s}_cache`, e);
+          });
         }
       })
       .catch((err) => {
@@ -451,8 +462,24 @@ export default function EventsPage() {
               ) : (
                 paginatedEvents.map((evt) => {
                   const CategoryIcon = getCategoryIcon(evt.categoryTag || evt.category);
+                  const targetSlug = evt.slug || evt.id;
+                  const eventUrl = `/events/${targetSlug}`;
+
+                  const handleWarmSlug = () => {
+                    setInCache(`clese_event_${targetSlug}_cache`, evt);
+                    prefetchEndpoint(`/api/events/${encodeURIComponent(targetSlug)}`, `clese_event_${targetSlug}_cache`);
+                  };
+
                   return (
-                    <Link key={evt.id} href={`/events/${evt.slug || evt.id}`} className="block group">
+                    <Link
+                      key={evt.id}
+                      href={eventUrl}
+                      prefetch={true}
+                      onMouseEnter={handleWarmSlug}
+                      onTouchStart={handleWarmSlug}
+                      onFocus={handleWarmSlug}
+                      className="block group"
+                    >
                       <div className="flex items-center gap-3 sm:gap-5">
 
                         {/* Left Date Column */}
