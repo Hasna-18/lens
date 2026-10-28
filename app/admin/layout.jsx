@@ -11,54 +11,74 @@ import {
   LogOut,
   Sparkles,
   BookOpen,
-  Mail
+  Mail,
+  ShieldCheck,
+  User,
+  Users
 } from 'lucide-react';
 import Footer from '../../components/Footer';
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const isLoginPage = pathname === '/admin/login';
 
-  const [adminUser, setAdminUser] = useState('Administrator');
+  const isAuthPage =
+    pathname === '/admin/login' ||
+    pathname === '/admin/register' ||
+    pathname === '/admin/forgot-password' ||
+    pathname === '/admin/reset-password';
+
+  const [adminUser, setAdminUser] = useState({
+    name: 'Administrator',
+    username: 'admin',
+    role: 'admin'
+  });
   const [loggingOut, setLoggingOut] = useState(false);
 
-  // Force Light Theme across all Admin Pages
+  // Maintain clean styles for admin pages
   useEffect(() => {
-    document.documentElement.classList.remove('dark');
-    document.documentElement.classList.add('light');
-    document.documentElement.setAttribute('data-theme', 'light');
-
-    // Also check saved username
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('lense_admin_user');
-      if (stored) setAdminUser(stored);
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed && typeof parsed === 'object') {
+            setAdminUser(parsed);
+          } else {
+            setAdminUser(prev => ({ ...prev, name: stored, username: stored }));
+          }
+        } catch {
+          setAdminUser(prev => ({ ...prev, name: stored, username: stored }));
+        }
+      }
     }
   }, [pathname]);
 
   // Check auth user quietly
   useEffect(() => {
-    if (isLoginPage) return;
+    if (isAuthPage) return;
     let isMounted = true;
     async function checkUser() {
       try {
         const res = await fetch('/api/admin/check');
         if (res.ok) {
           const data = await res.json();
-          if (data.user?.username && isMounted) {
-            setAdminUser(data.user.username);
+          if (data.user && isMounted) {
+            setAdminUser(data.user);
             if (typeof window !== 'undefined') {
-              localStorage.setItem('lense_admin_user', data.user.username);
+              localStorage.setItem('lense_admin_user', JSON.stringify(data.user));
             }
           }
+        } else {
+          router.replace('/admin/login');
         }
       } catch (err) {
-        // silent
+        console.error('Session verify failed:', err);
       }
     }
     checkUser();
     return () => { isMounted = false; };
-  }, [isLoginPage]);
+  }, [isAuthPage, router]);
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -75,10 +95,10 @@ export default function AdminLayout({ children }) {
     }
   };
 
-  // If on login page, render clean container without admin navbar/footer
-  if (isLoginPage) {
+  // If on an auth page (login, register, forgot-password, reset-password), render standalone without admin dashboard bar
+  if (isAuthPage) {
     return (
-      <div className="min-h-screen bg-[#edf4e8] text-slate-900 font-sans">
+      <div className="min-h-screen bg-[#f8fbfe] text-slate-900 selection:bg-[#0284c7]/20 selection:text-[#004b87]">
         {children}
       </div>
     );
@@ -123,28 +143,39 @@ export default function AdminLayout({ children }) {
     }
   ];
 
+  const displayName = adminUser.name || adminUser.username || 'Admin';
+  const initial = displayName.charAt(0).toUpperCase();
+
   return (
-    <div className="min-h-screen bg-[#edf4e8] text-slate-900 font-sans flex flex-col justify-between selection:bg-[#2d5a3c]/20 selection:text-[#1b3726]">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans flex flex-col justify-between selection:bg-[#1a6dff]/20 selection:text-[#0f1a3a]">
 
       {/* ========================================================================= */}
-      {/* 1. STANDARD ADMIN NAVBAR */}
+      {/* 1. ELEVATED ADMIN TOPBAR (Home Page Sapphire Aesthetic) */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-xs">
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/90 shadow-[0_4px_20px_rgba(26,109,255,0.03)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
 
           {/* Brand */}
-          <Link href="/admin" className="flex items-center gap-3 shrink-0">
-            <img
-              src="/logo.png"
-              alt="LEnSE Logo"
-              className="h-9 w-auto object-contain"
-            />
-            <div className="flex items-baseline gap-2">
-              <span className="font-bold text-base text-slate-900 tracking-tight">
-                LEnSE
-              </span>
-              <span className="text-xs font-medium text-slate-500">
-                Admin Panel
+          <Link href="/admin" className="flex items-center gap-3 shrink-0 group">
+            <div className="relative">
+              <img
+                src="/logo.png"
+                alt="LEnSE Logo"
+                className="h-9 w-auto object-contain transition-transform group-hover:scale-105"
+              />
+              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
+            </div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-base text-[#0f1a3a] tracking-tight">
+                  LEnSE
+                </span>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-[#1a6dff] border border-blue-200/60">
+                  Command
+                </span>
+              </div>
+              <span className="text-[10px] text-slate-500 font-medium">
+                Administrative Workspace
               </span>
             </div>
           </Link>
@@ -157,12 +188,13 @@ export default function AdminLayout({ children }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${item.active
-                      ? 'bg-[#edf4e8] text-[#1b3726] font-semibold'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                    }`}
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all ${
+                    item.active
+                      ? 'bg-blue-50/90 text-[#1a6dff] shadow-xs border border-blue-200/60 font-bold'
+                      : 'text-slate-600 hover:text-[#0f1a3a] hover:bg-slate-100/80 border border-transparent'
+                  }`}
                 >
-                  <Icon size={16} className={item.active ? 'text-[#2d5a3c]' : 'text-slate-400'} />
+                  <Icon size={15} className={item.active ? 'text-[#1a6dff]' : 'text-slate-400'} />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -177,29 +209,36 @@ export default function AdminLayout({ children }) {
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+              className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-600 hover:text-[#1a6dff] hover:border-blue-300 hover:bg-blue-50/50 transition-all shadow-2xs"
               title="Preview public site in new tab"
             >
-              <ExternalLink size={14} className="text-slate-500" />
-              <span>View Site</span>
+              <ExternalLink size={13} className="text-slate-400" />
+              <span>Public Site</span>
             </Link>
 
-            {/* Admin User */}
-            <div className="hidden md:flex items-center gap-2 text-xs text-slate-600 font-medium px-2 py-1 bg-slate-50 rounded-lg border border-slate-100">
-              <div className="w-5 h-5 rounded-full bg-[#1b3726] text-white flex items-center justify-center text-[10px] font-bold">
-                {adminUser ? adminUser.charAt(0).toUpperCase() : 'A'}
+            {/* Admin User Chip */}
+            <div className="hidden md:flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200/80 shadow-2xs">
+              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#1a6dff] to-[#38bdf8] text-white flex items-center justify-center text-xs font-bold shadow-xs">
+                {initial}
               </div>
-              <span className="max-w-[120px] truncate">{adminUser}</span>
+              <div className="flex flex-col text-left">
+                <span className="text-xs font-bold text-slate-800 leading-tight max-w-[130px] truncate">
+                  {displayName}
+                </span>
+                <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
+                  {adminUser.role || 'Admin'}
+                </span>
+              </div>
             </div>
 
             {/* Logout Button */}
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-200/70 hover:border-rose-300 transition-all cursor-pointer shadow-2xs disabled:opacity-50"
               title="Sign out of Admin Console"
             >
-              <LogOut size={14} />
+              <LogOut size={13} />
               <span>{loggingOut ? 'Signing out...' : 'Logout'}</span>
             </button>
 
@@ -208,19 +247,20 @@ export default function AdminLayout({ children }) {
         </div>
 
         {/* Mobile Navigation Bar */}
-        <div className="lg:hidden overflow-x-auto border-t border-slate-200 px-3 py-2 bg-slate-50 flex items-center gap-1">
+        <div className="lg:hidden overflow-x-auto border-t border-slate-200/80 px-3 py-2 bg-slate-50/90 flex items-center gap-1.5 scrollbar-none">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${item.active
-                    ? 'bg-white text-[#1b3726] font-semibold shadow-xs border border-slate-200'
+                className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                  item.active
+                    ? 'bg-white text-[#1a6dff] shadow-xs border border-blue-200/70'
                     : 'text-slate-600 hover:text-slate-900'
-                  }`}
+                }`}
               >
-                <Icon size={14} className={item.active ? 'text-[#2d5a3c]' : 'text-slate-400'} />
+                <Icon size={14} className={item.active ? 'text-[#1a6dff]' : 'text-slate-400'} />
                 <span>{item.label}</span>
               </Link>
             );
@@ -229,7 +269,7 @@ export default function AdminLayout({ children }) {
       </header>
 
       {/* ========================================================================= */}
-      {/* 2. ADMIN MAIN CONTENT WRAPPER WITH SMOOTH ROUTE TRANSITION */}
+      {/* 2. ADMIN MAIN CONTENT WRAPPER */}
       {/* ========================================================================= */}
       <main className="flex-1 w-full admin-page-transition">
         {children}

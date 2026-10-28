@@ -13,21 +13,23 @@ import {
   AlertCircle, 
   Loader2, 
   KeyRound,
-  ArrowLeft,
-  Sparkles
+  UserPlus,
+  CheckCircle2
 } from 'lucide-react';
+
+const SERIF = { fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif" };
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [checkingSession, setCheckingSession] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
-  // Auto check if already logged in
+  // Auto check if already logged in quietly
   useEffect(() => {
     async function checkAuth() {
       try {
@@ -35,14 +37,11 @@ export default function AdminLoginPage() {
         if (res.ok) {
           const data = await res.json();
           if (data.authenticated) {
-            router.replace('/admin/events');
-            return;
+            router.replace('/admin');
           }
         }
       } catch (err) {
-        // Not logged in, stay on login page
-      } finally {
-        setCheckingSession(false);
+        // Not logged in
       }
     }
     checkAuth();
@@ -51,9 +50,10 @@ export default function AdminLoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMsg('');
+    setSuccessMsg('');
 
-    if (!username.trim() || !password.trim()) {
-      setErrorMsg('Please enter both username and password.');
+    if (!identifier.trim() || !password.trim()) {
+      setErrorMsg('Please enter both your username/email and password.');
       return;
     }
 
@@ -62,7 +62,11 @@ export default function AdminLoginPage() {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: username.trim(), password: password.trim() })
+        body: JSON.stringify({
+          identifier: identifier.trim(),
+          password: password.trim(),
+          rememberMe
+        })
       });
 
       const data = await res.json();
@@ -71,135 +75,172 @@ export default function AdminLoginPage() {
         throw new Error(data.error || 'Invalid credentials');
       }
 
-      // Store local indicator for instant UI responsiveness
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('lense_admin_user', username.trim());
+      setSuccessMsg('Authentication verified. Entering Command Centre...');
+
+      if (typeof window !== 'undefined' && data.user) {
+        localStorage.setItem('lense_admin_user', JSON.stringify(data.user));
       }
 
-      // Redirect smoothly to the admin events page
-      router.push('/admin/events');
+      setTimeout(() => {
+        router.push('/admin');
+      }, 500);
     } catch (err) {
-      setErrorMsg(err.message || 'Login failed. Please check your credentials.');
-    } finally {
+      setErrorMsg(err.message || 'Login failed. Please verify your credentials.');
       setLoading(false);
     }
   };
 
-  const handleFillDemo = () => {
-    setUsername('admin');
-    setPassword('admin123');
-    setErrorMsg('');
-  };
-
-  if (checkingSession) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center font-outfit">
-        <div className="text-center space-y-3 bg-white p-8 rounded-2xl shadow-sm border border-slate-200/80">
-          <Loader2 className="animate-spin text-[#2d5a3c] mx-auto" size={32} />
-          <p className="text-slate-600 text-xs font-semibold tracking-wide">Checking administrative access...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-outfit flex flex-col justify-between relative overflow-hidden">
-      
-      {/* Background Subtle Gradient Glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-emerald-100/60 via-emerald-50/40 to-transparent blur-3xl pointer-events-none -z-10" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-20 left-10 w-80 h-80 bg-slate-200/30 rounded-full blur-3xl pointer-events-none -z-10" />
+    <div className="relative min-h-screen w-full bg-[#f0f7ff] overflow-hidden flex flex-col justify-between selection:bg-[#1a6dff]/20 selection:text-[#0f1a3a] font-sans">
 
-      {/* Top Bar */}
-      <header className="w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between z-20">
-        <Link 
-          href="/" 
-          className="flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-[#2d5a3c] transition-colors group"
-        >
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-          <span>Return to University Site</span>
-        </Link>
+      {/* ========================================================================= */}
+      {/* 1. BACKGROUND CAMPUS PHOTO & FLUID ORGANIC WAVES (Matching Design Mockup) */}
+      {/* ========================================================================= */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        
+        {/* Kerala University Campus Photo */}
+        <div 
+          className="absolute right-0 top-0 h-full w-full lg:w-[62%] bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url('/campus-bg.jpg'), url('/image.png'), url('/assets/image.png')` }}
+        />
 
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[11px] font-bold text-[#2d5a3c]">
-          <ShieldCheck size={14} className="text-[#2d5a3c]" />
-          <span>Restricted Admin Portal</span>
+        {/* Mobile & Tablet Soft Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/40 lg:hidden" />
+
+        {/* Desktop Organic Layered Liquid Wave Mask */}
+        <div className="hidden lg:block absolute inset-0 w-full h-full">
+          <svg
+            viewBox="0 0 1440 900"
+            preserveAspectRatio="none"
+            className="w-full h-full"
+            fill="none"
+          >
+            {/* Outer Cyan Swirl Accent */}
+            <path
+              d="M -50 0 L 830 0 C 760 170 890 330 790 490 C 690 650 850 790 730 900 L -50 900 Z"
+              fill="rgba(219, 239, 255, 0.75)"
+            />
+            {/* Middle Soft Sky Curve */}
+            <path
+              d="M -50 0 L 760 0 C 700 190 820 350 720 510 C 630 670 770 810 670 900 L -50 900 Z"
+              fill="rgba(240, 248, 255, 0.92)"
+            />
+            {/* Front Pure White Organic Body */}
+            <path
+              d="M -50 0 L 690 0 C 630 200 750 370 650 530 C 570 690 690 820 600 900 L -50 900 Z"
+              fill="#ffffff"
+            />
+          </svg>
         </div>
-      </header>
 
-      {/* Central Login Card */}
-      <main className="flex-1 flex items-center justify-center px-4 py-8 z-20">
-        <div className="w-full max-w-md bg-white border border-slate-200/80 rounded-3xl p-7 sm:p-10 shadow-xl shadow-slate-200/60 relative">
-          
-          {/* Subtle Accent Glow on Card */}
-          <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[#2d5a3c] to-transparent" />
+        {/* Ambient Top & Bottom Glows */}
+        <div className="hidden lg:block absolute -top-24 left-1/4 w-[450px] h-[450px] bg-sky-200/35 rounded-full blur-3xl pointer-events-none" />
+        <div className="hidden lg:block absolute -bottom-24 left-10 w-[400px] h-[400px] bg-blue-100/50 rounded-full blur-3xl pointer-events-none" />
+      </div>
 
-          {/* Header Brand */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200/80 text-[#2d5a3c] shadow-sm mb-4 ring-4 ring-emerald-50">
-              <Lock size={24} strokeWidth={2.2} />
+      {/* ========================================================================= */}
+      {/* 2. FOREGROUND SPLIT-SCREEN CONTENT CONTAINER */}
+      {/* ========================================================================= */}
+      <main className="relative z-10 w-full min-h-screen flex items-center px-6 sm:px-12 lg:px-20 py-8 lg:py-12">
+        <div className="w-full max-w-[440px] sm:max-w-[460px]">
+
+          {/* ==================== Brand Header ==================== */}
+          <div className="mb-6">
+            <Link href="/" className="inline-block group">
+              <div className="flex items-baseline select-none">
+                <span style={SERIF} className="text-[38px] sm:text-[44px] font-bold text-[#0f1a3a] tracking-tight leading-none group-hover:text-[#1a6dff] transition-colors">
+                  LEn
+                </span>
+                <span style={SERIF} className="text-[38px] sm:text-[44px] font-bold italic text-[#1a6dff] tracking-tight ml-0.5 leading-none">
+                  SE
+                </span>
+              </div>
+              <p className="text-[9.5px] font-extrabold uppercase tracking-[0.22em] text-[#0f1a3a]/80 mt-1.5 leading-tight">
+                Centre for Learning Engineering
+              </p>
+              <p className="text-[9.5px] font-extrabold uppercase tracking-[0.22em] text-[#0f1a3a]/80 leading-tight">
+                &amp; Sustainability Education
+              </p>
+            </Link>
+          </div>
+
+          {/* ==================== Access Badge ==================== */}
+          <div className="flex items-center gap-3 mb-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-100 to-blue-50 border border-sky-200/90 flex items-center justify-center text-[#1a6dff] shadow-[0_4px_14px_rgba(56,189,248,0.22)] shrink-0">
+              <Lock size={18} strokeWidth={2.2} />
             </div>
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-[1.5px] bg-[#1a6dff]/40" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#1a6dff]">
+                Administrative Access
+              </span>
+            </div>
+          </div>
 
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Admin Login
+          {/* ==================== Title & Subtitle ==================== */}
+          <div className="mb-5">
+            <h1 style={SERIF} className="text-3xl sm:text-[34px] font-normal text-[#0f1a3a] leading-tight tracking-tight">
+              Sign In to <em style={SERIF} className="italic text-[#1a6dff] font-normal">LEnSE</em>
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1.5 font-medium">
-              LEnSE • Centre for Learning Engineering & Sustainability Education
+            <p className="text-xs sm:text-[13px] text-slate-500 mt-1 font-normal leading-relaxed">
+              Centre for Learning Engineering &amp; Sustainability Education
             </p>
           </div>
 
-          {/* Quick Demo Pill Helper */}
-          <div className="mb-6 p-3 rounded-2xl bg-emerald-50/80 border border-emerald-200/80 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 text-xs text-emerald-950">
-              <Sparkles size={14} className="text-[#2d5a3c] shrink-0" />
-              <span>Default credentials: <strong>admin</strong> / <strong>admin123</strong></span>
-            </div>
-            <button
-              type="button"
-              onClick={handleFillDemo}
-              className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-[#2d5a3c] hover:bg-[#23462f] text-white transition-colors shrink-0 shadow-xs"
-            >
-              Fill Demo
-            </button>
-          </div>
-
-          {/* Error Message Box */}
+          {/* ==================== Error / Success Notifications ==================== */}
           {errorMsg && (
-            <div className="mb-6 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2.5 animate-in fade-in duration-200">
-              <AlertCircle size={17} className="text-rose-600 shrink-0" />
+            <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2.5 animate-in fade-in duration-200">
+              <AlertCircle size={16} className="text-rose-600 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
-          {/* Form */}
+          {successMsg && (
+            <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2.5 animate-in fade-in duration-200">
+              <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+              <span>{successMsg}</span>
+            </div>
+          )}
+
+          {/* ==================== Login Form ==================== */}
           <form onSubmit={handleLogin} className="space-y-4">
-            {/* Username */}
+
+            {/* Username or Email */}
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Username or Email
+              <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1.5">
+                Username or Registered Email
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-sky-600">
                   <User size={17} />
                 </div>
                 <input
                   type="text"
                   required
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  placeholder="admin or name@keralauniversity.ac.in"
                   autoComplete="username"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200 focus:bg-white focus:border-[#2d5a3c] focus:ring-2 focus:ring-[#2d5a3c]/10 rounded-xl text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-transparent rounded-xl text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700">
+                  Password
+                </label>
+                <Link
+                  href="/admin/forgot-password"
+                  className="text-xs font-semibold text-[#1a6dff] hover:text-blue-800 transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="relative rounded-xl border border-slate-200 focus-within:border-[#1a6dff] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-sky-600">
                   <KeyRound size={17} />
                 </div>
                 <input
@@ -209,12 +250,12 @@ export default function AdminLoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   autoComplete="current-password"
-                  className="w-full pl-10 pr-11 py-3 bg-slate-50/80 border border-slate-200 focus:bg-white focus:border-[#2d5a3c] focus:ring-2 focus:ring-[#2d5a3c]/10 rounded-xl text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none transition-all font-mono"
+                  className="w-full pl-10 pr-11 py-3 bg-transparent rounded-xl text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none font-mono"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
                   aria-label="Toggle password visibility"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -222,27 +263,27 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            {/* Remember Me */}
-            <div className="flex items-center justify-between pt-1">
+            {/* Remember Me & Session */}
+            <div className="flex items-center justify-between pt-0.5">
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-300 text-[#2d5a3c] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#2d5a3c]"
+                  className="w-4 h-4 rounded border-slate-300 text-[#1a6dff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#1a6dff]"
                 />
-                <span className="text-xs text-slate-600 font-medium">Remember on this device</span>
+                <span className="text-xs text-slate-600 font-medium">Remember me on this device</span>
               </label>
 
-              <span className="text-[11px] text-slate-400 font-medium">Session: 7 Days</span>
+              <span className="text-xs text-slate-500 font-medium">Session: 30 Days</span>
             </div>
 
             {/* Submit Button */}
-            <div className="pt-2">
+            <div className="pt-1">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 px-5 rounded-2xl bg-[#2d5a3c] hover:bg-[#23462f] text-white font-extrabold text-sm flex items-center justify-center gap-2.5 shadow-md shadow-emerald-900/15 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#1466f6] to-[#0052e0] hover:from-[#0d59e0] hover:to-[#0047c7] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(20,102,246,0.35)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
               >
                 {loading ? (
                   <>
@@ -259,20 +300,32 @@ export default function AdminLoginPage() {
             </div>
           </form>
 
-          {/* Footer note */}
-          <div className="mt-8 pt-5 border-t border-slate-100 text-center">
-            <p className="text-[11px] text-slate-400">
-              Protected administrative environment. Unauthorized access attempts are monitored and logged.
+          {/* OR Divider */}
+          <div className="flex items-center gap-3 my-3.5">
+            <div className="flex-1 h-px bg-slate-200" />
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">OR</span>
+            <div className="flex-1 h-px bg-slate-200" />
+          </div>
+
+          {/* Register New Administrator Button */}
+          <Link
+            href="/admin/register"
+            className="w-full py-3 px-5 rounded-xl border border-sky-300 bg-sky-50/50 hover:bg-sky-100/70 text-[#1a6dff] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-[1.01] shadow-2xs"
+          >
+            <UserPlus size={16} />
+            <span>REGISTER NEW ADMINISTRATOR</span>
+          </Link>
+
+          {/* Bottom Security Note */}
+          <div className="mt-4 text-center">
+            <p className="text-[11px] text-slate-500 font-medium flex items-center justify-center gap-1.5">
+              <ShieldCheck size={13} className="text-[#1a6dff]" />
+              <span>Protected environment with BetterAuth encryption</span>
             </p>
           </div>
 
         </div>
       </main>
-
-      {/* Bottom Footer */}
-      <footer className="w-full max-w-6xl mx-auto px-6 py-6 text-center text-xs text-slate-400 z-20">
-        © 2024-2025 LEnSE • University of Kerala • All Rights Reserved
-      </footer>
 
     </div>
   );

@@ -1,23 +1,32 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { validateAdminSession } from '../../../../lib/betterAuth.js';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
     const cookieStore = cookies();
-    const session = cookieStore.get('admin_session');
+    const sessionCookie = cookieStore.get('admin_session');
 
-    if (session && session.value && session.value.startsWith('authenticated_')) {
-      const username = process.env.ADMIN_USERNAME || 'admin';
+    if (!sessionCookie || !sessionCookie.value) {
+      return NextResponse.json(
+        { authenticated: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const sessionData = await validateAdminSession(sessionCookie.value);
+
+    if (sessionData && sessionData.user) {
       return NextResponse.json({
         authenticated: true,
-        user: { username }
+        user: sessionData.user
       });
     }
 
     return NextResponse.json(
-      { authenticated: false, error: 'Unauthorized' },
+      { authenticated: false, error: 'Session expired or invalid' },
       { status: 401 }
     );
   } catch (error) {

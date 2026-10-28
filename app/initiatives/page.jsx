@@ -140,9 +140,37 @@ export default function InitiativesPage() {
         </div>
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#f4f8ff] via-[#f4f8ff]/85 to-transparent pointer-events-none" />
 
+        {/* Left Side Blue Color Design: Ambient Glow, Silk Streaks, Curved Waves & Frosted Glass Orbs */}
+        <div className="absolute top-[8%] -left-[12%] w-[48%] h-[72%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-200/40 via-sky-100/25 to-transparent blur-[90px] rounded-full pointer-events-none" />
+        <div className="hidden lg:block absolute -left-[90px] top-[15%] w-[240px] h-[240px] rounded-full bg-[radial-gradient(circle_at_70%_50%,rgba(59,130,246,0.3)_0%,rgba(96,165,250,0.18)_45%,transparent_70%)] blur-[8px] pointer-events-none" />
+
+        {/* Left-side subtle oceanic silk streak flow */}
+        <div className="hidden lg:block absolute inset-y-0 left-0 w-[42%] pointer-events-none select-none opacity-30 overflow-hidden">
+          <svg viewBox="0 0 500 600" preserveAspectRatio="xMidYMid slice" className="w-full h-full -scale-x-100" fill="none">
+            <g filter="url(#ocean-blur-initiatives)">
+              <path d="M -80 100 C 180 20, 360 220, 540 120" stroke="#7dd3fc" strokeWidth={16} opacity={0.35} strokeLinecap="round" />
+              <path d="M -60 180 C 200 90, 390 310, 560 200" stroke="#38bdf8" strokeWidth={12} opacity={0.3} strokeLinecap="round" />
+              <path d="M -40 270 C 220 170, 420 390, 580 280" stroke="#1d4ed8" strokeWidth={14} opacity={0.25} strokeLinecap="round" />
+              <path d="M -20 360 C 240 250, 440 470, 600 360" stroke="#bae6fd" strokeWidth={16} opacity={0.4} strokeLinecap="round" />
+            </g>
+          </svg>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#f4f8ff]/50 to-[#f4f8ff]" />
+        </div>
+
+        {/* Sweeping Thin Blue Vector Arcs */}
+        <svg className="hidden lg:block absolute -left-8 top-[140px] w-[460px] h-[320px] pointer-events-none z-0 opacity-55" viewBox="0 0 460 320" fill="none">
+          <path d="M0 60 C 140 20, 290 150, 440 100" stroke="#7dd3fc" strokeWidth="1.2" strokeDasharray="4 4" />
+          <path d="M0 115 C 160 70, 310 210, 460 150" stroke="#38bdf8" strokeWidth="1" />
+          <path d="M0 170 C 180 120, 330 270, 450 210" stroke="#1d4ed8" strokeWidth="0.8" strokeOpacity="0.5" />
+        </svg>
+
+        {/* Ambient 3D Glass Orbs on Left Side */}
+        <div className="hidden lg:block absolute -left-12 top-[26%] w-24 h-24 rounded-full bg-gradient-to-br from-white/80 via-sky-200/40 to-blue-500/25 backdrop-blur-md border border-white/80 shadow-[0_18px_40px_rgba(37,99,235,0.14),inset_0_2px_6px_#fff] pointer-events-none z-0" />
+        <div className="hidden lg:block absolute left-8 top-[68%] w-10 h-10 rounded-full bg-gradient-to-br from-blue-400/35 to-sky-300/20 border border-white/70 shadow-sm pointer-events-none z-0" />
+
         {/* Decorative Ring + Dots on left edge (matching About page) */}
         <div className="hidden lg:block absolute -left-[270px] top-[22%] w-[320px] h-[320px] rounded-full border border-sky-400/50 pointer-events-none" />
-        <div className="hidden lg:block absolute left-[80px] top-[60%] w-2.5 h-2.5 rounded-full bg-[#1a6dff] pointer-events-none" />
+        <div className="hidden lg:block absolute left-[80px] top-[60%] w-2.5 h-2.5 rounded-full bg-[#1a6dff] shadow-[0_0_12px_rgba(26,109,255,0.6)] pointer-events-none" />
         <Dots rows={8} cols={5} className="hidden lg:grid absolute left-3 bottom-16 pointer-events-none" />
 
         <Wrap className="w-full relative z-10 my-auto">

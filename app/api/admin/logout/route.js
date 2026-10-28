@@ -1,13 +1,20 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { destroyAdminSession } from '../../../../lib/betterAuth.js';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST() {
   try {
     const cookieStore = cookies();
+    const sessionCookie = cookieStore.get('admin_session');
+
+    if (sessionCookie?.value) {
+      await destroyAdminSession(sessionCookie.value);
+    }
+
     cookieStore.delete('admin_session');
-    
+
     return NextResponse.json({
       success: true,
       message: 'Logged out successfully'

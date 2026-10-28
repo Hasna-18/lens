@@ -61,6 +61,7 @@ export default function AdminEventsPage() {
   const [loading, setLoading] = useState(true);
 
   // Settings & Initiatives
+  
   const [currentInitiativeIndex, setCurrentInitiativeIndex] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
 

@@ -233,7 +233,6 @@ const Flow = ({ className = '' }) => (
 export default function AboutPage() {
     return (
         <div className="min-h-screen bg-[#f4f8ff] text-slate-900 font-sans overflow-x-hidden relative" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-            <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Mrs+Saint+Delafield&display=swap');`}</style>
 
             <Hero />
 
