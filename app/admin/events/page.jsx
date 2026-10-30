@@ -111,41 +111,12 @@ export default function AdminEventsPage() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Settings & Initiatives
-  const [currentInitiativeIndex, setCurrentInitiativeIndex] = useState(0);
-  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
-
+  // Settings (Stats & Newsletter)
   const [settings, setSettings] = useState({
     heroTag: 'EVENTS',
     heroTitle: 'Discover. Learn.\nConnect.',
     heroSubtitle: 'Explore our conferences, workshops, lectures, courses and STEM initiatives that inspire learning and create sustainable impact.',
     heroImage: '/events/e1.png',
-    featuredInitiatives: [
-      {
-        id: "init-1",
-        tag: "FEATURED INITIATIVE",
-        title: "STEM 4 Girls",
-        subtitle: "Creating opportunities.<br/>Inspiring futures.",
-        imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600&auto=format&fit=crop",
-        link: "#"
-      },
-      {
-        id: "init-2",
-        tag: "UPCOMING INITIATIVE",
-        title: "Experiential STEM Labs",
-        subtitle: "Interactive robotics & AI education across 44+ schools in Kerala.",
-        imageUrl: "/events/e1.png",
-        link: "#"
-      },
-      {
-        id: "init-3",
-        tag: "SPECIAL PROGRAMME",
-        title: "Gifted Student STEM Camp",
-        subtitle: "Empowering young innovators through hands-on science & technology.",
-        imageUrl: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop",
-        link: "#"
-      }
-    ],
     stat1Number: '56+',
     stat1Text: 'Gifted Students<br/>Supported',
     stat2Number: '44',
@@ -161,13 +132,10 @@ export default function AdminEventsPage() {
   // Modal / Inline Add state
   const [showAddForm, setShowAddForm] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [showInitiativeModal, setShowInitiativeModal] = useState(false);
   const [editingEventId, setEditingEventId] = useState(null);
-  const [editingInitiativeId, setEditingInitiativeId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState({ show: false, type: '', message: '' });
-  const [deleteModal, setDeleteModal] = useState({ show: false, id: null, title: '', deleting: false });
-  const [deleteInitModal, setDeleteInitModal] = useState({ show: false, id: null, title: '', deleting: false });
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
   const getTodayDMY = () => {
     const d = new Date();
@@ -189,17 +157,8 @@ export default function AdminEventsPage() {
     dateMonth: initialDMY.month,
     dateYear: initialDMY.year,
     category: 'Conference',
-    imageUrl: '',
-    filterType: 'Conferences'
-  });
-
-  // Initiative Form State
-  const [initiativeForm, setInitiativeForm] = useState({
-    tag: 'FEATURED INITIATIVE',
-    title: '',
-    subtitle: '',
     imageUrl: '/events/e1.png',
-    link: '#'
+    filterType: 'Conferences'
   });
 
   const categories = [
@@ -218,21 +177,9 @@ export default function AdminEventsPage() {
     setTimeout(() => setToast({ show: false, type: '', message: '' }), 2500);
   };
 
-  // Carousel timer
-  useEffect(() => {
-    const inits = settings.featuredInitiatives || [];
-    if (inits.length <= 1 || isCarouselPaused) return;
-
-    const interval = setInterval(() => {
-      setCurrentInitiativeIndex((prev) => (prev + 1) % inits.length);
-    }, 4500);
-
-    return () => clearInterval(interval);
-  }, [settings.featuredInitiatives, isCarouselPaused]);
-
   // Fetch events & settings
-  const fetchData = async () => {
-    setLoading(true);
+  const fetchData = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const [eventsRes, settingsRes] = await Promise.all([
         fetch('/api/events', { cache: 'no-store' }),
@@ -252,31 +199,52 @@ export default function AdminEventsPage() {
       }
     } catch (error) {
       console.error("Fetch error:", error);
-      showToast('error', 'Error syncing with database');
+      if (!silent) showToast('error', 'Error syncing with database');
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
-  // Auth check & initial fetch
+  // Fast Auth check & initial fetch
   useEffect(() => {
+    let isMounted = true;
     async function verifyAuthAndFetch() {
+      // 1. Instant optimistic unlock if admin session is already in localStorage
+      if (typeof window !== 'undefined') {
+        const cachedUser = localStorage.getItem('lense_admin_user');
+        if (cachedUser) {
+          setAdminUser(cachedUser);
+          setAuthChecking(false);
+        }
+      }
+
       try {
-        const res = await fetch('/api/admin/check', { cache: 'no-store' });
-        if (!res.ok) {
+        // Concurrently run cookie verification and initial data fetch
+        const [authRes] = await Promise.all([
+          fetch('/api/admin/check', { cache: 'no-store' }),
+          fetchData(true)
+        ]);
+
+        if (!authRes.ok) {
           router.replace('/admin/login');
           return;
         }
-        const data = await res.json();
-        if (data.user?.username) setAdminUser(data.user.username);
-        await fetchData();
+
+        const data = await authRes.json();
+        if (isMounted && data.user?.username) {
+          setAdminUser(data.user.username);
+        }
       } catch (err) {
-        router.replace('/admin/login');
+        if (isMounted) router.replace('/admin/login');
       } finally {
-        setAuthChecking(false);
+        if (isMounted) {
+          setAuthChecking(false);
+          setLoading(false);
+        }
       }
     }
     verifyAuthAndFetch();
+    return () => { isMounted = false; };
   }, [router]);
 
   const handleLogout = async () => {
@@ -377,7 +345,9 @@ export default function AdminEventsPage() {
       };
 
       if (isEditing) {
-        setEvents(prev => sortEventsLatestFirst(prev.map(ev => (ev.id === editingEventId || ev.slug === savedItem.slug) ? savedItem : ev)));
+        setEvents(prev => sortEventsLatestFirst(
+          prev.map(ev => (String(ev.id) === String(editingEventId) || (savedItem.slug && ev.slug === savedItem.slug)) ? savedItem : ev)
+        ));
       } else {
         setEvents(prev => sortEventsLatestFirst([savedItem, ...prev]));
       }
@@ -385,7 +355,8 @@ export default function AdminEventsPage() {
       showToast('success', isEditing ? 'Event updated!' : 'Event published to database!');
       setShowAddForm(false);
       setEditingEventId(null);
-      fetchData();
+      // Background silent sync so the UI never blinks or shows full-page loader
+      fetchData(true);
     } catch (err) {
       showToast('error', err.message);
     } finally {
@@ -393,142 +364,49 @@ export default function AdminEventsPage() {
     }
   };
 
-  // Delete event
-  const handlePromptDelete = (id, title) => {
-    setDeleteModal({ show: true, id, title, deleting: false });
-  };
+  // Delete event smoothly without screen blur or freeze
+  const handleExecuteDelete = async (evt) => {
+    if (!evt || (evt.id == null && !evt.slug)) return;
+    const targetId = evt.id;
+    const targetSlug = evt.slug || '';
 
-  const handleConfirmDelete = async () => {
-    const { id } = deleteModal;
-    if (!id) return;
+    // 1. Instantly reset confirmation state
+    setDeleteConfirmId(null);
 
-    setDeleteModal(prev => ({ ...prev, deleting: true }));
-
+    // 2. Optimistically remove from list immediately (0ms smooth reaction, no freeze, no blur)
     const prevEvents = [...events];
-    setEvents(prev => prev.filter(e => e.id !== id && e.slug !== id));
-    if (editingEventId === id) {
+    setEvents(prev => prev.filter(e => {
+      if (targetId != null && String(e.id) === String(targetId)) return false;
+      if (targetSlug && e.slug && String(e.slug) === String(targetSlug)) return false;
+      return true;
+    }));
+
+    if ((targetId != null && String(editingEventId) === String(targetId)) || (targetSlug && editingEventId === targetSlug)) {
       setShowAddForm(false);
       setEditingEventId(null);
     }
-    setDeleteModal({ show: false, id: null, title: '', deleting: false });
-    showToast('success', 'Event deleted');
 
+    showToast('success', 'Event deleted permanently');
+
+    // 3. Fast non-blocking API call to delete from DB
     try {
-      const res = await fetch(`/api/events?id=${id}`, { method: 'DELETE' });
+      const queryParams = new URLSearchParams();
+      if (targetId != null) queryParams.set('id', String(targetId));
+      if (targetSlug) queryParams.set('slug', String(targetSlug));
+
+      const res = await fetch(`/api/events?${queryParams.toString()}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: targetId, slug: targetSlug })
+      });
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setEvents(prevEvents);
-        showToast('error', 'Failed to delete event from database');
+        throw new Error(data.error || 'Failed to delete event from database');
       }
     } catch (err) {
+      // Revert if error
       setEvents(prevEvents);
       showToast('error', err.message || 'Failed to delete event');
-    }
-  };
-
-  // Initiatives Management
-  const handleOpenAddInitiative = () => {
-    setEditingInitiativeId(null);
-    setInitiativeForm({
-      tag: 'FEATURED INITIATIVE',
-      title: '',
-      subtitle: '',
-      imageUrl: '/events/e1.png',
-      link: '#'
-    });
-    setShowInitiativeModal(true);
-  };
-
-  const handleStartEditInitiative = (init) => {
-    setEditingInitiativeId(init.id);
-    setInitiativeForm({
-      tag: init.tag || 'FEATURED INITIATIVE',
-      title: init.title || '',
-      subtitle: (init.subtitle || '').replace(/<br\s*[\/]?>/gi, '\n'),
-      imageUrl: init.imageUrl || '/events/e1.png',
-      link: init.link || '#'
-    });
-    setShowInitiativeModal(true);
-  };
-
-  const handleInitiativeSubmit = async (e) => {
-    e.preventDefault();
-    if (!initiativeForm.title.trim()) {
-      showToast('error', 'Please enter an initiative title');
-      return;
-    }
-
-    setSaving(true);
-    try {
-      const formattedSubtitle = initiativeForm.subtitle.replace(/\n/g, '<br/>');
-      let updatedInitiatives = [...(settings.featuredInitiatives || [])];
-
-      if (editingInitiativeId) {
-        updatedInitiatives = updatedInitiatives.map(item =>
-          item.id === editingInitiativeId
-            ? { ...item, ...initiativeForm, subtitle: formattedSubtitle }
-            : item
-        );
-      } else {
-        const newInit = {
-          id: `init-${Date.now()}`,
-          ...initiativeForm,
-          subtitle: formattedSubtitle
-        };
-        updatedInitiatives.push(newInit);
-      }
-
-      const updatedSettings = { ...settings, featuredInitiatives: updatedInitiatives };
-      const res = await fetch('/api/event-settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedSettings)
-      });
-
-      if (!res.ok) throw new Error('Failed to update initiatives');
-
-      setSettings(updatedSettings);
-      setShowInitiativeModal(false);
-      setEditingInitiativeId(null);
-      showToast('success', editingInitiativeId ? 'Initiative updated!' : 'New initiative added to carousel!');
-    } catch (err) {
-      showToast('error', err.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handlePromptDeleteInitiative = (initId, title) => {
-    setDeleteInitModal({ show: true, id: initId, title, deleting: false });
-  };
-
-  const handleConfirmDeleteInitiative = async () => {
-    const { id: initId } = deleteInitModal;
-    if (!initId) return;
-
-    const prevInitiatives = settings.featuredInitiatives || [];
-    const updatedInitiatives = prevInitiatives.filter(item => item.id !== initId);
-    const updatedSettings = { ...settings, featuredInitiatives: updatedInitiatives };
-
-    setSettings(updatedSettings);
-    if (currentInitiativeIndex >= updatedInitiatives.length) {
-      setCurrentInitiativeIndex(Math.max(0, updatedInitiatives.length - 1));
-    }
-    setDeleteInitModal({ show: false, id: null, title: '', deleting: false });
-    showToast('success', 'Initiative removed');
-
-    try {
-      const res = await fetch('/api/event-settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedSettings)
-      });
-      if (!res.ok) {
-        setSettings({ ...settings, featuredInitiatives: prevInitiatives });
-        showToast('error', 'Failed to delete initiative from database');
-      }
-    } catch (err) {
-      setSettings({ ...settings, featuredInitiatives: prevInitiatives });
-      showToast('error', err.message);
     }
   };
 
@@ -581,23 +459,6 @@ export default function AdminEventsPage() {
     return counts;
   }, [events, categories]);
 
-  const initiatives = settings.featuredInitiatives || [];
-  const activeInitiative = initiatives[currentInitiativeIndex] || {
-    tag: 'FEATURED INITIATIVE',
-    title: 'No Initiatives Added',
-    subtitle: 'Add initiatives using the button above to showcase them here.',
-    imageUrl: '/events/e1.png',
-    link: '#'
-  };
-
-  const handleNextInitiative = () => {
-    setCurrentInitiativeIndex((prev) => (prev + 1) % initiatives.length);
-  };
-
-  const handlePrevInitiative = () => {
-    setCurrentInitiativeIndex((prev) => (prev - 1 + initiatives.length) % initiatives.length);
-  };
-
   if (authChecking) {
     return (
       <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -638,81 +499,7 @@ export default function AdminEventsPage() {
         </div>
       )}
 
-      {/* Delete Event Confirmation Modal */}
-      {deleteModal.show && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-4 animate-in fade-in-50 duration-200">
-          <div className="bg-white/95 backdrop-blur-2xl rounded-[2rem] max-w-sm w-full p-6 shadow-[0_25px_60px_rgba(0,154,177,0.22)] border border-white/90 space-y-4">
-            <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-rose-50 border border-rose-200/80 text-rose-600 flex items-center justify-center shrink-0">
-                <Trash2 size={20} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h4 style={SERIF} className="text-lg font-normal text-slate-900 leading-tight">Delete Event?</h4>
-                <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
-                  Are you sure you want to delete <span className="font-semibold text-slate-800">"{deleteModal.title}"</span>? This cannot be undone.
-                </p>
-              </div>
-            </div>
 
-            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
-              <button
-                type="button"
-                onClick={() => setDeleteModal({ show: false, id: null, title: '', deleting: false })}
-                className="px-4 py-2 rounded-full border border-slate-200/80 bg-white/80 hover:bg-white text-slate-600 text-xs font-bold transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleConfirmDelete}
-                disabled={deleteModal.deleting}
-                className="px-4 py-2 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-              >
-                {deleteModal.deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
-                <span>{deleteModal.deleting ? 'Deleting...' : 'Yes, Delete'}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Initiative Confirmation Modal */}
-      {deleteInitModal.show && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-4 animate-in fade-in-50 duration-200">
-          <div className="bg-white/95 backdrop-blur-2xl rounded-[2rem] max-w-sm w-full p-6 shadow-[0_25px_60px_rgba(0,154,177,0.22)] border border-white/90 space-y-4">
-            <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-rose-50 border border-rose-200/80 text-rose-600 flex items-center justify-center shrink-0">
-                <Trash2 size={20} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h4 style={SERIF} className="text-lg font-normal text-slate-900 leading-tight">Delete Initiative?</h4>
-                <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
-                  Remove <span className="font-semibold text-slate-800">"{deleteInitModal.title}"</span> from carousel?
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
-              <button
-                type="button"
-                onClick={() => setDeleteInitModal({ show: false, id: null, title: '', deleting: false })}
-                className="px-4 py-2 rounded-full border border-slate-200/80 bg-white/80 hover:bg-white text-slate-600 text-xs font-bold transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleConfirmDeleteInitiative}
-                disabled={deleteInitModal.deleting}
-                className="px-4 py-2 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-              >
-                {deleteInitModal.deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
-                <span>{deleteInitModal.deleting ? 'Deleting...' : 'Yes, Delete'}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ========================================================================= */}
       {/* ADMIN FLOATING TOP CONTROLLER BAR                                          */}
@@ -1126,9 +913,44 @@ export default function AdminEventsPage() {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2.5">
+                      {editingEventId && (
+                        deleteConfirmId === editingEventId ? (
+                          <div className="flex items-center gap-2 bg-rose-50 border border-rose-200/90 px-3 py-1.5 rounded-full animate-in fade-in duration-150">
+                            <span className="text-[11px] font-bold text-rose-700">Delete this event?</span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const ev = events.find(e => String(e.id) === String(editingEventId) || e.slug === editingEventId);
+                                if (ev) handleExecuteDelete(ev);
+                              }}
+                              className="px-3 py-1 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white rounded-full text-[11px] font-bold transition-all shadow-xs flex items-center gap-1 cursor-pointer"
+                            >
+                              <Trash2 size={11} />
+                              <span>Yes, Delete</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setDeleteConfirmId(null)}
+                              className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-600 rounded-full text-[11px] font-semibold transition-all border border-slate-200 cursor-pointer"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setDeleteConfirmId(editingEventId)}
+                            className="px-3.5 py-2.5 rounded-full border border-rose-200 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white font-bold text-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+                            title="Delete this event"
+                          >
+                            <Trash2 size={13} />
+                            <span>Delete Event</span>
+                          </button>
+                        )
+                      )}
                       <button
                         type="button"
-                        onClick={() => { setShowAddForm(false); setEditingEventId(null); }}
+                        onClick={() => { setShowAddForm(false); setEditingEventId(null); setDeleteConfirmId(null); }}
                         className="px-4 py-2.5 rounded-full border border-slate-200/80 bg-white/80 text-slate-600 font-bold text-xs hover:bg-white hover:text-slate-800 transition-colors cursor-pointer"
                       >
                         Cancel
@@ -1158,11 +980,24 @@ export default function AdminEventsPage() {
             )}
 
             {/* TIMELINE LISTING */}
-            {loading ? (
-              <div className="sm:ml-24 text-center py-20 rounded-[2rem] bg-gradient-to-br from-white/90 via-white/80 to-[#009ab1]/10 backdrop-blur-xl border border-white/90 shadow-[0_18px_45px_rgba(0,154,177,0.08)]">
-                <Loader2 className="animate-spin text-[#009ab1] mx-auto mb-3" size={32} />
-                <div style={SERIF} className="text-slate-800 text-lg font-normal">Syncing live events from database...</div>
-                <p className="text-slate-400 text-xs mt-1">Checking Neon DB collections</p>
+            {loading && events.length === 0 ? (
+              <div className="sm:ml-24 space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="rounded-[1.8rem] bg-gradient-to-br from-white/95 via-white/85 to-[#009ab1]/10 backdrop-blur-xl border border-white/95 p-5 shadow-xs animate-pulse">
+                    <div className="flex justify-between items-center pb-3 border-b border-slate-100">
+                      <div className="h-5 w-24 bg-slate-200/80 rounded-full" />
+                      <div className="h-6 w-36 bg-slate-200/60 rounded-full" />
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-5 items-start sm:items-center mt-3">
+                      <div className="w-full sm:w-[210px] h-[130px] bg-slate-200/80 rounded-2xl shrink-0" />
+                      <div className="flex-1 min-w-0 space-y-3 w-full">
+                        <div className="h-5 w-3/4 bg-slate-200/90 rounded-lg" />
+                        <div className="h-3.5 w-1/2 bg-slate-200/60 rounded-lg" />
+                        <div className="h-3 w-1/3 bg-slate-200/40 rounded-lg" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : filteredEvents.length === 0 ? (
               <div className="sm:ml-24 text-center py-16 rounded-[2rem] bg-gradient-to-br from-white/90 via-white/80 to-[#009ab1]/10 backdrop-blur-xl border border-white/90 shadow-[0_18px_45px_rgba(0,154,177,0.08)] p-8">
@@ -1217,32 +1052,55 @@ export default function AdminEventsPage() {
                       </div>
 
                       {/* Right: Actions (In document flow, NEVER overlapping) */}
-                      <div className="flex flex-wrap items-center gap-2 shrink-0">
-                        <Link
-                          href={`/admin/events/${evt.slug || evt.id}`}
-                          className="px-3.5 py-1.5 bg-gradient-to-r from-[#009ab1]/15 to-[#14b4cb]/15 hover:from-[#009ab1] hover:to-[#00869c] text-[#00869c] hover:text-white border border-[#009ab1]/30 rounded-full text-[11px] font-bold flex items-center gap-1.5 transition-all shadow-xs group/btn cursor-pointer"
-                          title="Customize live event page, about text, speakers, and layout"
-                        >
-                          <Sparkles size={12} className="text-[#009ab1] group-hover/btn:text-white transition-colors" />
-                          <span>Customize Live Page</span>
-                        </Link>
-                        <button
-                          onClick={() => handleStartEdit(evt)}
-                          className="px-3 py-1.5 bg-white/90 hover:bg-white text-slate-700 hover:text-[#009ab1] border border-slate-200/80 hover:border-[#009ab1]/30 rounded-full text-[11px] font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
-                          title="Edit event"
-                        >
-                          <Edit3 size={12} />
-                          <span>Edit</span>
-                        </button>
-                        <button
-                          onClick={() => handlePromptDelete(evt.slug || evt.id, evt.title)}
-                          className="px-3 py-1.5 bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white border border-rose-200/80 hover:border-rose-600 rounded-full text-[11px] font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
-                          title="Delete event"
-                        >
-                          <Trash2 size={12} />
-                          <span>Delete</span>
-                        </button>
-                      </div>
+                      {deleteConfirmId === evt.id ? (
+                        <div className="flex items-center gap-2 bg-rose-50 border border-rose-200/90 px-3 py-1.5 rounded-full animate-in fade-in zoom-in-95 duration-150">
+                          <span className="text-[11px] font-bold text-rose-700">Do you want to delete this event?</span>
+                          <button
+                            type="button"
+                            onClick={() => handleExecuteDelete(evt)}
+                            className="px-3 py-1 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white rounded-full text-[11px] font-bold transition-all shadow-xs flex items-center gap-1 cursor-pointer"
+                          >
+                            <Trash2 size={11} />
+                            <span>Yes, Delete</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setDeleteConfirmId(null)}
+                            className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-600 rounded-full text-[11px] font-semibold transition-all border border-slate-200 cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-wrap items-center gap-2 shrink-0">
+                          <Link
+                            href={`/admin/events/${evt.slug || evt.id}`}
+                            className="px-3.5 py-1.5 bg-gradient-to-r from-[#009ab1]/15 to-[#14b4cb]/15 hover:from-[#009ab1] hover:to-[#00869c] text-[#00869c] hover:text-white border border-[#009ab1]/30 rounded-full text-[11px] font-bold flex items-center gap-1.5 transition-all shadow-xs group/btn cursor-pointer"
+                            title="Customize live event page, about text, speakers, and layout"
+                          >
+                            <Sparkles size={12} className="text-[#009ab1] group-hover/btn:text-white transition-colors" />
+                            <span>Customize Live Page</span>
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => handleStartEdit(evt)}
+                            className="px-3 py-1.5 bg-white/90 hover:bg-white text-slate-700 hover:text-[#009ab1] border border-slate-200/80 hover:border-[#009ab1]/30 rounded-full text-[11px] font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                            title="Edit event"
+                          >
+                            <Edit3 size={12} />
+                            <span>Edit</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setDeleteConfirmId(evt.id)}
+                            className="px-3 py-1.5 bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white border border-rose-200/80 hover:border-rose-600 rounded-full text-[11px] font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                            title="Delete event"
+                          >
+                            <Trash2 size={12} />
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      )}
                     </div>
 
                     {/* Main Body Row: Poster Image + Details */}
@@ -1382,123 +1240,10 @@ export default function AdminEventsPage() {
       </div>
 
       {/* ======================================================== */}
-      {/* MODAL 1: ADD / EDIT INITIATIVE MODAL                     */}
-      {/* ======================================================== */}
-      {showInitiativeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-4 overflow-y-auto animate-in fade-in-50 duration-200">
-          <div className="bg-white/95 backdrop-blur-2xl rounded-[2.2rem] max-w-lg w-full p-6 sm:p-8 shadow-[0_30px_70px_rgba(0,154,177,0.22)] border border-white/90 relative my-8">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#009ab1] to-[#00869c] text-white flex items-center justify-center font-bold shadow-md">
-                  <Sparkles size={18} />
-                </div>
-                <div>
-                  <h3 style={SERIF} className="text-2xl font-normal text-slate-900 leading-tight">
-                    {editingInitiativeId ? 'Edit Initiative' : 'Add New Initiative'}
-                  </h3>
-                  <p className="text-[11px] text-slate-500 font-medium">Configure carousel showcase spotlight</p>
-                </div>
-              </div>
-              <button
-                onClick={() => { setShowInitiativeModal(false); setEditingInitiativeId(null); }}
-                className="w-9 h-9 rounded-full bg-white/80 hover:bg-white text-slate-400 hover:text-slate-700 border border-slate-200/60 flex items-center justify-center transition-colors shadow-xs"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <form onSubmit={handleInitiativeSubmit} className="space-y-4">
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                  Initiative Tag
-                </label>
-                <input
-                  type="text"
-                  value={initiativeForm.tag}
-                  onChange={(e) => setInitiativeForm({ ...initiativeForm, tag: e.target.value.toUpperCase() })}
-                  placeholder="FEATURED INITIATIVE"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/80 border border-slate-200/80 text-xs font-semibold text-slate-800 focus:bg-white focus:border-[#009ab1] focus:ring-4 focus:ring-[#009ab1]/15 outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                  Initiative Title *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={initiativeForm.title}
-                  onChange={(e) => setInitiativeForm({ ...initiativeForm, title: e.target.value })}
-                  placeholder="STEM 4 Girls"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/80 border border-slate-200/80 text-xs font-semibold text-slate-800 focus:bg-white focus:border-[#009ab1] focus:ring-4 focus:ring-[#009ab1]/15 outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                  Subtitle Description
-                </label>
-                <textarea
-                  rows={2}
-                  value={initiativeForm.subtitle}
-                  onChange={(e) => setInitiativeForm({ ...initiativeForm, subtitle: e.target.value })}
-                  placeholder="Short impact statement..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/80 border border-slate-200/80 text-xs text-slate-800 focus:bg-white focus:border-[#009ab1] focus:ring-4 focus:ring-[#009ab1]/15 outline-none"
-                />
-              </div>
-
-              {/* Local Device Image Uploader for Initiative */}
-              <div className="pt-1">
-                <ImageUploader
-                  value={initiativeForm.imageUrl}
-                  onChange={(url) => setInitiativeForm({ ...initiativeForm, imageUrl: url })}
-                  category="initiatives"
-                  label="Initiative Banner Image"
-                  helperText="Upload image from device (stored in Cloudinary) or enter URL."
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                  Learn More Link URL
-                </label>
-                <input
-                  type="text"
-                  value={initiativeForm.link}
-                  onChange={(e) => setInitiativeForm({ ...initiativeForm, link: e.target.value })}
-                  placeholder="#"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/80 border border-slate-200/80 text-xs text-slate-800 focus:bg-white focus:border-[#009ab1] focus:ring-4 focus:ring-[#009ab1]/15 outline-none"
-                />
-              </div>
-
-              <div className="pt-3 flex gap-3 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => { setShowInitiativeModal(false); setEditingInitiativeId(null); }}
-                  className="flex-1 py-2.5 rounded-full border border-slate-200/80 bg-white/80 text-slate-600 font-bold text-xs hover:bg-white transition-colors cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="flex-1 btn-teal py-2.5 rounded-full text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-[0_8px_20px_rgba(0,154,177,0.28)] disabled:opacity-50 cursor-pointer"
-                >
-                  {saving ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />}
-                  <span>{saving ? 'Saving...' : editingInitiativeId ? 'Update Initiative' : 'Add to Carousel'}</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ======================================================== */}
-      {/* MODAL 2: EDIT SIDEBAR & HERO SETTINGS MODAL              */}
+      {/* EDIT STATS & NEWSLETTER SETTINGS MODAL                   */}
       {/* ======================================================== */}
       {showSettingsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-4 overflow-y-auto animate-in fade-in-50 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-xs p-4 overflow-y-auto animate-in fade-in-50 duration-200">
           <div className="bg-white/95 backdrop-blur-2xl rounded-[2.2rem] max-w-2xl w-full p-6 sm:p-8 shadow-[0_30px_70px_rgba(0,154,177,0.22)] border border-white/90 my-8 relative">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
               <div>

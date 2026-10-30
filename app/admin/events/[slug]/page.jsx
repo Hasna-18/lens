@@ -273,6 +273,9 @@ export default function AdminLiveEventPlatformEditor({ params }) {
     title: 'Upload / Attach Resource Document (Cloudinary)'
   });
 
+  // Delete Event Confirmation State
+  const [deleteModal, setDeleteModal] = useState({ show: false, deleting: false });
+
   // Highlight Icon Picker State
   const [openIconPickerIdx, setOpenIconPickerIdx] = useState(null);
   const AVAILABLE_ICONS = ['Star', 'User', 'Users', 'MapPin', 'Clock', 'Calendar', 'Building', 'Mic', 'Projector', 'FlaskConical', 'Network', 'GraduationCap', 'Briefcase', 'Monitor', 'Microscope', 'Sparkles'];
@@ -447,6 +450,34 @@ export default function AdminLiveEventPlatformEditor({ params }) {
       showToast('error', err.message);
     } finally {
       setSaving(false);
+    }
+  };
+
+  // Delete event permanently from inside the editor
+  const handleConfirmDeleteEvent = async () => {
+    setDeleteModal(prev => ({ ...prev, deleting: true }));
+    try {
+      const targetId = baseEvent?.id;
+      const targetSlug = baseEvent?.slug || eventSlugOrId;
+      const queryParams = new URLSearchParams();
+      if (targetId != null) queryParams.set('id', String(targetId));
+      if (targetSlug) queryParams.set('slug', String(targetSlug));
+
+      const res = await fetch(`/api/events?${queryParams.toString()}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: targetId, slug: targetSlug })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to delete event');
+      }
+
+      showToast('success', 'Event deleted! Redirecting to events list...');
+      router.push('/admin/events');
+    } catch (err) {
+      setDeleteModal({ show: false, deleting: false });
+      showToast('error', err.message || 'Failed to delete event');
     }
   };
 
@@ -696,6 +727,16 @@ export default function AdminLiveEventPlatformEditor({ params }) {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={() => setDeleteModal({ show: true, deleting: false })}
+              className="px-3.5 py-2 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white font-bold text-xs rounded-xl flex items-center gap-1.5 border border-rose-200/80 hover:border-rose-600 shadow-2xs transition-colors cursor-pointer"
+              title="Delete this event permanently"
+            >
+              <Trash2 size={14} />
+              <span className="hidden sm:inline">Delete Event</span>
+            </button>
+
             <Link
               href={`/events/${baseEvent.slug || eventSlugOrId}`}
               target="_blank"
@@ -1145,7 +1186,7 @@ export default function AdminLiveEventPlatformEditor({ params }) {
                     <button
                       type="button"
                       onClick={() => removeHighlight(idx)}
-                      className="absolute top-2.5 right-2.5 p-1.5 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+                      className="absolute top-2.5 right-2.5 p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all opacity-80 sm:opacity-0 sm:group-hover:opacity-100 cursor-pointer"
                       title="Remove highlight"
                     >
                       <Trash2 size={13} />
@@ -1237,7 +1278,7 @@ export default function AdminLiveEventPlatformEditor({ params }) {
                     <button
                       type="button"
                       onClick={() => removeSpeaker(idx)}
-                      className="absolute top-3.5 right-3.5 p-1.5 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+                      className="absolute top-3.5 right-3.5 p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all opacity-80 sm:opacity-0 sm:group-hover:opacity-100 cursor-pointer"
                       title="Remove speaker"
                     >
                       <Trash2 size={14} />
@@ -1765,6 +1806,44 @@ export default function AdminLiveEventPlatformEditor({ params }) {
           )}
         </div>
       </div>
+
+      {/* Delete Event Confirmation Modal */}
+      {deleteModal.show && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/30 backdrop-blur-xs p-4 animate-in fade-in-50 duration-200">
+          <div className="bg-white/95 backdrop-blur-2xl rounded-[2rem] max-w-sm w-full p-6 shadow-[0_25px_60px_rgba(0,154,177,0.22)] border border-white/90 space-y-4">
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-rose-50 border border-rose-200/80 text-rose-600 flex items-center justify-center shrink-0">
+                <Trash2 size={20} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 style={SERIF} className="text-lg font-normal text-slate-900 leading-tight">Do you want to delete this event?</h4>
+                <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                  Are you sure you want to delete <span className="font-semibold text-slate-800">"{baseEvent.title || 'this event'}"</span>? This will permanently remove the event, its visual page, and student registrations.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setDeleteModal({ show: false, deleting: false })}
+                className="px-4 py-2 rounded-full border border-slate-200/80 bg-white/80 hover:bg-white text-slate-600 text-xs font-bold transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDeleteEvent}
+                disabled={deleteModal.deleting}
+                className="px-4 py-2 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                {deleteModal.deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                <span>{deleteModal.deleting ? 'Deleting...' : 'Yes, Delete'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

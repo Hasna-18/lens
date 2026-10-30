@@ -92,20 +92,31 @@ export async function PUT(request) {
 
 export async function DELETE(request) {
   try {
-    const { searchParams } = new URL(request.url);
-    let id = searchParams.get('id') || searchParams.get('slug');
+    let id = null;
+    let slug = null;
 
-    if (!id) {
-      const body = await request.json().catch(() => ({}));
-      id = body.id || body.slug;
-    }
+    try {
+      const { searchParams } = new URL(request.url);
+      id = searchParams.get('id');
+      slug = searchParams.get('slug');
+    } catch (_) {}
 
-    if (!id) {
+    try {
+      const body = await request.json();
+      if (!id && body?.id) id = body.id;
+      if (!slug && body?.slug) slug = body.slug;
+    } catch (_) {}
+
+    if (!id && !slug) {
       return NextResponse.json({ error: 'Event ID or slug is required' }, { status: 400 });
     }
 
-    const res = await deleteEvent(id);
-    return NextResponse.json(res);
+    const res = await deleteEvent(id, slug);
+    return NextResponse.json(res, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+      }
+    });
   } catch (error) {
     console.error('Error deleting event:', error);
     return NextResponse.json({ error: error.message || 'Failed to delete event from database' }, { status: 500 });
