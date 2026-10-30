@@ -26,11 +26,63 @@ import {
   Palette,
   Eye,
   Image as ImageIcon,
-  Type
+  Type,
+  ArrowRight
 } from 'lucide-react';
 import PdfUploader from '../../../components/admin/PdfUploader';
 import ImageUploader from '../../../components/admin/ImageUploader';
 import PublicationCover, { COVER_TEMPLATES, THEME_PRESETS } from '../../../components/PublicationCover';
+
+const SERIF = { fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif" };
+
+function SectionTag({ label, light = false }) {
+  return (
+    <div
+      className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase mb-2 ${
+        light
+          ? 'bg-white/10 text-white/90 border border-white/15'
+          : 'bg-[#009ab1]/10 text-[#009ab1] border border-[#009ab1]/25'
+      }`}
+    >
+      <span className="w-1.5 h-1.5 rounded-full bg-[#009ab1] animate-pulse" />
+      {label}
+    </div>
+  );
+}
+
+function Em({ children }) {
+  return (
+    <span
+      style={{
+        fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif",
+        fontStyle: 'italic',
+        fontWeight: 400,
+      }}
+      className="text-[#009ab1] font-normal"
+    >
+      {children}
+    </span>
+  );
+}
+
+function Dots({ className = '' }) {
+  return (
+    <svg className={`pointer-events-none opacity-25 ${className}`} width="120" height="120" viewBox="0 0 120 120" fill="none">
+      <pattern id="dot-pattern-resources" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+        <circle cx="2" cy="2" r="1.5" fill="#009ab1" />
+      </pattern>
+      <rect width="120" height="120" fill="url(#dot-pattern-resources)" />
+    </svg>
+  );
+}
+
+function Swirl({ className = '' }) {
+  return (
+    <svg className={`pointer-events-none ${className}`} viewBox="0 0 200 60" fill="none">
+      <path d="M10 40 C 60 10, 140 70, 190 20" stroke="#009ab1" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="6 6" opacity="0.35" />
+    </svg>
+  );
+}
 
 export default function AdminResourcesPage() {
   const router = useRouter();
@@ -273,34 +325,36 @@ export default function AdminResourcesPage() {
 
   if (authChecking) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3">
-        <Loader2 className="animate-spin text-[#2d5a3c] dark:text-[#60a5fa]" size={32} />
-        <span className="text-xs font-semibold uppercase tracking-wider text-[#556959]">
-          Verifying Console Authorization...
-        </span>
+      <div className="min-h-screen bg-gradient-to-br from-[#f8fbfb] via-[#f0f8f9] to-[#edf6f8] flex items-center justify-center font-sans">
+        <div className="text-center space-y-4 bg-white/80 backdrop-blur-xl p-9 rounded-[2rem] shadow-xl border border-white/90">
+          <Loader2 className="animate-spin text-[#009ab1] mx-auto" size={36} />
+          <p className="text-slate-600 text-xs font-bold tracking-wider uppercase">Verifying Authorization...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f5ed] dark:bg-[#020617] text-[#19241c] dark:text-slate-100 font-sans relative overflow-hidden transition-colors duration-300">
-      {/* Ambient soft background glows */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[8%] -left-40 w-[600px] h-[600px] bg-[#e1ecd6]/50 dark:bg-emerald-950/20 rounded-full blur-3xl" />
-        <div className="absolute top-[50%] -right-40 w-[650px] h-[650px] bg-[#dbe8d0]/50 dark:bg-emerald-950/15 rounded-full blur-3xl" />
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-[#f8fbfb] via-[#f0f8f9] to-[#edf6f8] text-slate-800 font-sans pb-32 pt-20 sm:pt-24 relative overflow-hidden transition-colors duration-300">
+      {/* Ambient background glows & patterns from home page */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#009ab1]/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 right-10 w-[450px] h-[450px] bg-sky-400/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 left-10 w-[500px] h-[500px] bg-teal-300/8 rounded-full blur-3xl pointer-events-none" />
+      <Dots className="absolute top-28 left-8" />
+      <Swirl className="absolute top-44 right-12 w-48" />
 
-      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8 animate-in fade-in duration-300">
+      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8 animate-in fade-in duration-300">
 
         {/* Toast Notification */}
         {toast.show && (
           <div
-            className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-5 py-3.5 rounded-2xl shadow-xl border text-xs font-bold animate-in slide-in-from-bottom duration-300 ${toast.type === 'error'
-                ? 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950 dark:text-rose-200 dark:border-rose-800'
-                : 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-200 dark:border-emerald-800'
-              }`}
+            className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-6 py-4 rounded-2xl shadow-2xl border text-xs font-bold animate-in slide-in-from-bottom duration-300 ${
+              toast.type === 'error'
+                ? 'bg-rose-50 text-rose-950 border-rose-300 shadow-xl'
+                : 'bg-white/95 text-slate-900 border-[#009ab1]/40 shadow-[0_15px_40px_rgba(0,154,177,0.2)]'
+            }`}
           >
-            {toast.type === 'error' ? <AlertCircle size={16} /> : <CheckCircle2 size={16} />}
+            {toast.type === 'error' ? <AlertCircle size={18} className="text-rose-600" /> : <CheckCircle2 size={18} className="text-[#009ab1]" />}
             <span>{toast.message}</span>
           </div>
         )}
@@ -308,29 +362,31 @@ export default function AdminResourcesPage() {
         {/* ========================================================================= */}
         {/* 1. TOP HEADER & BREADCRUMB */}
         {/* ========================================================================= */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#e2ece3] dark:border-white/10">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 pb-6 border-b border-white/80">
           <div>
-            <div className="flex items-center gap-2 text-[11px] font-bold text-[#5c7361] dark:text-slate-400 uppercase tracking-wider mb-1.5">
-              <Link href="/admin" className="hover:text-[#1b3726] dark:hover:text-[#60a5fa] transition-colors">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-2">
+              <Sparkles size={14} className="text-[#009ab1]" />
+              <Link href="/admin" className="hover:text-[#009ab1] transition-colors">
                 Admin Console
               </Link>
-              <span>/</span>
-              <span className="text-[#132418] dark:text-white">Academic Resources &amp; Downloads</span>
+              <span className="text-slate-300">&gt;</span>
+              <span className="text-slate-900 font-bold">Academic Resources &amp; Downloads</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal text-[#122417] dark:text-white tracking-tight">
-              Academic Resources &amp; Downloads
+            <SectionTag label="Knowledge Repository" />
+            <h1 style={SERIF} className="text-3xl sm:text-4xl lg:text-5xl font-normal text-slate-900 tracking-tight">
+              Academic Resources &amp; <Em>Downloads</Em>
             </h1>
-            <p className="text-xs sm:text-sm text-[#546b59] dark:text-slate-300 font-normal mt-1 max-w-2xl leading-relaxed">
-              Manage official conference brochures, syllabus courseware, experiential STEM toolkits, research proceedings, and university policy documents. Custom cover typography, image assets &amp; themes sync dynamically to the public catalog.
+            <p className="text-xs sm:text-sm text-slate-600 font-normal mt-2 max-w-2xl leading-relaxed">
+              Manage official conference brochures, syllabus courseware, STEM toolkits, research proceedings, and university policy documents. Custom cover typography, image assets, and color themes sync dynamically to the public catalog.
             </p>
           </div>
 
           {/* Action Controls */}
-          <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+          <div className="flex items-center gap-3 shrink-0 flex-wrap">
             <button
               onClick={fetchResources}
               disabled={loading}
-              className="p-2.5 rounded-xl bg-white dark:bg-[#020617]/40 dark:backdrop-blur-xl border border-[#d8e5da] dark:border-white/10 text-[#2d4032] dark:text-slate-200 hover:bg-[#f1f6f1] dark:hover:bg-white/10 transition-all cursor-pointer shadow-xs disabled:opacity-50"
+              className="p-3 rounded-2xl bg-white/90 hover:bg-white border border-slate-200/80 text-slate-700 hover:text-[#009ab1] transition-all cursor-pointer shadow-xs disabled:opacity-50"
               title="Refresh database records"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
@@ -339,15 +395,15 @@ export default function AdminResourcesPage() {
             <Link
               href="/resources"
               target="_blank"
-              className="px-4 py-2.5 rounded-xl bg-white dark:bg-[#020617]/40 dark:backdrop-blur-xl border border-[#d8e5da] dark:border-white/10 text-[#1b3726] dark:text-emerald-300 hover:bg-[#f1f6f1] dark:hover:bg-white/10 text-xs font-bold transition-all shadow-xs flex items-center gap-2"
+              className="px-4 py-3 rounded-2xl bg-white/90 hover:bg-[#009ab1]/5 border border-slate-200/80 text-slate-700 hover:text-[#009ab1] text-xs font-bold transition-all shadow-xs flex items-center gap-2"
             >
+              <Eye size={15} />
               <span>Public Site View</span>
-              <ExternalLink size={14} />
             </Link>
 
             <button
               onClick={handleOpenAdd}
-              className="px-5 py-2.5 rounded-xl bg-[#1b3726] hover:bg-[#254d35] dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all active:scale-98 cursor-pointer"
+              className="px-5 py-3 rounded-2xl bg-gradient-to-r from-[#009ab1] to-[#14b4cb] hover:from-[#00869c] hover:to-[#009ab1] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-[0_8px_20px_rgba(0,154,177,0.3)] transition-all active:scale-95 cursor-pointer"
             >
               <Plus size={16} />
               <span>Upload Resource</span>
@@ -359,81 +415,81 @@ export default function AdminResourcesPage() {
         {/* 2. STATS OVERVIEW CARDS */}
         {/* ========================================================================= */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#020617]/40 dark:backdrop-blur-xl border border-[#e2ece3] dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-[#eef5ee] dark:bg-white/10 border border-[#d6e6d8] dark:border-white/10 flex items-center justify-center text-[#2d5a3c] dark:text-emerald-400 shrink-0">
+          <div className="p-5 sm:p-6 rounded-[2rem] bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_10px_30px_rgba(0,154,177,0.05)] flex items-center gap-4 hover:shadow-[0_15px_40px_rgba(0,154,177,0.1)] transition-all">
+            <div className="w-12 h-12 rounded-2xl bg-[#009ab1]/10 border border-[#009ab1]/20 flex items-center justify-center text-[#009ab1] shrink-0">
               <BookOpen size={22} />
             </div>
             <div>
-              <span className="text-[10.5px] font-bold text-[#627766] dark:text-slate-400 uppercase tracking-wider block">
+              <span className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider block">
                 Total Resources
               </span>
-              <span className="text-xl sm:text-2xl font-serif font-normal text-[#122417] dark:text-white leading-tight block mt-0.5">
-                {totalCount} <span className="text-xs font-sans text-[#485e4d] dark:text-slate-400">Files</span>
+              <span style={SERIF} className="text-2xl sm:text-3xl font-normal text-slate-900 leading-tight block mt-0.5">
+                {totalCount} <span className="text-xs font-sans text-slate-500 font-semibold">Files</span>
               </span>
             </div>
           </div>
 
-          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#020617]/40 dark:backdrop-blur-xl border border-[#e2ece3] dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-[#eef5ee] dark:bg-white/10 border border-[#d6e6d8] dark:border-white/10 flex items-center justify-center text-[#2d5a3c] dark:text-emerald-400 shrink-0">
+          <div className="p-5 sm:p-6 rounded-[2rem] bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_10px_30px_rgba(0,154,177,0.05)] flex items-center gap-4 hover:shadow-[0_15px_40px_rgba(0,154,177,0.1)] transition-all">
+            <div className="w-12 h-12 rounded-2xl bg-[#009ab1]/10 border border-[#009ab1]/20 flex items-center justify-center text-[#009ab1] shrink-0">
               <FileText size={22} />
             </div>
             <div>
-              <span className="text-[10.5px] font-bold text-[#627766] dark:text-slate-400 uppercase tracking-wider block">
+              <span className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider block">
                 Brochures
               </span>
-              <span className="text-xl sm:text-2xl font-serif font-normal text-[#122417] dark:text-white leading-tight block mt-0.5">
-                {brochuresCount} <span className="text-xs font-sans text-[#485e4d] dark:text-slate-400">Documents</span>
+              <span style={SERIF} className="text-2xl sm:text-3xl font-normal text-slate-900 leading-tight block mt-0.5">
+                {brochuresCount} <span className="text-xs font-sans text-slate-500 font-semibold">Documents</span>
               </span>
             </div>
           </div>
 
-          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#020617]/40 dark:backdrop-blur-xl border border-[#e2ece3] dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-[#eef5ee] dark:bg-white/10 border border-[#d6e6d8] dark:border-white/10 flex items-center justify-center text-[#2d5a3c] dark:text-emerald-400 shrink-0">
+          <div className="p-5 sm:p-6 rounded-[2rem] bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_10px_30px_rgba(0,154,177,0.05)] flex items-center gap-4 hover:shadow-[0_15px_40px_rgba(0,154,177,0.1)] transition-all">
+            <div className="w-12 h-12 rounded-2xl bg-[#009ab1]/10 border border-[#009ab1]/20 flex items-center justify-center text-[#009ab1] shrink-0">
               <Layers size={22} />
             </div>
             <div>
-              <span className="text-[10.5px] font-bold text-[#627766] dark:text-slate-400 uppercase tracking-wider block">
+              <span className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider block">
                 Courseware &amp; Kits
               </span>
-              <span className="text-xl sm:text-2xl font-serif font-normal text-[#122417] dark:text-white leading-tight block mt-0.5">
-                {toolkitsCount} <span className="text-xs font-sans text-[#485e4d] dark:text-slate-400">Toolkits</span>
+              <span style={SERIF} className="text-2xl sm:text-3xl font-normal text-slate-900 leading-tight block mt-0.5">
+                {toolkitsCount} <span className="text-xs font-sans text-slate-500 font-semibold">Toolkits</span>
               </span>
             </div>
           </div>
 
-          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#020617]/40 dark:backdrop-blur-xl border border-[#e2ece3] dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-[#eef5ee] dark:bg-white/10 border border-[#d6e6d8] dark:border-white/10 flex items-center justify-center text-[#2d5a3c] dark:text-emerald-400 shrink-0">
+          <div className="p-5 sm:p-6 rounded-[2rem] bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_10px_30px_rgba(0,154,177,0.05)] flex items-center gap-4 hover:shadow-[0_15px_40px_rgba(0,154,177,0.1)] transition-all">
+            <div className="w-12 h-12 rounded-2xl bg-[#009ab1]/10 border border-[#009ab1]/20 flex items-center justify-center text-[#009ab1] shrink-0">
               <HardDrive size={22} />
             </div>
             <div>
-              <span className="text-[10.5px] font-bold text-[#627766] dark:text-slate-400 uppercase tracking-wider block">
+              <span className="text-[10.5px] font-bold text-slate-500 uppercase tracking-wider block">
                 Guides &amp; Reports
               </span>
-              <span className="text-xl sm:text-2xl font-serif font-normal text-[#122417] dark:text-white leading-tight block mt-0.5">
-                {guidesCount} <span className="text-xs font-sans text-[#485e4d] dark:text-slate-400">Handbooks</span>
+              <span style={SERIF} className="text-2xl sm:text-3xl font-normal text-slate-900 leading-tight block mt-0.5">
+                {guidesCount} <span className="text-xs font-sans text-slate-500 font-semibold">Handbooks</span>
               </span>
             </div>
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* 3. SEARCH & CATEGORY FILTER BAR */}
+        {/* 3. SEARCH & CATEGORY FILTER DOCK */}
         {/* ========================================================================= */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#020617]/40 dark:backdrop-blur-xl border border-[#e2ece3] dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        <div className="p-4 sm:p-5 rounded-[2rem] bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_10px_30px_rgba(0,154,177,0.05)] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
           {/* Search Input */}
           <div className="relative flex-1 max-w-md">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#738a79] dark:text-slate-400" />
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#009ab1]" />
             <input
               type="text"
               placeholder="Search resources by title, format, or description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#f8faf8] dark:bg-white/5 border border-[#d8e5da] dark:border-white/10 text-xs font-medium text-[#19241c] dark:text-white placeholder:text-[#889b8d] dark:placeholder:text-slate-500 focus:outline-none focus:border-[#2d5a3c] dark:focus:border-emerald-400 transition-all"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/90 border border-slate-200/80 text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#009ab1] focus:ring-2 focus:ring-[#009ab1]/20 transition-all"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#889b8d] dark:text-slate-500 hover:text-[#19241c] dark:hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
               >
                 <X size={14} />
               </button>
@@ -447,10 +503,11 @@ export default function AdminResourcesPage() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${selectedCategory === cat
-                      ? 'bg-[#1b3726] dark:bg-emerald-600 text-white shadow-xs'
-                      : 'bg-[#f0f5f0] dark:bg-white/10 text-[#3f5444] dark:text-slate-300 hover:bg-[#e4ece4] dark:hover:bg-white/20 hover:text-[#19241c] dark:hover:text-white'
-                    }`}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                    selectedCategory === cat
+                      ? 'bg-gradient-to-r from-[#009ab1] to-[#14b4cb] text-white shadow-[0_4px_15px_rgba(0,154,177,0.3)]'
+                      : 'bg-white/90 hover:bg-[#009ab1]/10 text-slate-700 hover:text-[#009ab1] border border-slate-200/80'
+                  }`}
                 >
                   {cat}
                 </button>
@@ -464,10 +521,11 @@ export default function AdminResourcesPage() {
                 else if (sortOrder === 'az') setSortOrder('za');
                 else setSortOrder('default');
               }}
-              className={`p-2 rounded-xl border border-[#d8e5da] dark:border-white/10 transition-colors shadow-xs cursor-pointer ${sortOrder !== 'default'
-                  ? 'bg-[#1b3726] dark:bg-emerald-600 text-white'
-                  : 'bg-white dark:bg-white/5 text-[#4d6052] dark:text-slate-300 hover:bg-slate-50'
-                }`}
+              className={`p-2.5 rounded-xl border border-slate-200/80 transition-all shadow-xs cursor-pointer ${
+                sortOrder !== 'default'
+                  ? 'bg-gradient-to-r from-[#009ab1] to-[#14b4cb] text-white'
+                  : 'bg-white/90 text-slate-600 hover:bg-[#009ab1]/10 hover:text-[#009ab1]'
+              }`}
               title={`Sort: ${sortOrder === 'az' ? 'A to Z' : sortOrder === 'za' ? 'Z to A' : 'Default'}`}
             >
               <SlidersHorizontal size={15} />
@@ -476,20 +534,20 @@ export default function AdminResourcesPage() {
         </div>
 
         {/* ========================================================================= */}
-        {/* 4. RESOURCE ITEMS LIST / CARDS (MATCHING PUBLIC PAGE AESTHETIC) */}
+        {/* 4. RESOURCE ITEMS LIST / CARDS */}
         {/* ========================================================================= */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
-            <Loader2 className="animate-spin text-[#2d5a3c] dark:text-emerald-400" size={28} />
-            <span className="text-xs font-semibold text-[#667d6c] dark:text-slate-400">
-              Loading database repository...
+            <Loader2 className="animate-spin text-[#009ab1]" size={32} />
+            <span className="text-xs font-semibold text-slate-500">
+              Loading academic repository...
             </span>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="p-12 rounded-3xl bg-white dark:bg-[#020617]/40 dark:backdrop-blur-xl border border-[#e2ece3] dark:border-white/10 text-center space-y-3">
-            <BookOpen size={36} className="mx-auto text-[#94a899]" />
-            <h3 className="text-base font-bold text-[#142618] dark:text-white">No Academic Resources Found</h3>
-            <p className="text-xs text-[#637667] dark:text-slate-400 max-w-sm mx-auto">
+          <div className="p-14 rounded-[2.5rem] bg-white/80 backdrop-blur-xl border border-white/90 text-center space-y-4 shadow-sm">
+            <BookOpen size={40} className="mx-auto text-slate-300" />
+            <h3 style={SERIF} className="text-xl font-normal text-slate-900">No Academic Resources Found</h3>
+            <p className="text-xs text-slate-500 max-w-sm mx-auto">
               {searchQuery || selectedCategory !== 'All'
                 ? 'No resources match your current search or category filter. Try resetting filters.'
                 : 'Your resources repository is currently empty. Click "Upload Resource" above to add the first document.'}
@@ -500,7 +558,7 @@ export default function AdminResourcesPage() {
                   setSearchQuery('');
                   setSelectedCategory('All');
                 }}
-                className="mt-2 text-xs font-bold text-[#2d5a3c] dark:text-emerald-400 hover:underline cursor-pointer"
+                className="mt-2 text-xs font-bold text-[#009ab1] hover:underline cursor-pointer"
               >
                 Reset Filters
               </button>
@@ -515,13 +573,13 @@ export default function AdminResourcesPage() {
               return (
                 <div
                   key={item.id}
-                  className="rounded-2xl sm:rounded-[1.6rem] bg-white/85 dark:bg-[#0c2217]/35 backdrop-blur-2xl border border-white/90 dark:border-emerald-500/20 p-4 sm:p-5 shadow-[0_8px_32px_rgba(0,0,0,0.03)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:shadow-[0_16px_40px_rgba(45,90,60,0.1)] dark:hover:shadow-[0_16px_40px_rgba(16,185,129,0.12)] hover:-translate-y-1 hover:border-[#2d5a3c]/40 dark:hover:border-emerald-400/40 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
+                  className="rounded-[2rem] bg-white/85 backdrop-blur-2xl border border-white/90 p-5 sm:p-6 shadow-[0_10px_35px_rgba(0,154,177,0.06)] hover:shadow-[0_20px_50px_rgba(0,154,177,0.12)] hover:-translate-y-1 hover:border-[#009ab1]/40 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
                 >
                   {/* Subtle glass reflection highlight on top edge */}
-                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 dark:via-emerald-400/30 to-transparent pointer-events-none" />
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#009ab1]/30 to-transparent pointer-events-none" />
 
                   {/* Horizontal split inside card */}
-                  <div className="grid grid-cols-12 gap-3.5 sm:gap-4 items-stretch relative z-10">
+                  <div className="grid grid-cols-12 gap-4 items-stretch relative z-10">
                     {/* Left Column: Publication Cover */}
                     <div className="col-span-4 sm:col-span-4 flex items-center justify-center">
                       <div className="w-full max-w-[115px] sm:max-w-[125px] aspect-[1/1.38]">
@@ -545,49 +603,49 @@ export default function AdminResourcesPage() {
                         {/* Category Badge & Size */}
                         <div className="flex items-center justify-between gap-1 flex-wrap mb-1.5">
                           <span
-                            className={`px-2 py-0.5 rounded text-[9.5px] font-bold uppercase tracking-wider ${themeConfig.badgeStyle}`}
+                            className={`px-2.5 py-0.5 rounded-full text-[9.5px] font-bold uppercase tracking-wider ${themeConfig.badgeStyle}`}
                           >
                             {item.category || 'General'}
                           </span>
-                          <span className="text-[10px] font-medium text-[#718476] dark:text-slate-400">
+                          <span className="text-[10px] font-mono text-slate-500">
                             {item.type || 'PDF'} • {item.size || 'N/A'}
                           </span>
                         </div>
 
                         {/* Title */}
-                        <h3 className="text-[13.5px] sm:text-[14px] font-serif font-bold text-[#14261a] dark:text-white leading-[1.3] group-hover:text-[#2d5a3c] dark:group-hover:text-emerald-300 transition-colors line-clamp-2">
+                        <h3 style={SERIF} className="text-[15px] sm:text-[16px] font-bold text-slate-900 leading-[1.3] group-hover:text-[#009ab1] transition-colors line-clamp-2">
                           {item.title}
                         </h3>
 
                         {/* Description */}
-                        <p className="text-[11px] sm:text-[11.5px] text-[#4d6052] dark:text-slate-300 leading-relaxed font-normal line-clamp-2 mt-1">
+                        <p className="text-[11.5px] text-slate-600 leading-relaxed font-normal line-clamp-2 mt-1">
                           {item.desc || 'No detailed description provided.'}
                         </p>
                       </div>
 
                       {/* PDF Attachment Status Pill */}
                       {hasPdf ? (
-                        <div className="flex items-center justify-between p-1.5 px-2.5 rounded-lg bg-emerald-50/90 dark:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-500/20 text-[10px] font-bold text-emerald-900 dark:text-emerald-300">
+                        <div className="flex items-center justify-between p-2 px-3 rounded-xl bg-[#009ab1]/10 border border-[#009ab1]/25 text-[10px] font-bold text-[#009ab1]">
                           <div className="flex items-center gap-1.5 min-w-0">
-                            <CheckCircle2 size={12} className="text-emerald-700 dark:text-emerald-400 shrink-0" />
-                            <span className="truncate">PDF Attached ({item.size || 'PDF'})</span>
+                            <CheckCircle2 size={13} className="text-[#009ab1] shrink-0" />
+                            <span className="truncate">Attached ({item.size || 'PDF'})</span>
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
                             <a
                               href={`/api/resources/download?id=${item.id}&mode=preview`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[9.5px] text-emerald-800 dark:text-emerald-300 hover:text-emerald-950 dark:hover:text-white font-bold flex items-center gap-1 hover:underline"
+                              className="text-[10px] text-[#009ab1] hover:text-[#00869c] font-bold flex items-center gap-1 hover:underline"
                               title="Preview document in browser viewer"
                             >
                               <Eye size={11} />
                               <span>Preview</span>
                             </a>
-                            <span className="text-emerald-400 dark:text-emerald-700">•</span>
+                            <span className="text-slate-300">•</span>
                             <a
                               href={`/api/resources/download?id=${item.id}&mode=download`}
                               download
-                              className="text-[9.5px] text-emerald-800 dark:text-emerald-300 hover:text-emerald-950 dark:hover:text-white font-bold flex items-center gap-1 hover:underline"
+                              className="text-[10px] text-[#009ab1] hover:text-[#00869c] font-bold flex items-center gap-1 hover:underline"
                               title="Download document file"
                             >
                               <Download size={11} />
@@ -596,14 +654,14 @@ export default function AdminResourcesPage() {
                           </div>
                         </div>
                       ) : (
-                        <div className="flex items-center justify-between p-1.5 px-2.5 rounded-lg bg-amber-50/90 dark:bg-amber-950/50 border border-amber-200/80 dark:border-amber-500/20 text-[10px] font-bold text-amber-900 dark:text-amber-300">
+                        <div className="flex items-center justify-between p-2 px-3 rounded-xl bg-amber-50/90 border border-amber-200/80 text-[10px] font-bold text-amber-900">
                           <div className="flex items-center gap-1.5">
-                            <AlertCircle size={12} className="text-amber-700 dark:text-amber-400 shrink-0" />
+                            <AlertCircle size={13} className="text-amber-600 shrink-0" />
                             <span>No PDF Uploaded</span>
                           </div>
                           <button
                             onClick={() => handleOpenEdit(item)}
-                            className="text-[9.5px] text-amber-800 dark:text-amber-300 underline hover:text-amber-950 font-bold cursor-pointer"
+                            className="text-[10px] text-amber-800 underline hover:text-amber-950 font-bold cursor-pointer"
                           >
                             Attach PDF
                           </button>
@@ -613,16 +671,16 @@ export default function AdminResourcesPage() {
                   </div>
 
                   {/* Bottom Card Footer: Date & Admin Actions */}
-                  <div className="pt-3 mt-3 border-t border-[#f0f4ef] dark:border-white/10 flex items-center justify-between relative z-10">
-                    <div className="flex items-center gap-1 text-[10.5px] text-[#718476] dark:text-slate-400 font-medium">
-                      <Calendar size={12} className="text-[#2d5a3c] dark:text-emerald-400" />
+                  <div className="pt-3.5 mt-3.5 border-t border-slate-100 flex items-center justify-between relative z-10">
+                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
+                      <Calendar size={13} className="text-[#009ab1]" />
                       <span>{item.date || 'N/A'}</span>
                     </div>
 
                     <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => handleOpenEdit(item)}
-                        className="px-3 py-1.5 rounded-full bg-[#f4f7f2] dark:bg-white/10 hover:bg-[#1b3726] hover:text-white dark:hover:bg-emerald-600 text-[#1b3726] dark:text-slate-200 text-[11px] font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+                        className="px-3.5 py-1.5 rounded-full bg-white hover:bg-[#009ab1] hover:text-white text-slate-700 text-[11px] font-bold transition-all shadow-2xs border border-slate-200/80 flex items-center gap-1.5 cursor-pointer"
                         title="Edit resource metadata & design template"
                       >
                         <Edit3 size={11} />
@@ -631,10 +689,10 @@ export default function AdminResourcesPage() {
 
                       <button
                         onClick={() => setDeleteConfirmId(item.id)}
-                        className="p-1.5 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                         title="Delete resource"
                       >
-                        <Trash2 size={13} />
+                        <Trash2 size={14} />
                       </button>
                     </div>
                   </div>
@@ -648,34 +706,34 @@ export default function AdminResourcesPage() {
         {/* 5. ADD / EDIT RESOURCE MODAL WITH LIVE PREVIEW & COMPLETE CUSTOMIZATION */}
         {/* ========================================================================= */}
         {showModal && (
-          <div className="fixed inset-0 z-50 bg-[#07170e]/60 dark:bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
-            <div className="w-full max-w-5xl bg-white dark:bg-[#071d13] rounded-3xl border border-[#e2ece3] dark:border-emerald-500/30 shadow-2xl overflow-hidden my-6">
+          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+            <div className="w-full max-w-5xl bg-white/95 backdrop-blur-2xl rounded-[2.5rem] border border-white/90 shadow-[0_25px_70px_rgba(0,0,0,0.25)] overflow-hidden my-6">
               {/* Modal Top Header */}
-              <div className="p-5 sm:p-6 border-b border-[#e8f0e9] dark:border-white/10 flex items-center justify-between bg-[#f8faf8] dark:bg-white/5">
+              <div className="p-6 sm:p-7 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-white via-white/80 to-[#009ab1]/5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#eef5ee] dark:bg-emerald-950/60 border border-[#d6e6d8] dark:border-emerald-500/30 flex items-center justify-center text-[#2d5a3c] dark:text-emerald-400">
-                    <BookOpen size={20} />
+                  <div className="w-11 h-11 rounded-2xl bg-[#009ab1]/10 border border-[#009ab1]/25 flex items-center justify-center text-[#009ab1]">
+                    <BookOpen size={22} />
                   </div>
                   <div>
-                    <h3 className="font-serif text-lg sm:text-xl font-bold text-[#142618] dark:text-white">
+                    <h3 style={SERIF} className="text-xl sm:text-2xl font-bold text-slate-900">
                       {editingId ? 'Edit Academic Resource' : 'Publish Academic Resource'}
                     </h3>
-                    <span className="text-[11px] text-[#637667] dark:text-slate-400">
+                    <span className="text-xs text-slate-500">
                       Configure cover typography, custom image, palette, document metadata, and attach download PDF.
                     </span>
                   </div>
                 </div>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="p-2 rounded-xl text-[#718575] hover:text-[#142618] dark:hover:text-white hover:bg-[#ebf2ec] dark:hover:bg-white/10 transition-colors cursor-pointer"
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
                 >
-                  <X size={18} />
+                  <X size={20} />
                 </button>
               </div>
 
               {/* Modal Body: Split Grid (Left: Live Preview, Right: Edit Form) */}
-              <form onSubmit={handleSaveResource} className="p-5 sm:p-6 space-y-6">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <form onSubmit={handleSaveResource} className="p-6 sm:p-8 space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
                   {/* --------------------------------------------------------------- */}
                   {/* LEFT COLUMN: LIVE CARD & COVER PREVIEW */}
@@ -683,19 +741,19 @@ export default function AdminResourcesPage() {
                   <div className="lg:col-span-5 space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Eye size={14} className="text-[#2d5a3c] dark:text-emerald-400" />
-                        <span className="text-xs font-bold uppercase tracking-wider text-[#3d5442] dark:text-slate-300">
+                        <Eye size={15} className="text-[#009ab1]" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
                           Live Portal Preview
                         </span>
                       </div>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#eef5ee] dark:bg-emerald-950/60 text-[#2d5a3c] dark:text-emerald-300 border border-[#d6e6d8] dark:border-emerald-500/20">
+                      <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#009ab1]/10 text-[#009ab1] border border-[#009ab1]/25">
                         {formData.coverType.toUpperCase()} • {formData.themeColor.toUpperCase()}
                       </span>
                     </div>
 
                     {/* Preview Card Shell (Identical to public site) */}
-                    <div className="rounded-2xl bg-white/90 dark:bg-[#0c2217]/50 backdrop-blur-2xl border border-[#d6e6d8] dark:border-emerald-500/30 p-4 shadow-md space-y-3">
-                      <div className="grid grid-cols-12 gap-3.5 items-stretch">
+                    <div className="rounded-[2rem] bg-white/95 backdrop-blur-2xl border border-slate-200/80 p-5 shadow-lg space-y-3">
+                      <div className="grid grid-cols-12 gap-4 items-stretch">
                         {/* Cover Preview */}
                         <div className="col-span-5 flex items-center justify-center">
                           <div className="w-full max-w-[125px] aspect-[1/1.38]">
@@ -718,33 +776,32 @@ export default function AdminResourcesPage() {
                           <div>
                             <div className="flex items-center justify-between gap-1 flex-wrap mb-1">
                               <span
-                                className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${(THEME_PRESETS[formData.themeColor] || THEME_PRESETS.emerald).badgeStyle
-                                  }`}
+                                className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${(THEME_PRESETS[formData.themeColor] || THEME_PRESETS.emerald).badgeStyle}`}
                               >
                                 {formData.category}
                               </span>
-                              <span className="text-[9.5px] font-medium text-[#718476] dark:text-slate-400">
+                              <span className="text-[9.5px] font-mono text-slate-500">
                                 {formData.type} • {formData.size}
                               </span>
                             </div>
 
-                            <h4 className="text-[13px] font-serif font-bold text-[#14261a] dark:text-white leading-[1.3] line-clamp-2">
+                            <h4 style={SERIF} className="text-[14px] font-bold text-slate-900 leading-[1.3] line-clamp-2">
                               {formData.title || 'Resource Title Preview...'}
                             </h4>
 
-                            <p className="text-[11px] text-[#4d6052] dark:text-slate-300 leading-relaxed line-clamp-3 mt-1 font-normal">
+                            <p className="text-[11px] text-slate-600 leading-relaxed line-clamp-3 mt-1 font-normal">
                               {formData.desc || 'Document synopsis or key topics outline will be rendered here.'}
                             </p>
                           </div>
 
-                          <div className="flex items-center justify-between text-[10px] text-[#718476] dark:text-slate-400 pt-2 border-t border-[#f0f4ef] dark:border-white/10">
+                          <div className="flex items-center justify-between text-[10px] text-slate-500 pt-2 border-t border-slate-100">
                             <span className="flex items-center gap-1 font-medium">
-                              <Calendar size={11} className="text-[#2d5a3c] dark:text-emerald-400" />
+                              <Calendar size={11} className="text-[#009ab1]" />
                               {formData.date || 'March 2025'}
                             </span>
-                            <span className="px-2.5 py-0.5 rounded-full bg-[#122b1c] text-white dark:bg-emerald-600 text-[9.5px] font-bold flex items-center gap-1">
+                            <span className="px-3 py-1 rounded-full bg-gradient-to-r from-[#009ab1] to-[#14b4cb] text-white text-[9.5px] font-bold flex items-center gap-1 shadow-xs">
                               <span>Download</span>
-                              <Download size={9} />
+                              <Download size={10} />
                             </span>
                           </div>
                         </div>
@@ -752,8 +809,8 @@ export default function AdminResourcesPage() {
                     </div>
 
                     {/* Helpful Design Tip */}
-                    <div className="p-3 rounded-xl bg-[#f4f7f2] dark:bg-white/5 border border-[#e2ece3] dark:border-white/10 text-[11px] text-[#556b59] dark:text-slate-400 leading-relaxed">
-                      <strong className="text-[#1b3726] dark:text-emerald-300 block mb-0.5">
+                    <div className="p-4 rounded-2xl bg-[#009ab1]/5 border border-[#009ab1]/20 text-[11px] text-slate-600 leading-relaxed">
+                      <strong className="text-[#009ab1] block mb-1">
                         Real-time Synchronized:
                       </strong>
                       Changes made to the cover title, subtitle, badge, template, and colors update live here and immediately sync with the public downloads catalog.
@@ -763,15 +820,15 @@ export default function AdminResourcesPage() {
                   {/* --------------------------------------------------------------- */}
                   {/* RIGHT COLUMN: CUSTOMIZATION & FORM INPUTS */}
                   {/* --------------------------------------------------------------- */}
-                  <div className="lg:col-span-7 space-y-4 max-h-[64vh] overflow-y-auto pr-1 no-scrollbar">
+                  <div className="lg:col-span-7 space-y-5 max-h-[64vh] overflow-y-auto pr-1 no-scrollbar">
 
                     {/* A. TEMPLATE PICKER */}
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-[#1c2e21] dark:text-white flex items-center gap-1.5">
-                        <Sparkles size={13} className="text-[#2d5a3c] dark:text-emerald-400" />
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <Sparkles size={14} className="text-[#009ab1]" />
                         <span>1. Publication Cover Template</span>
                       </label>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                         {COVER_TEMPLATES.map((tmpl) => {
                           const isSelected = formData.coverType === tmpl.id;
                           return (
@@ -785,20 +842,21 @@ export default function AdminResourcesPage() {
                                   customBadge: prev.customBadge || tmpl.defaultBadge
                                 }))
                               }
-                              className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 ${isSelected
-                                  ? 'bg-[#eef5ee] dark:bg-emerald-950/60 border-[#2d5a3c] dark:border-emerald-400 ring-2 ring-[#2d5a3c]/20 shadow-xs'
-                                  : 'bg-[#fbfdfb] dark:bg-white/5 border-[#d8e5da] dark:border-white/10 hover:border-[#b8cdbc] hover:bg-[#f6f9f6]'
-                                }`}
+                              className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 ${
+                                isSelected
+                                  ? 'bg-[#009ab1]/10 border-[#009ab1] ring-2 ring-[#009ab1]/20 shadow-xs'
+                                  : 'bg-white border-slate-200/80 hover:border-[#009ab1]/40 hover:bg-[#009ab1]/5'
+                              }`}
                             >
                               <div className="flex items-center justify-between">
-                                <span className="text-xs font-bold text-[#142618] dark:text-white">
+                                <span className="text-xs font-bold text-slate-900">
                                   {tmpl.name}
                                 </span>
                                 {isSelected && (
-                                  <Check size={14} className="text-[#2d5a3c] dark:text-emerald-400" />
+                                  <Check size={14} className="text-[#009ab1]" />
                                 )}
                               </div>
-                              <span className="text-[10px] text-[#637767] dark:text-slate-400 leading-snug line-clamp-2">
+                              <span className="text-[10px] text-slate-500 leading-snug line-clamp-2">
                                 {tmpl.desc}
                               </span>
                             </button>
@@ -808,9 +866,9 @@ export default function AdminResourcesPage() {
                     </div>
 
                     {/* B. THEME COLOR SELECTION */}
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-[#1c2e21] dark:text-white flex items-center gap-1.5">
-                        <Palette size={13} className="text-[#2d5a3c] dark:text-emerald-400" />
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <Palette size={14} className="text-[#009ab1]" />
                         <span>2. Color Palette &amp; Accent</span>
                       </label>
                       <div className="flex items-center gap-2 flex-wrap">
@@ -821,16 +879,17 @@ export default function AdminResourcesPage() {
                               key={t.id}
                               type="button"
                               onClick={() => setFormData((prev) => ({ ...prev, themeColor: t.id }))}
-                              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-medium transition-all cursor-pointer ${isSelected
-                                  ? 'bg-white dark:bg-white/15 border-slate-900 dark:border-white shadow-xs ring-2 ring-slate-900/10 dark:ring-white/20'
-                                  : 'bg-[#fbfdfb] dark:bg-white/5 border-[#d8e5da] dark:border-white/10 hover:bg-[#f3f7f3]'
-                                }`}
+                              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-medium transition-all cursor-pointer ${
+                                isSelected
+                                  ? 'bg-white border-[#009ab1] shadow-xs ring-2 ring-[#009ab1]/25 text-[#009ab1]'
+                                  : 'bg-white border-slate-200 hover:bg-slate-50 text-slate-700'
+                              }`}
                             >
                               <span
                                 className="w-3.5 h-3.5 rounded-full shadow-xs shrink-0"
                                 style={{ backgroundColor: t.hex }}
                               />
-                              <span className="text-[11px] font-semibold text-[#19241c] dark:text-white">
+                              <span className="text-[11px] font-semibold">
                                 {t.name}
                               </span>
                             </button>
@@ -840,15 +899,15 @@ export default function AdminResourcesPage() {
                     </div>
 
                     {/* C. COVER TYPOGRAPHY (TITLE, SUBTITLE, DATE & BADGE) */}
-                    <div className="p-3.5 rounded-2xl bg-[#fbfdfb] dark:bg-white/5 border border-[#d8e5da] dark:border-white/10 space-y-3">
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#142618] dark:text-white pb-1 border-b border-[#edf3ee] dark:border-white/10">
-                        <Type size={14} className="text-[#2d5a3c] dark:text-emerald-400" />
+                    <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-3">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 pb-1.5 border-b border-slate-100">
+                        <Type size={14} className="text-[#009ab1]" />
                         <span>3. Cover Typography &amp; Badge</span>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#2d4032] dark:text-slate-300 block">
+                          <label className="text-[11px] font-semibold text-slate-600 block">
                             Cover Main Title (Line 1)
                           </label>
                           <input
@@ -856,12 +915,12 @@ export default function AdminResourcesPage() {
                             placeholder="e.g. Annual, AI, STEM, Learning"
                             value={formData.coverTitle}
                             onChange={(e) => setFormData({ ...formData, coverTitle: e.target.value })}
-                            className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#071d13] border border-[#d5e2d6] dark:border-white/10 text-xs font-medium text-[#19241c] dark:text-white focus:outline-none focus:border-[#2d5a3c]"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-[#009ab1]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#2d4032] dark:text-slate-300 block">
+                          <label className="text-[11px] font-semibold text-slate-600 block">
                             Cover Subtitle (Line 2)
                           </label>
                           <input
@@ -869,12 +928,12 @@ export default function AdminResourcesPage() {
                             placeholder="e.g. Report, in Education, Activity Toolkit"
                             value={formData.coverSubtitle}
                             onChange={(e) => setFormData({ ...formData, coverSubtitle: e.target.value })}
-                            className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#071d13] border border-[#d5e2d6] dark:border-white/10 text-xs font-medium text-[#19241c] dark:text-white focus:outline-none focus:border-[#2d5a3c]"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-[#009ab1]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#2d4032] dark:text-slate-300 block">
+                          <label className="text-[11px] font-semibold text-slate-600 block">
                             Cover Date / Academic Year
                           </label>
                           <input
@@ -882,12 +941,12 @@ export default function AdminResourcesPage() {
                             placeholder="e.g. 2024 - 2025, Semester II, March 2025"
                             value={formData.coverDate}
                             onChange={(e) => setFormData({ ...formData, coverDate: e.target.value })}
-                            className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#071d13] border border-[#d5e2d6] dark:border-white/10 text-xs font-medium text-[#19241c] dark:text-white focus:outline-none focus:border-[#2d5a3c]"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-[#009ab1]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#2d4032] dark:text-slate-300 block">
+                          <label className="text-[11px] font-semibold text-slate-600 block">
                             Cover Badge Text
                           </label>
                           <input
@@ -895,21 +954,21 @@ export default function AdminResourcesPage() {
                             placeholder="e.g. LEnSE, SIET, FYUGP, BROCHURE"
                             value={formData.customBadge}
                             onChange={(e) => setFormData({ ...formData, customBadge: e.target.value })}
-                            className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#071d13] border border-[#d5e2d6] dark:border-white/10 text-xs font-medium text-[#19241c] dark:text-white focus:outline-none focus:border-[#2d5a3c]"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-[#009ab1]"
                           />
                         </div>
                       </div>
                     </div>
 
                     {/* D. COVER IMAGE / VISUAL ASSET */}
-                    <div className="p-3.5 rounded-2xl bg-[#fbfdfb] dark:bg-white/5 border border-[#d8e5da] dark:border-white/10 space-y-3">
-                      <div className="flex items-center justify-between pb-1 border-b border-[#edf3ee] dark:border-white/10">
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#142618] dark:text-white">
-                          <ImageIcon size={14} className="text-[#2d5a3c] dark:text-emerald-400" />
+                    <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-3">
+                      <div className="flex items-center justify-between pb-1.5 border-b border-slate-100">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                          <ImageIcon size={14} className="text-[#009ab1]" />
                           <span>4. Cover Photo &amp; Visual Asset</span>
                         </div>
                         {(formData.coverType === 'brochure' || formData.coverType === 'photo' || formData.coverType === 'image') && (
-                          <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-700">
+                          <span className="text-[10px] font-bold text-[#009ab1] bg-[#009ab1]/10 px-2 py-0.5 rounded-full border border-[#009ab1]/25">
                             {formData.coverType === 'brochure' ? 'Active in Brochure Arch Window' : 'Active in Full Photo Cover'}
                           </span>
                         )}
@@ -925,15 +984,15 @@ export default function AdminResourcesPage() {
                     </div>
 
                     {/* E. DOCUMENT METADATA */}
-                    <div className="p-3.5 rounded-2xl bg-[#fbfdfb] dark:bg-white/5 border border-[#d8e5da] dark:border-white/10 space-y-3">
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#142618] dark:text-white pb-1 border-b border-[#edf3ee] dark:border-white/10">
-                        <FileText size={14} className="text-[#2d5a3c] dark:text-emerald-400" />
+                    <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-3">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 pb-1.5 border-b border-slate-100">
+                        <FileText size={14} className="text-[#009ab1]" />
                         <span>5. Catalog Document Metadata</span>
                       </div>
 
                       {/* Full Document Title */}
                       <div className="space-y-1">
-                        <label className="text-[11px] font-semibold text-[#1c2e21] dark:text-white block">
+                        <label className="text-[11px] font-semibold text-slate-700 block">
                           Catalog Document Title *
                         </label>
                         <input
@@ -942,20 +1001,20 @@ export default function AdminResourcesPage() {
                           placeholder="e.g. 4th SIET International Conference Official Brochure"
                           value={formData.title}
                           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                          className="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-[#071d13] border border-[#d5e2d6] dark:border-white/10 text-xs font-medium text-[#19241c] dark:text-white focus:outline-none focus:border-[#2d5a3c]"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-[#009ab1]"
                         />
                       </div>
 
                       {/* Category & Format Type */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#1c2e21] dark:text-white block">
+                          <label className="text-[11px] font-semibold text-slate-700 block">
                             Category *
                           </label>
                           <select
                             value={formData.category}
                             onChange={(e) => handleCategoryChange(e.target.value)}
-                            className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#071d13] border border-[#d5e2d6] dark:border-white/10 text-xs font-medium text-[#19241c] dark:text-white focus:outline-none focus:border-[#2d5a3c]"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-[#009ab1]"
                           >
                             {formCategories.map((c) => (
                               <option key={c} value={c}>
@@ -966,7 +1025,7 @@ export default function AdminResourcesPage() {
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#1c2e21] dark:text-white block">
+                          <label className="text-[11px] font-semibold text-slate-700 block">
                             File Type / Format *
                           </label>
                           <input
@@ -974,7 +1033,7 @@ export default function AdminResourcesPage() {
                             placeholder="e.g. PDF, PDF / Interactive, ZIP"
                             value={formData.type}
                             onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                            className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#071d13] border border-[#d5e2d6] dark:border-white/10 text-xs font-medium text-[#19241c] dark:text-white focus:outline-none focus:border-[#2d5a3c]"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-[#009ab1]"
                           />
                         </div>
                       </div>
@@ -982,7 +1041,7 @@ export default function AdminResourcesPage() {
                       {/* Publication Date & Auto-detected File Size */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#1c2e21] dark:text-white block">
+                          <label className="text-[11px] font-semibold text-slate-700 block">
                             Publication / Term Date
                           </label>
                           <input
@@ -990,23 +1049,23 @@ export default function AdminResourcesPage() {
                             placeholder="e.g. March 2025, Semester II 2025"
                             value={formData.date}
                             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                            className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#071d13] border border-[#d5e2d6] dark:border-white/10 text-xs font-medium text-[#19241c] dark:text-white focus:outline-none focus:border-[#2d5a3c]"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-[#009ab1]"
                           />
                         </div>
 
                         {/* File Size: Auto-detected from uploaded PDF */}
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <label className="text-[11px] font-semibold text-[#1c2e21] dark:text-white block">
+                            <label className="text-[11px] font-semibold text-slate-700 block">
                               Detected File Size
                             </label>
-                            <span className="text-[9.5px] text-emerald-700 dark:text-emerald-400 font-medium">
+                            <span className="text-[9.5px] text-[#009ab1] font-semibold">
                               Auto from PDF
                             </span>
                           </div>
-                          <div className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-white/5 border border-[#d5e2d6] dark:border-white/10 text-xs font-mono text-[#19241c] dark:text-slate-200 flex items-center justify-between">
+                          <div className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-700 flex items-center justify-between">
                             <span className="truncate">{formData.size || 'Auto (upload PDF)'}</span>
-                            <span className="text-[9.5px] px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-sans font-bold shrink-0">
+                            <span className="text-[9.5px] px-2 py-0.5 rounded-full bg-[#009ab1]/10 text-[#009ab1] font-sans font-bold shrink-0">
                               Auto
                             </span>
                           </div>
@@ -1015,7 +1074,7 @@ export default function AdminResourcesPage() {
 
                       {/* Description */}
                       <div className="space-y-1">
-                        <label className="text-[11px] font-semibold text-[#1c2e21] dark:text-white block">
+                        <label className="text-[11px] font-semibold text-slate-700 block">
                           Description / Synopsis
                         </label>
                         <textarea
@@ -1023,12 +1082,12 @@ export default function AdminResourcesPage() {
                           placeholder="Outline key topics covered, intended audience, authors or mentors..."
                           value={formData.desc}
                           onChange={(e) => setFormData({ ...formData, desc: e.target.value })}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#071d13] border border-[#d5e2d6] dark:border-white/10 text-xs font-medium text-[#19241c] dark:text-white focus:outline-none focus:border-[#2d5a3c]"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-[#009ab1]"
                         />
                       </div>
                     </div>
 
-                    {/* F. PDF DOCUMENT ATTACHMENT (10MB MAX, AUTO-SIZE DETECTION) */}
+                    {/* F. PDF DOCUMENT ATTACHMENT */}
                     <div className="pt-1">
                       <PdfUploader
                         value={formData.downloadUrl}
@@ -1053,11 +1112,11 @@ export default function AdminResourcesPage() {
                 </div>
 
                 {/* Modal Action Buttons Footer */}
-                <div className="pt-4 border-t border-[#e8f0e9] dark:border-white/10 flex items-center justify-end gap-3">
+                <div className="pt-5 border-t border-slate-100 flex items-center justify-end gap-3">
                   <button
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="px-4 py-2.5 rounded-xl border border-[#d8e5da] dark:border-white/10 text-xs font-bold text-[#4e6453] dark:text-slate-300 hover:bg-[#f1f6f1] dark:hover:bg-white/10 transition-colors cursor-pointer"
+                    className="px-5 py-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -1065,7 +1124,7 @@ export default function AdminResourcesPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="px-6 py-2.5 rounded-xl bg-[#1b3726] hover:bg-[#254d35] dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all active:scale-98 disabled:opacity-50 cursor-pointer"
+                    className="px-7 py-3 rounded-xl bg-gradient-to-r from-[#009ab1] to-[#14b4cb] hover:from-[#00869c] hover:to-[#009ab1] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-[0_8px_20px_rgba(0,154,177,0.3)] transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
                   >
                     {saving ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}
                     <span>{saving ? 'Saving...' : editingId ? 'Save Changes' : 'Publish Resource'}</span>
@@ -1080,32 +1139,32 @@ export default function AdminResourcesPage() {
         {/* 6. DELETE CONFIRMATION MODAL */}
         {/* ========================================================================= */}
         {deleteConfirmId && (
-          <div className="fixed inset-0 z-50 bg-[#07170e]/60 dark:bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
-            <div className="w-full max-w-md bg-white dark:bg-[#071d13] rounded-3xl border border-[#e2ece3] dark:border-white/10 shadow-2xl p-6 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 flex items-center justify-center text-rose-600">
+          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+            <div className="w-full max-w-md bg-white rounded-[2rem] border border-white/90 shadow-2xl p-7 space-y-4">
+              <div className="flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0">
                   <Trash2 size={20} />
                 </div>
                 <div>
-                  <h3 className="font-serif text-base font-bold text-[#142618] dark:text-white">
+                  <h3 style={SERIF} className="text-lg font-bold text-slate-900">
                     Delete Academic Resource?
                   </h3>
-                  <span className="text-xs text-[#667d6c] dark:text-slate-400">
+                  <span className="text-xs text-slate-500">
                     This action is permanent and will remove the document from both admin and public catalogs.
                   </span>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-[#edf3ee] dark:border-white/10 flex items-center justify-end gap-2.5">
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
                 <button
                   onClick={() => setDeleteConfirmId(null)}
-                  className="px-4 py-2 rounded-xl border border-[#d8e5da] dark:border-white/10 text-xs font-bold text-[#4e6453] dark:text-slate-300 hover:bg-[#f1f6f1] dark:hover:bg-white/10 transition-colors cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
                 >
                   Keep Resource
                 </button>
                 <button
                   onClick={() => handleDeleteResource(deleteConfirmId)}
-                  className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
                 >
                   Confirm Delete
                 </button>

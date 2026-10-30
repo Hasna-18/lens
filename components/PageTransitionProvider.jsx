@@ -169,7 +169,7 @@ function PageTransitionInternal({ children }) {
           fullScreen={true}
           progress={progress}
           autoProgress={false}
-          message="L O A D I N G . . ."
+          message="Loading..."
         />
       )}
 

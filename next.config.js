@@ -9,6 +9,25 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
+  async redirects() {
+    return [
+      {
+        source: '/admin/register',
+        destination: '/admin/login',
+        permanent: false,
+      },
+      {
+        source: '/admin/forgot-password',
+        destination: '/admin/login',
+        permanent: false,
+      },
+      {
+        source: '/admin/reset-password',
+        destination: '/admin/login',
+        permanent: false,
+      },
+    ];
+  },
   async headers() {
     return [
       {

@@ -3,15 +3,15 @@ import React from 'react';
 import LenseLoader from './LenseLoader';
 
 /**
- * Universal LoadingSpinner component matching LEnSE 2026 design system
+ * Universal LoadingSpinner component - Simple, clean, and lightweight
  */
-export default function LoadingSpinner({ message = 'L O A D I N G . . .', fullScreen = false }) {
+export default function LoadingSpinner({ message = 'Loading...', fullScreen = false }) {
   return (
     <LenseLoader
       fullScreen={fullScreen}
       message={message}
       autoProgress={true}
-      duration={400}
+      duration={350}
     />
   );
 }

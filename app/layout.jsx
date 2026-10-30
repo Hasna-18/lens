@@ -48,10 +48,10 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body suppressHydrationWarning className={isAdminRoute ? "bg-[#f1f5f9] text-slate-900 min-h-screen antialiased selection:bg-[#009ab1]/25 selection:text-[#009ab1] transition-colors duration-300" : "bg-[#f8fafc] dark:bg-[#030712] text-slate-900 dark:text-slate-100 min-h-screen antialiased selection:bg-[#009ab1]/25 selection:text-white transition-colors duration-300"}>
+      <body suppressHydrationWarning className={isAdminRoute ? "bg-[#eaf6f9] text-slate-900 min-h-screen antialiased selection:bg-[#009ab1]/25 selection:text-[#009ab1] transition-colors duration-300" : "bg-[#f8fafc] dark:bg-[#030712] text-slate-900 dark:text-slate-100 min-h-screen antialiased selection:bg-[#009ab1]/25 selection:text-white transition-colors duration-300"}>
         <ToastProvider>
           <PageTransitionProvider>
-            <div id="app" className={isAdminRoute ? "relative min-h-screen flex flex-col justify-between bg-[#f1f5f9] text-slate-900" : "relative min-h-screen flex flex-col justify-between bg-[#f8fafc] dark:bg-[#030712] text-slate-900 dark:text-slate-100 transition-colors duration-300"}>
+            <div id="app" className={isAdminRoute ? "relative min-h-screen flex flex-col justify-between bg-[#eaf6f9] text-slate-900" : "relative min-h-screen flex flex-col justify-between bg-[#f8fafc] dark:bg-[#030712] text-slate-900 dark:text-slate-100 transition-colors duration-300"}>
               {/* Top Navigation - Suppressed on admin routes */}
               {!isAdminRoute && <Navbar />}
 

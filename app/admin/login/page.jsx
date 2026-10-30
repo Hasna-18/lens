@@ -13,7 +13,6 @@ import {
   AlertCircle, 
   Loader2, 
   KeyRound,
-  UserPlus,
   CheckCircle2
 } from 'lucide-react';
 
@@ -228,17 +227,9 @@ export default function AdminLoginPage() {
 
             {/* Password */}
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700">
-                  Password
-                </label>
-                <Link
-                  href="/admin/forgot-password"
-                  className="text-xs font-semibold text-[#009ab1] hover:text-blue-800 transition-colors"
-                >
-                  Forgot password?
-                </Link>
-              </div>
+              <label className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-700 mb-1.5">
+                Password
+              </label>
               <div className="relative rounded-xl border border-slate-200 focus-within:border-[#009ab1] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all bg-white shadow-2xs">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-sky-600">
                   <KeyRound size={17} />
@@ -300,24 +291,8 @@ export default function AdminLoginPage() {
             </div>
           </form>
 
-          {/* OR Divider */}
-          <div className="flex items-center gap-3 my-3.5">
-            <div className="flex-1 h-px bg-slate-200" />
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">OR</span>
-            <div className="flex-1 h-px bg-slate-200" />
-          </div>
-
-          {/* Register New Administrator Button */}
-          <Link
-            href="/admin/register"
-            className="w-full py-3 px-5 rounded-xl border border-sky-300 bg-sky-50/50 hover:bg-sky-100/70 text-[#009ab1] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:scale-[1.01] shadow-2xs"
-          >
-            <UserPlus size={16} />
-            <span>REGISTER NEW ADMINISTRATOR</span>
-          </Link>
-
           {/* Bottom Security Note */}
-          <div className="mt-4 text-center">
+          <div className="mt-5 text-center">
             <p className="text-[11px] text-slate-500 font-medium flex items-center justify-center gap-1.5">
               <ShieldCheck size={13} className="text-[#009ab1]" />
               <span>Protected environment with BetterAuth encryption</span>

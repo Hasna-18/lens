@@ -27,24 +27,24 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 
 /* ---------- shared design system matching Home & About ---------- */
 const SERIF = { fontFamily: "'Newsreader', 'Playfair Display', Georgia, serif" };
-const BLUE = 'text-[#009ab1]';
+const BLUE = 'text-[#007485]';
 const GLASS =
-  'bg-gradient-to-br from-white/80 via-[#EDF6F5]/60 to-[#009ab1]/12 backdrop-blur-xl border border-white/90 shadow-[0_18px_45px_rgba(21,159,150,0.10),inset_0_1px_0_rgba(255,255,255,1)]';
+  'bg-gradient-to-br from-white/80 via-[#EDF6F5]/60 to-[#007485]/12 backdrop-blur-xl border border-white/90 shadow-[0_18px_45px_rgba(21,159,150,0.10),inset_0_1px_0_rgba(255,255,255,1)]';
 
 const Wrap = ({ children, className = '' }) => (
   <div className={`relative max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>
 );
 
 const Em = ({ children, light = false }) => (
-  <em style={SERIF} className={`italic font-normal ${light ? 'text-[#009ab1]' : BLUE}`}>{children}</em>
+  <em style={SERIF} className={`italic font-normal ${light ? 'text-[#007485]' : BLUE}`}>{children}</em>
 );
 
 function SectionTag({ text, light = false, className = '' }) {
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${light ? 'bg-[#009ab1]' : 'bg-[#009ab1]'}`} />
+      <span className={`w-1.5 h-1.5 rounded-full ${light ? 'bg-[#007485]' : 'bg-[#007485]'}`} />
       <span className={`text-[11px] font-bold tracking-[0.22em] uppercase ${light ? 'text-[#00616f]' : BLUE}`}>{text}</span>
-      <span className={`w-16 h-px ${light ? 'bg-white/20' : 'bg-[#009ab1]/25'}`} />
+      <span className={`w-16 h-px ${light ? 'bg-white/20' : 'bg-[#007485]/25'}`} />
     </div>
   );
 }
@@ -53,7 +53,7 @@ function Dots({ rows = 5, cols = 10, className = '' }) {
   return (
     <div className={`grid gap-2 pointer-events-none select-none ${className}`} style={{ gridTemplateColumns: `repeat(${cols}, 3px)` }}>
       {Array.from({ length: rows * cols }).map((_, i) => (
-        <span key={i} className="w-[3px] h-[3px] rounded-full bg-[#009ab1]/60" />
+        <span key={i} className="w-[3px] h-[3px] rounded-full bg-[#007485]/60" />
       ))}
     </div>
   );
@@ -64,7 +64,7 @@ function Swirl({ className = '' }) {
   return (
     <div
       aria-hidden="true"
-      className={`absolute pointer-events-none rounded-full bg-gradient-to-br from-[#009ab1]/20 via-[#8ecbd0]/15 to-transparent blur-3xl ${className}`}
+      className={`absolute pointer-events-none rounded-full bg-gradient-to-br from-[#007485]/20 via-[#8ecbd0]/15 to-transparent blur-3xl ${className}`}
     />
   );
 }
@@ -72,7 +72,7 @@ function Swirl({ className = '' }) {
 function Flow({ className = '' }) {
   return (
     <svg aria-hidden="true" className={`absolute pointer-events-none ${className}`} viewBox="0 0 800 160" fill="none" preserveAspectRatio="none">
-      <path d="M0 150 C200 20 420 10 800 60" stroke="#009ab1" strokeOpacity="0.35" strokeWidth="1.2" />
+      <path d="M0 150 C200 20 420 10 800 60" stroke="#007485" strokeOpacity="0.35" strokeWidth="1.2" />
       <path d="M0 160 C220 50 440 40 800 90" stroke="#4fa8b2" strokeOpacity="0.32" strokeWidth="1" />
       <path d="M0 140 C180 0 400 -10 800 30" stroke="#8ecbd0" strokeOpacity="0.55" strokeWidth="1" />
     </svg>
@@ -81,7 +81,7 @@ function Flow({ className = '' }) {
 
 /* Silky ocean streaks background for the hero (matching About page) */
 function OceanWaves() {
-  const colors = ['#ffffff', '#4fa8b2', '#009ab1', '#009ab1', '#b7dce0', '#00616f'];
+  const colors = ['#ffffff', '#4fa8b2', '#007485', '#007485', '#b7dce0', '#00616f'];
   const streaks = Array.from({ length: 40 }, (_, i) => ({
     d: `M -150 ${20 + i * 14} C 250 ${-80 + i * 12}, 650 ${240 - i * 3}, 1350 ${60 + i * 16}`,
     c: colors[(i * 5) % colors.length],
@@ -93,8 +93,8 @@ function OceanWaves() {
       <defs>
         <linearGradient id="ocean-base-events" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#f4eadb" />
-          <stop offset="0.45" stopColor="#009ab1" />
-          <stop offset="1" stopColor="#009ab1" />
+          <stop offset="0.45" stopColor="#007485" />
+          <stop offset="1" stopColor="#007485" />
         </linearGradient>
         <filter id="ocean-blur-events"><feGaussianBlur stdDeviation="8" /></filter>
       </defs>
@@ -320,7 +320,7 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAF9] text-[#143f45] font-sans pb-20 sm:pb-28 selection:bg-[#009ab1]/30 pt-28 sm:pt-36 relative overflow-hidden">
+    <div className="min-h-screen bg-[#F8FAF9] text-[#143f45] font-sans pb-20 sm:pb-28 selection:bg-[#007485]/30 pt-28 sm:pt-36 relative overflow-hidden">
 
       {/* ============================================================ */}
       {/* 0. HERO NATURAL ENVIRONMENT & SPHERE */}
@@ -342,9 +342,9 @@ export default function EventsPage() {
       <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[1100px] z-0 pointer-events-none overflow-hidden">
         <Swirl className="-top-16 -left-24 w-[420px] h-[360px]" />
         <Swirl className="top-[390px] right-[-100px] w-[420px] h-[420px] opacity-70" />
-        <div className="hidden lg:block absolute -left-[190px] top-[250px] w-[320px] h-[320px] rounded-full border border-[#009ab1]/20" />
-        <div className="hidden lg:block absolute left-[92px] top-[405px] w-2.5 h-2.5 rounded-full bg-[#009ab1]/60" />
-        <div className="hidden lg:block absolute right-[7%] top-[520px] w-[180px] h-[180px] rounded-full border border-[#009ab1]/15" />
+        <div className="hidden lg:block absolute -left-[190px] top-[250px] w-[320px] h-[320px] rounded-full border border-[#007485]/20" />
+        <div className="hidden lg:block absolute left-[92px] top-[405px] w-2.5 h-2.5 rounded-full bg-[#007485]/60" />
+        <div className="hidden lg:block absolute right-[7%] top-[520px] w-[180px] h-[180px] rounded-full border border-[#007485]/15" />
         <Dots rows={8} cols={6} className="hidden sm:grid absolute left-5 top-[560px] opacity-60" />
         <Dots rows={7} cols={10} className="hidden lg:grid absolute right-10 top-[690px] opacity-50" />
         <Flow className="hidden lg:block absolute right-0 top-[610px] w-[52%] h-40" />
@@ -352,8 +352,8 @@ export default function EventsPage() {
 
       {/* Ambient background glows */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#009ab1]/20 via-[#EDF6F5]/30 to-transparent blur-[100px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#009ab1]/20 via-[#EDF6F5]/30 to-transparent blur-[120px] rounded-full" />
+        <div className="absolute top-[0%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#007485]/20 via-[#EDF6F5]/30 to-transparent blur-[100px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#007485]/20 via-[#EDF6F5]/30 to-transparent blur-[120px] rounded-full" />
         <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#EDF6F5]/40 to-transparent blur-3xl rounded-full" />
       </div>
 
@@ -369,15 +369,15 @@ export default function EventsPage() {
 
             {/* Left: Text & CTA */}
             <div className="col-span-6 space-y-6 lg:pr-2 z-10">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-[#F8FAF9]/80 shadow-sm hover:border-[#009ab1]/70 transition-colors duration-300">
-                <span className="text-[11px] font-bold tracking-[0.22em] text-[#009ab1] uppercase">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-[#F8FAF9]/80 shadow-sm hover:border-[#007485]/70 transition-colors duration-300">
+                <span className="text-[11px] font-bold tracking-[0.22em] text-[#007485] uppercase">
                   LEnSE EVENTS
                 </span>
               </div>
 
               <h1 className="text-5xl sm:text-6xl lg:text-[4.5rem] font-normal text-[#143f45] leading-[1.05] tracking-tight font-serif">
                 Events that<br />
-                <span className="italic text-[#009ab1] font-serif font-normal">inspire change.</span>
+                <span className="italic text-[#007485] font-serif font-normal">inspire change.</span>
               </h1>
 
               <p className="text-slate-600 text-[13.5px] leading-[1.72] max-w-[430px] font-normal">
@@ -386,10 +386,10 @@ export default function EventsPage() {
 
               <div className="pt-2">
                 <a href="#events-section" className="inline-flex group">
-                  <button className="px-7 py-3.5 rounded-full bg-gradient-to-r from-[#009ab1] to-[#009ab1] hover:from-[#005b68] hover:to-[#1694a2] text-white text-[11px] font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-[0_12px_28px_rgba(21,159,150,0.32),inset_0_1px_1px_rgba(255,255,255,0.25)] hover:scale-105 active:scale-95 cursor-pointer">
+                  <button className="px-7 py-3.5 rounded-full bg-gradient-to-r from-[#007485] to-[#007485] hover:from-[#005b68] hover:to-[#1694a2] text-white text-[11px] font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-[0_12px_28px_rgba(21,159,150,0.32),inset_0_1px_1px_rgba(255,255,255,0.25)] hover:scale-105 active:scale-95 cursor-pointer">
                     <span>Explore All Events</span>
                     <div className="w-5 h-5 rounded-full border border-white/35 flex items-center justify-center group-hover:bg-[#EDF6F5] group-hover:border-white transition-all duration-300">
-                      <ArrowRight size={10} className="text-white group-hover:text-[#009ab1] group-hover:translate-x-0.5 transition-transform duration-300" />
+                      <ArrowRight size={10} className="text-white group-hover:text-[#007485] group-hover:translate-x-0.5 transition-transform duration-300" />
                     </div>
                   </button>
                 </a>
@@ -398,9 +398,9 @@ export default function EventsPage() {
 
             {/* Right: Transparent Crystal Glass "Upcoming Events" Card */}
             <div className="col-span-6 relative flex items-center justify-start lg:justify-center min-h-[340px] sm:min-h-[420px]">
-              <div className="relative lg:ml-[-50px] xl:ml-[-90px] bg-gradient-to-br from-white/65 via-[#EDF6F5]/45 to-[#009ab1]/12 backdrop-blur-2xl p-6 sm:p-7 rounded-[2.2rem] border-[1.5px] border-white/95 shadow-[inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(255,255,255,0.3),inset_2px_0_4px_rgba(255,255,255,0.8),0_25px_50px_-10px_rgba(21,100,92,0.18)] w-52 sm:w-60 z-20 group transition-all duration-500 hover:-translate-y-2 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_35px_70px_-10px_rgba(21,100,92,0.28)] cursor-pointer">
+              <div className="relative lg:ml-[-50px] xl:ml-[-90px] bg-gradient-to-br from-white/65 via-[#EDF6F5]/45 to-[#007485]/12 backdrop-blur-2xl p-6 sm:p-7 rounded-[2.2rem] border-[1.5px] border-white/95 shadow-[inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(255,255,255,0.3),inset_2px_0_4px_rgba(255,255,255,0.8),0_25px_50px_-10px_rgba(21,100,92,0.18)] w-52 sm:w-60 z-20 group transition-all duration-500 hover:-translate-y-2 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,1),0_35px_70px_-10px_rgba(21,100,92,0.28)] cursor-pointer">
                 <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-white/70 via-white/20 to-transparent rounded-tl-[2.2rem] pointer-events-none" />
-                <div className="w-12 h-12 rounded-full bg-gradient-to-b from-white/95 via-[#EDF6F5]/60 to-[#009ab1]/12 backdrop-blur-2xl border-[1.5px] border-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(0,0,0,0.06),0_10px_20px_rgba(21,100,92,0.15)] flex items-center justify-center absolute -top-5 -right-5 text-[#009ab1] z-30 transition-all duration-500 group-hover:scale-115 group-hover:rotate-12 group-hover:text-[#005b68]">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-b from-white/95 via-[#EDF6F5]/60 to-[#007485]/12 backdrop-blur-2xl border-[1.5px] border-white shadow-[inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(0,0,0,0.06),0_10px_20px_rgba(21,100,92,0.15)] flex items-center justify-center absolute -top-5 -right-5 text-[#007485] z-30 transition-all duration-500 group-hover:scale-115 group-hover:rotate-12 group-hover:text-[#005b68]">
                   <Calendar size={20} strokeWidth={1.75} />
                 </div>
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-1.5 relative z-10 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] group-hover:tracking-[0.25em] transition-all duration-300">
@@ -412,7 +412,7 @@ export default function EventsPage() {
                 <p className="text-[11px] text-slate-600 leading-relaxed font-medium mb-3 relative z-10 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">
                   Promoting innovative, inclusive and sustainable learning events.
                 </p>
-                <div className="w-5 h-[1.5px] bg-[#009ab1] rounded-full mt-2 relative z-10 group-hover:w-10 transition-all duration-300" />
+                <div className="w-5 h-[1.5px] bg-[#007485] rounded-full mt-2 relative z-10 group-hover:w-10 transition-all duration-300" />
               </div>
             </div>
 
@@ -430,15 +430,15 @@ export default function EventsPage() {
               {/* Left text */}
               <div className="col-span-7 space-y-2.5 z-10 pr-0.5">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-[#F8FAF9]/80 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:scale-105 transition-transform duration-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#009ab1]" />
-                  <span className="text-[9.5px] font-bold tracking-wider text-[#009ab1] uppercase">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#007485]" />
+                  <span className="text-[9.5px] font-bold tracking-wider text-[#007485] uppercase">
                     LEnSE EVENTS
                   </span>
                 </div>
 
                 <h1 className="text-2xl sm:text-3xl font-normal text-[#143f45] leading-[1.1] tracking-tight font-serif">
                   Events that<br />
-                  <span className="italic text-[#009ab1] font-serif font-normal">inspire change.</span>
+                  <span className="italic text-[#007485] font-serif font-normal">inspire change.</span>
                 </h1>
 
                 <p className="text-slate-600 text-xs sm:text-sm leading-relaxed font-normal">
@@ -447,7 +447,7 @@ export default function EventsPage() {
 
                 <div className="pt-1">
                   <a href="#events-section" className="inline-flex group">
-                    <button className="px-5 py-2.5 rounded-full bg-[#009ab1] hover:bg-[#005b68] text-white text-xs font-semibold tracking-wide flex items-center gap-2 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
+                    <button className="px-5 py-2.5 rounded-full bg-[#007485] hover:bg-[#005b68] text-white text-xs font-semibold tracking-wide flex items-center gap-2 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
                       <span>Explore All Events</span>
                       <ArrowRight size={12} className="text-white group-hover:translate-x-1 transition-transform duration-300" />
                     </button>
@@ -458,7 +458,7 @@ export default function EventsPage() {
               {/* Right Glass Card: Upcoming Events */}
               <div className="col-span-5 flex justify-end items-start pt-1 relative">
                 <div className="relative bg-white/90 backdrop-blur-2xl p-3.5 sm:p-4 rounded-2xl border border-[#F8FAF9]/80 shadow-[0_8px_25px_rgba(21,100,92,0.08)] w-full max-w-[165px] z-20 group transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer">
-                  <div className="w-8 h-8 rounded-full bg-[#EAF4F3] border border-[#F8FAF9]/80 shadow-sm flex items-center justify-center absolute -top-2.5 -right-2.5 text-[#009ab1] z-30 group-hover:scale-115 group-hover:rotate-12 transition-all duration-300">
+                  <div className="w-8 h-8 rounded-full bg-[#EAF4F3] border border-[#F8FAF9]/80 shadow-sm flex items-center justify-center absolute -top-2.5 -right-2.5 text-[#007485] z-30 group-hover:scale-115 group-hover:rotate-12 transition-all duration-300">
                     <Calendar size={16} strokeWidth={2} />
                   </div>
 
@@ -474,7 +474,7 @@ export default function EventsPage() {
                     Promoting innovative, inclusive and sustainable learning events.
                   </p>
 
-                  <div className="w-5 h-[2px] bg-[#009ab1] rounded-full mt-1.5 relative z-10 group-hover:w-8 transition-all duration-300" />
+                  <div className="w-5 h-[2px] bg-[#007485] rounded-full mt-1.5 relative z-10 group-hover:w-8 transition-all duration-300" />
                 </div>
               </div>
             </div>
@@ -500,18 +500,18 @@ export default function EventsPage() {
                   key={i}
                   onClick={() => handleCategorySelect(cat.name)}
                   className={`flex flex-col items-center text-center px-2 sm:px-4 py-3 sm:py-4 group transition-all duration-300 rounded-2xl cursor-pointer ${isSelected
-                    ? 'bg-[#EAF4F3]/90 shadow-sm ring-2 ring-[#009ab1]/30'
+                    ? 'bg-[#EAF4F3]/90 shadow-sm ring-2 ring-[#007485]/30'
                     : 'hover:bg-white/60'
                     }`}
                 >
                   <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center mb-2.5 transition-all duration-300 ${isSelected
-                    ? 'bg-[#009ab1] text-white shadow-md scale-105'
-                    : 'bg-[#EAF4F3] border border-[#F8FAF9]/80 text-[#009ab1] group-hover:scale-105'
+                    ? 'bg-[#007485] text-white shadow-md scale-105'
+                    : 'bg-[#EAF4F3] border border-[#F8FAF9]/80 text-[#007485] group-hover:scale-105'
                     }`}>
                     <Icon size={20} strokeWidth={1.6} />
                   </div>
 
-                  <h4 style={SERIF} className={`text-[15px] sm:text-[16px] font-normal mb-1 leading-tight transition-colors ${isSelected ? 'text-[#009ab1] font-bold' : 'text-[#143f45] group-hover:text-[#009ab1]'}`}>
+                  <h4 style={SERIF} className={`text-[15px] sm:text-[16px] font-normal mb-1 leading-tight transition-colors ${isSelected ? 'text-[#007485] font-bold' : 'text-[#143f45] group-hover:text-[#007485]'}`}>
                     {cat.name}
                   </h4>
 
@@ -543,7 +543,7 @@ export default function EventsPage() {
 
               <button
                 onClick={() => { setSelectedCategory('All'); setCurrentPage(1); }}
-                className="self-start sm:self-auto px-4 py-2 rounded-full bg-white/90 border border-[#F8FAF9]/80 text-xs font-bold text-[#009ab1] hover:bg-[#EAF4F3] flex items-center gap-2 transition shadow-sm cursor-pointer"
+                className="self-start sm:self-auto px-4 py-2 rounded-full bg-white/90 border border-[#F8FAF9]/80 text-xs font-bold text-[#007485] hover:bg-[#EAF4F3] flex items-center gap-2 transition shadow-sm cursor-pointer"
               >
                 <span>View All Events</span>
                 <ArrowRight size={13} />
@@ -558,7 +558,7 @@ export default function EventsPage() {
                 </div>
               ) : paginatedEvents.length === 0 ? (
                 <div className={`${GLASS} text-center py-12 rounded-[2rem] p-8`}>
-                  <div className="w-12 h-12 bg-[#EAF4F3] border border-[#F8FAF9]/80 rounded-full flex items-center justify-center text-[#009ab1] mx-auto mb-3 shadow-sm">
+                  <div className="w-12 h-12 bg-[#EAF4F3] border border-[#F8FAF9]/80 rounded-full flex items-center justify-center text-[#007485] mx-auto mb-3 shadow-sm">
                     <Calendar size={22} />
                   </div>
                   <h3 style={SERIF} className="text-xl font-normal text-[#143f45] mb-1">No events found in this category</h3>
@@ -567,7 +567,7 @@ export default function EventsPage() {
                   </p>
                   <button
                     onClick={() => { setSelectedCategory('All'); setCurrentPage(1); }}
-                    className="px-5 py-2.5 rounded-full bg-[#009ab1] text-white text-[11px] font-bold uppercase tracking-wider hover:scale-105 transition shadow-sm cursor-pointer"
+                    className="px-5 py-2.5 rounded-full bg-[#007485] text-white text-[11px] font-bold uppercase tracking-wider hover:scale-105 transition shadow-sm cursor-pointer"
                   >
                     Show All Events
                   </button>
@@ -600,7 +600,7 @@ export default function EventsPage() {
                           <span style={SERIF} className="block text-2xl sm:text-3xl font-normal text-[#143f45] leading-none">
                             {evt.dateDay}
                           </span>
-                          <span className="block text-[9.5px] sm:text-[11px] font-bold text-[#009ab1] mt-1 uppercase tracking-wider">
+                          <span className="block text-[9.5px] sm:text-[11px] font-bold text-[#007485] mt-1 uppercase tracking-wider">
                             {evt.dateMonth}
                           </span>
                           <span className="block text-[8.5px] sm:text-[9.5px] text-slate-400 font-medium">
@@ -627,11 +627,11 @@ export default function EventsPage() {
 
                           {/* Content Area */}
                           <div className="flex-1 py-0.5 sm:py-1 w-full flex flex-col justify-center min-w-0">
-                            <span className="inline-block px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] font-bold uppercase tracking-wider bg-[#EAF4F3] text-[#009ab1] mb-1.5 w-max border border-[#F8FAF9]/80">
+                            <span className="inline-block px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] font-bold uppercase tracking-wider bg-[#EAF4F3] text-[#007485] mb-1.5 w-max border border-[#F8FAF9]/80">
                               {evt.categoryTag || evt.category}
                             </span>
 
-                            <h3 style={SERIF} className="text-[16px] sm:text-[19px] font-normal text-[#143f45] leading-tight mb-1 group-hover:text-[#009ab1] transition-colors line-clamp-1 sm:line-clamp-2">
+                            <h3 style={SERIF} className="text-[16px] sm:text-[19px] font-normal text-[#143f45] leading-tight mb-1 group-hover:text-[#007485] transition-colors line-clamp-1 sm:line-clamp-2">
                               {evt.title}
                             </h3>
 
@@ -641,18 +641,18 @@ export default function EventsPage() {
 
                             <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[10.5px] sm:text-[11.5px] text-slate-500 font-medium">
                               <span className="flex items-center gap-1.5 truncate">
-                                <MapPin size={12} className="text-[#009ab1] shrink-0" />
+                                <MapPin size={12} className="text-[#007485] shrink-0" />
                                 {evt.location || 'Kazhakkoottam, Kerala'}
                               </span>
                               <span className="flex items-center gap-1.5">
-                                <Clock size={12} className="text-[#009ab1] shrink-0" />
+                                <Clock size={12} className="text-[#007485] shrink-0" />
                                 {evt.duration || 'Session'}
                               </span>
                             </div>
                           </div>
 
                           {/* Right Circular Arrow Button */}
-                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#EDF6F5] shadow-[0_6px_14px_rgba(21,159,150,0.12)] border border-white flex items-center justify-center text-[#009ab1] group-hover:bg-[#009ab1] group-hover:text-white transition-all duration-300 shrink-0">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#EDF6F5] shadow-[0_6px_14px_rgba(21,159,150,0.12)] border border-white flex items-center justify-center text-[#007485] group-hover:bg-[#007485] group-hover:text-white transition-all duration-300 shrink-0">
                             <ArrowRight size={13} strokeWidth={2} />
                           </div>
 
@@ -693,7 +693,7 @@ export default function EventsPage() {
                       key={page}
                       onClick={() => handlePageChange(page)}
                       className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer ${isCurrent
-                        ? 'bg-[#009ab1] text-white shadow-md scale-105'
+                        ? 'bg-[#007485] text-white shadow-md scale-105'
                         : 'bg-[#EDF6F5] border border-[#F8FAF9]/80 text-slate-700 hover:bg-[#EAF4F3] shadow-sm'
                         }`}
                       aria-label={`Page ${page}`}
@@ -752,9 +752,9 @@ export default function EventsPage() {
         {/* 4. FEATURED EVENT BANNER (Sleek Oceanic Vector Banner, No Images) */}
         {/* ============================================================ */}
         <div className="pt-2">
-          <div className="rounded-[2.4rem] bg-gradient-to-r from-[#30291f] via-[#005b68] to-[#009ab1] text-white p-7 sm:p-10 lg:p-12 shadow-[0_25px_60px_rgba(48,41,31,0.24)] grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative overflow-hidden">
+          <div className="rounded-[2.4rem] bg-gradient-to-r from-[#30291f] via-[#005b68] to-[#007485] text-white p-7 sm:p-10 lg:p-12 shadow-[0_25px_60px_rgba(48,41,31,0.24)] grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative overflow-hidden">
             <svg className="absolute inset-0 w-full h-full opacity-35 pointer-events-none" viewBox="0 0 1200 400" preserveAspectRatio="none" fill="none">
-              <path d="M0 240 C300 120 500 320 800 180 C1000 80 1100 160 1200 100 L1200 400 L0 400Z" fill="#009ab1" opacity="0.4" />
+              <path d="M0 240 C300 120 500 320 800 180 C1000 80 1100 160 1200 100 L1200 400 L0 400Z" fill="#007485" opacity="0.4" />
               <path d="M0 80 C240 -20 500 180 800 60 C1000 -20 1100 40 1200 10 L1200 0 L0 0Z" fill="#4fa8b2" opacity="0.3" />
               <circle cx="950" cy="180" r="140" fill="#74ddd4" opacity="0.25" />
             </svg>
@@ -764,7 +764,7 @@ export default function EventsPage() {
               <SectionTag text="LEnSE MOVEMENT" light />
               <h3 style={SERIF} className="text-3xl sm:text-4xl lg:text-5xl font-normal text-white leading-[1.12]">
                 Be a part of<br />
-                <em style={SERIF} className="italic text-[#009ab1]">the movement.</em>
+                <em style={SERIF} className="italic text-[#007485]">the movement.</em>
               </h3>
 
               <p className="text-[#e5fffb] text-sm sm:text-base leading-relaxed max-w-md font-normal">
@@ -775,7 +775,7 @@ export default function EventsPage() {
                 <Link href="/about" className="inline-flex">
                   <span className="px-6 py-3.5 rounded-full bg-[#EDF6F5] hover:bg-[#EDF6F5] text-[#143f45] text-xs font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-md hover:scale-105 active:scale-95">
                     <span>Explore About LEnSE</span>
-                    <ArrowRight size={13} className="text-[#009ab1]" />
+                    <ArrowRight size={13} className="text-[#007485]" />
                   </span>
                 </Link>
               </div>
@@ -794,7 +794,7 @@ export default function EventsPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#243c38]/90 via-[#243c38]/30 to-transparent flex items-end justify-end p-5">
                   <div style={SERIF} className="text-right text-white italic text-sm sm:text-base leading-tight">
-                    Learning today,<br /><span className="text-[#009ab1]">leading tomorrow.</span>
+                    Learning today,<br /><span className="text-[#007485]">leading tomorrow.</span>
                   </div>
                 </div>
               </div>
@@ -811,7 +811,7 @@ export default function EventsPage() {
 
             {/* Left Info */}
             <div className="flex items-center gap-4 w-full md:w-auto">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#EAF4F3] border border-[#F8FAF9]/80 flex items-center justify-center text-[#009ab1] shadow-sm shrink-0">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#EAF4F3] border border-[#F8FAF9]/80 flex items-center justify-center text-[#007485] shadow-sm shrink-0">
                 <Mail size={22} strokeWidth={1.75} />
               </div>
               <div>
@@ -827,7 +827,7 @@ export default function EventsPage() {
             {/* Right Rounded Pill Form */}
             <div className="w-full md:w-auto shrink-0">
               {subscribed ? (
-                <div className="flex items-center gap-2 text-xs font-bold text-[#009ab1] bg-[#EAF4F3] border border-[#F8FAF9]/80 px-6 py-3 rounded-full shadow-sm">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#007485] bg-[#EAF4F3] border border-[#F8FAF9]/80 px-6 py-3 rounded-full shadow-sm">
                   <CheckCircle2 size={16} />
                   <span>Thank you for subscribing!</span>
                 </div>
@@ -846,7 +846,7 @@ export default function EventsPage() {
                   />
                   <button
                     type="submit"
-                    className="w-9 h-9 rounded-full bg-[#009ab1] hover:bg-[#005b68] text-white flex items-center justify-center transition shadow-md hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
+                    className="w-9 h-9 rounded-full bg-[#007485] hover:bg-[#005b68] text-white flex items-center justify-center transition shadow-md hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
                     title="Subscribe"
                   >
                     <ArrowRight size={14} />

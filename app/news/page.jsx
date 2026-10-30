@@ -131,29 +131,25 @@ const CARD_THEMES = [
     tagBg: 'bg-blue-50 text-blue-600 border-blue-200/80',
     waveColor: '#3b82f6',
     gradient: 'from-blue-500/15 via-sky-400/10 to-transparent',
-    iconBg: 'bg-gradient-to-br from-[#009ab1] to-sky-400 shadow-[0_8px_20px_rgba(10,108,255,0.3)] text-white',
-    icon: GraduationCap,
+    
   },
   {
     tagBg: 'bg-amber-50 text-amber-600 border-amber-200/80',
     waveColor: '#f59e0b',
     gradient: 'from-amber-500/15 via-orange-400/10 to-transparent',
-    iconBg: 'bg-gradient-to-br from-amber-500 to-orange-400 shadow-[0_8px_20px_rgba(245,158,11,0.3)] text-white',
-    icon: FileText,
+
   },
   {
     tagBg: 'bg-emerald-50 text-emerald-600 border-emerald-200/80',
     waveColor: '#10b981',
     gradient: 'from-emerald-500/15 via-teal-400/10 to-transparent',
-    iconBg: 'bg-gradient-to-br from-emerald-500 to-teal-400 shadow-[0_8px_20px_rgba(16,185,129,0.3)] text-white',
-    icon: Users,
+   
   },
   {
     tagBg: 'bg-purple-50 text-purple-600 border-purple-200/80',
     waveColor: '#a855f7',
     gradient: 'from-purple-500/15 via-indigo-400/10 to-transparent',
-    iconBg: 'bg-gradient-to-br from-purple-500 to-indigo-400 shadow-[0_8px_20px_rgba(168,85,247,0.3)] text-white',
-    icon: FlaskConical,
+   
   },
 ];
 
@@ -636,12 +632,7 @@ export default function NewsPage() {
                             &bull;&bull;&bull;
                           </div>
 
-                          {/* Floating 3D Frosted Glass Diamond/Badge in right wave */}
-                          <div className="absolute right-7 top-1/2 -translate-y-1/2 hidden md:flex items-center justify-center pointer-events-none">
-                            <div className={`w-13 h-13 rounded-2xl ${theme.iconBg} transform rotate-6 group-hover:rotate-0 group-hover:scale-110 transition-all duration-500 flex items-center justify-center border-2 border-white/70 dark:border-white/20 backdrop-blur-md`}>
-                              <theme.icon size={22} className="transform -rotate-6 group-hover:rotate-0 transition-transform duration-500" />
-                            </div>
-                          </div>
+        
 
                           {/* Image Thumbnail with Left Pinned Floating Date Pill */}
                           <div className="relative w-full sm:w-[220px] md:w-[240px] h-[155px] shrink-0 rounded-[1.6rem] overflow-hidden bg-slate-100 dark:bg-slate-950 border border-white/80 dark:border-slate-800 shadow-sm">

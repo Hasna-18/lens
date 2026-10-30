@@ -56,7 +56,7 @@ function Dots({ rows = 5, cols = 10, className = '' }) {
   );
 }
 
-/* Silky ocean streaks background for the hero (matching About page) */
+/* Silky ocean streaks background for the hero */
 function OceanWaves() {
   const colors = ['#ffffff', '#7dd3fc', '#0ea5e9', '#1d4ed8', '#bae6fd', '#0369a1'];
   const streaks = Array.from({ length: 40 }, (_, i) => ({
@@ -66,12 +66,12 @@ function OceanWaves() {
     o: 0.25 + ((i * 13) % 50) / 100,
   }));
   return (
-    <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" className="w-full h-full pointer-events-none" fill="none">
+    <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" className="w-full h-full pointer-events-none select-none opacity-90" fill="none">
       <defs>
         <linearGradient id="ocean-base-resources" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#eaf6ff" />
-          <stop offset="0.45" stopColor="#4cb8f5" />
-          <stop offset="1" stopColor="#1e40af" />
+          <stop offset="0%" stopColor="#f4f8ff" />
+          <stop offset="0.45" stopColor="#38bdf8" />
+          <stop offset="1" stopColor="#1d4ed8" />
         </linearGradient>
         <filter id="ocean-blur-resources"><feGaussianBlur stdDeviation="8" /></filter>
       </defs>
@@ -191,97 +191,169 @@ export default function AcademicResourcesPage() {
     <div className="min-h-screen bg-[#f4f8ff] text-slate-800 font-sans pb-20 sm:pb-28 selection:bg-blue-100 relative overflow-hidden">
 
       {/* ============================================================ */}
-      {/* 0. HERO SECTION (Crisp & Clean - Matching About Page) */}
+      {/* 0. AMBIENT GLOWS & GEOMETRIC ACCENTS (News Page Style)       */}
       {/* ============================================================ */}
-      <section className="relative overflow-hidden min-h-[calc(100vh-70px)] sm:min-h-screen flex flex-col justify-center py-20 sm:py-24">
-        {/* Ocean Waves Background matching About page */}
-        <div className="absolute inset-y-0 right-0 w-full lg:w-[75%] pointer-events-none select-none">
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[0%] left-[-10%] w-[55%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#009ab1]/15 via-sky-400/10 to-transparent blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[65%] h-[70%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-sky-400/5 to-transparent blur-[140px] rounded-full" />
+        <div className="absolute bottom-10 left-10 w-[40%] h-[40%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-sky-400/10 to-transparent blur-3xl rounded-full" />
+      </div>
+
+      {/* Decorative ring + dots on the left background edge */}
+      <div className="hidden lg:block absolute -left-[220px] top-[14%] w-[340px] h-[340px] rounded-full border border-[#009ab1]/20 pointer-events-none" />
+      <div className="hidden lg:block absolute left-[90px] top-[26%] w-2.5 h-2.5 rounded-full bg-[#009ab1]/70 pointer-events-none" />
+      <Dots rows={7} cols={5} className="hidden lg:grid absolute left-6 top-[32%]" />
+
+      {/* ============================================================ */}
+      {/* 1. HERO SECTION WITH OCEAN WAVES & BLENDED IMAGE             */}
+      {/* ============================================================ */}
+      <div className="relative w-full overflow-hidden">
+
+        {/* Silky Ocean Streaks Backdrop behind hero */}
+        <div
+          className="absolute inset-y-0 right-0 w-full lg:w-[68%] pointer-events-none z-0 opacity-40"
+          style={{
+            maskImage: 'linear-gradient(to right, black 0%, black 20%, transparent 60%)',
+            WebkitMaskImage: 'linear-gradient(to right, black 0%, black 20%, transparent 60%)'
+          }}
+        >
           <OceanWaves />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#f4f8ff] via-[#f4f8ff]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#f4f8ff] via-[#f4f8ff]/60 to-transparent" />
         </div>
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#f4f8ff] via-[#f4f8ff]/85 to-transparent pointer-events-none" />
 
-        {/* Decorative Ring + Dots on left edge (matching About page) */}
-        <div className="hidden lg:block absolute -left-[270px] top-[22%] w-[320px] h-[320px] rounded-full border border-sky-400/50 pointer-events-none" />
-        <div className="hidden lg:block absolute left-[80px] top-[60%] w-2.5 h-2.5 rounded-full bg-[#009ab1] pointer-events-none" />
-        <Dots rows={8} cols={5} className="hidden lg:grid absolute left-3 bottom-16 pointer-events-none" />
+        {/* Natural Environment Blend Container (Full Bleed Right with Ultra-Smooth Feathered Blend) */}
+        <div
+          className="absolute top-0 right-0 h-full min-h-[520px] lg:h-[620px] xl:h-[670px] w-full lg:w-[68%] xl:w-[64%] pointer-events-none z-0 overflow-hidden select-none hidden lg:block transition-all duration-500"
+          style={{
+            maskImage: 'linear-gradient(to right, transparent 0%, transparent 14%, rgba(0,0,0,0.03) 24%, rgba(0,0,0,0.14) 36%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.76) 66%, rgba(0,0,0,0.95) 82%, black 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, transparent 14%, rgba(0,0,0,0.03) 24%, rgba(0,0,0,0.14) 36%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.76) 66%, rgba(0,0,0,0.95) 82%, black 100%)'
+          }}
+        >
+          <img
+            src="https://images.pexels.com/photos/3992949/pexels-photo-3992949.jpeg"
+            alt="Academic Resources & Literature"
+            className="w-full h-full object-cover object-left-center transition-all duration-300"
+            onError={(e) => { e.currentTarget.src = "/campus_building.jpg"; }}
+          />
+          {/* Edge Fading layers to blend smoothly with canvas */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#f4f8ff] via-[#f4f8ff]/70 via-[20%] to-transparent to-[70%] w-full h-full pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-[#f4f8ff] via-[#f4f8ff]/85 via-[35%] to-transparent pointer-events-none" />
+          <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-[#f4f8ff] to-transparent pointer-events-none" />
+        </div>
 
-        <Wrap className="w-full relative z-10 my-auto">
-          <div className="grid lg:grid-cols-12 items-center gap-10 lg:gap-8">
-            {/* Left Copy */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="flex items-center gap-3">
-                <span className={`flex items-center gap-2 text-[11px] font-bold tracking-[0.24em] uppercase ${BLUE}`}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#009ab1]" />OPEN REPOSITORY
+        {/* Mobile Background Fallback */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none z-0 block lg:hidden opacity-15">
+          <img
+            src="https://cdn.pixabay.com/photo/2020/05/16/16/43/book-5178205_1280.jpg"
+            alt="Academic Resources"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#f4f8ff] via-[#f4f8ff]/90 to-transparent" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 pt-28 sm:pt-36 pb-12 sm:pb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 items-center min-h-[440px] sm:min-h-[500px]">
+
+            <div className="lg:col-span-7 xl:col-span-6 space-y-6 sm:space-y-7 lg:pr-6 z-10">
+
+              {/* Breadcrumb Navigation */}
+              <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500">
+                <span className="w-2 h-2 rounded-full bg-[#009ab1]" />
+                <Link href="/" className="hover:text-[#009ab1] transition-colors">Home</Link>
+                <span className="text-slate-300">&gt;</span>
+                <span className="text-[#009ab1] font-bold">Resources</span>
+              </div>
+
+              {/* Category Pill Tag matching News Page Style */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#009ab1]/25 shadow-[0_4px_16px_rgba(0,154,177,0.08)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#009ab1] animate-pulse" />
+                <span className="text-[11px] font-bold tracking-[0.24em] text-[#009ab1] uppercase">
+                  OPEN REPOSITORY &amp; ARCHIVES
                 </span>
-                <span className="text-slate-300">|</span>
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-                  <Home size={12} className="text-[#009ab1]" />
-                  <Link href="/" className="hover:text-[#009ab1] transition-colors">Home</Link>
-                  <span className="text-slate-300">&gt;</span>
-                  <span className="text-[#009ab1]">Resources</span>
+              </div>
+
+              {/* Main Headline with Serif Accent & Double Slashes */}
+              <h1 style={SERIF} className="text-4xl sm:text-5xl lg:text-[4.1rem] leading-[1.06] tracking-tight font-normal text-slate-900">
+                Academic Resources &amp;<br />
+                <Em>Downloads.</Em>
+                <span className="font-light text-[#009ab1]/40 not-italic ml-2 text-3xl sm:text-4xl select-none">//</span>
+              </h1>
+
+              <p className="text-slate-600 text-sm sm:text-[15px] leading-[1.78] max-w-2xl font-normal">
+                Access peer-reviewed toolkits, digital courseware, conference proceedings, STEM learning frameworks, educator handbooks, and institutional reports published by LEnSE.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-4 pt-1">
+                <button
+                  onClick={scrollToCatalog}
+                  className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#009ab1] to-[#14b4cb] hover:from-[#00869c] hover:to-[#009ab1] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3 transition-all duration-300 shadow-[0_12px_26px_rgba(0,154,177,0.32)] hover:scale-[1.03] active:scale-95 cursor-pointer"
+                >
+                  <BookOpen size={14} />
+                  <span>Explore Catalog</span>
+                  <ArrowRight size={13} />
+                </button>
+
+                <div className="inline-flex items-center gap-2 px-5 py-3.5 rounded-full bg-white/80 border border-blue-100 text-xs font-bold text-slate-700 shadow-2xs">
+                  <FileText size={14} className="text-[#009ab1]" />
+                  <span>{resourcesList.length > 0 ? `${resourcesList.length}+` : '12+'} Publications</span>
                 </div>
               </div>
 
-              <h1 style={SERIF} className="text-[52px] sm:text-[66px] lg:text-[74px] leading-[1.03] tracking-tight text-slate-900 font-normal">
-                Resources &amp;<br />
-                <Em>Downloads.</Em>
-              </h1>
-
-              <p className="text-slate-600 text-[15px] sm:text-[16px] leading-[1.8] max-w-[500px]">
-                Access digital courseware, conference proceedings, STEM learning toolkits, educator handbooks, and institutional reports published by LEnSE.
-              </p>
-
-              <div className="pt-2">
-                <button
-                  onClick={scrollToCatalog}
-                  className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#009ab1] to-[#1fa2ff] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3 shadow-[0_12px_26px_rgba(10,108,255,0.4)] hover:scale-[1.03] transition cursor-pointer"
-                >
-                  <BookOpen size={14} />
-                  <span>EXPLORE CATALOG</span>
-                  <ArrowRight size={13} />
-                </button>
+              {/* Clean Inline Meta Info Bar */}
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-3 text-xs text-slate-600 font-medium border-t border-[#009ab1]/20 max-w-2xl">
+                <div className="flex items-center gap-2">
+                  <Globe size={15} className="text-[#009ab1]" />
+                  <span className="font-bold text-slate-900">Open Access</span>
+                </div>
+                <span className="text-slate-300">•</span>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={15} className="text-[#009ab1]" />
+                  <span>Verified PDFs</span>
+                </div>
+                <span className="text-slate-300">•</span>
+                <div className="flex items-center gap-2">
+                  <Sparkles size={15} className="text-[#009ab1]" />
+                  <span>University of Kerala</span>
+                </div>
               </div>
 
-              {/* 4 Value Pillars Row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-5 border-t border-blue-100/80">
-                {[
-                  { title: 'Learn', sub: 'today', icon: BookOpen },
-                  { title: 'Share', sub: 'knowledge', icon: Users },
-                  { title: 'Create', sub: 'impact', icon: Leaf },
-                  { title: 'Build a', sub: 'sustainable future', icon: Globe }
-                ].map((p, i) => (
-                  <div key={i} className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#009ab1] shrink-0">
-                      <p.icon size={15} strokeWidth={1.75} />
-                    </div>
-                    <div className="flex flex-col text-xs leading-tight">
-                      <span className="font-bold text-slate-800">{p.title}</span>
-                      <span className="text-slate-500 text-[11px] font-normal">{p.sub}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            {/* Right: Floating Glass Card (Matching About Page Estd Card) */}
-            <div className="lg:col-span-5 relative hidden sm:flex items-center justify-center lg:justify-end">
-              <div className="relative w-[300px] sm:w-[320px] rounded-[1.8rem] p-7 sm:p-8 bg-gradient-to-br from-white/55 via-sky-50/40 to-blue-100/30 backdrop-blur-xl border border-white/80 shadow-[0_25px_60px_rgba(2,60,140,0.22),inset_0_1px_0_rgba(255,255,255,0.95)] hover:-translate-y-1 transition duration-300">
-                <span className="absolute -top-3.5 -right-3.5 w-9 h-9 rounded-full bg-white/90 border border-white text-sky-500 flex items-center justify-center shadow-md">
-                  <Sparkles size={17} />
-                </span>
-                <p className="text-[10px] font-bold tracking-[0.22em] text-slate-600 uppercase mb-1">OPEN PUBLICATIONS</p>
-                <p style={SERIF} className="text-6xl sm:text-[68px] text-slate-900 leading-none my-2 font-normal">
-                  {resourcesList.length > 0 ? `${resourcesList.length}+` : '12+'}
-                </p>
-                <p className="text-[13.5px] text-slate-600 leading-relaxed max-w-[210px] mt-2">
-                  Curated toolkits, reports and educational courseware.
-                </p>
-              </div>
-            </div>
           </div>
-        </Wrap>
-      </section>
+        </div>
+
+      </div>
+
+      {/* ============================================================ */}
+      {/* 1.5. 4 QUICK PILLARS STRIP (News-Page Style Snapshot)       */}
+      {/* ============================================================ */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6 mb-10 sm:mb-14">
+        <div className="rounded-2xl sm:rounded-3xl bg-white/80 backdrop-blur-xl border border-white p-2 sm:p-2.5 shadow-[0_12px_36px_rgba(0,154,177,0.08)]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+            {[
+              { label: 'Access Type', val: 'Free & Open Public Domain', icon: Globe },
+              { label: 'Total Catalog', val: `${resourcesList.length > 0 ? resourcesList.length : '12'}+ Curated Documents`, icon: FileText },
+              { label: 'Primary Formats', val: 'Digital PDF & Teaching Toolkits', icon: BookOpen },
+              { label: 'Institutional Center', val: 'CLESE / LEnSE Kerala', icon: Sparkles }
+            ].map((item, i) => (
+              <div key={i} className="p-3 sm:p-3.5 flex items-center gap-3.5 hover:bg-[#f4f8ff] rounded-xl sm:rounded-2xl transition-all duration-300 group cursor-default">
+                <div className="w-10 h-10 rounded-xl bg-[#009ab1]/10 border border-[#009ab1]/20 flex items-center justify-center text-[#009ab1] shrink-0 group-hover:bg-[#009ab1] group-hover:text-white transition-all duration-300 shadow-xs">
+                  <item.icon size={18} strokeWidth={1.7} />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10.5px] uppercase tracking-wider text-slate-400 font-bold block">
+                    {item.label}
+                  </span>
+                  <h4 className="text-[13px] font-bold text-slate-800 leading-tight group-hover:text-[#009ab1] transition-colors truncate mt-0.5">
+                    {item.val}
+                  </h4>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <Wrap className="space-y-10 sm:space-y-14 relative z-10">
 
